@@ -1,0 +1,770 @@
+
+
+
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Just recently we've built a simple zippy component in Angular 2.0.0 and in this article we want to show how. Read on to build your first component.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="thoughtram">
+    <title>Developing a zippy component in Angular by thoughtram</title>
+    <meta name="google-site-verification" content="o9eGPEgIETEqYGombq7NiQuBIB_qa6gz1yAL7PxKyK0">
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#4D8799">
+    <link rel="icon" sizes="192x192" href="/images/touch/chrome-touch-icon-192x192.png">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="thoughtram">
+    <link rel="apple-touch-icon" href="/images/touch/apple-touch-icon.png">
+
+    <!-- Tile icon for Win8 (144x144 + tile color) -->
+    <meta name="msapplication-TileImage" content="/images/touch/ms-touch-icon-144x144-precomposed.png">
+    <meta name="msapplication-TileColor" content="#4D8799">
+
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Developing a zippy component in Angular">
+    <meta property="og:description" content="Just recently we've built a simple zippy component in Angular 2.0.0 and in this article we want to show how. Read on to build your first component.">
+    <meta property="og:url" content="http://blog.thoughtram.io/angular/2015/03/27/building-a-zippy-component-in-angular-2.html">
+    <meta property="og:site_name" content="Articles by thoughtram">
+    <meta property="og:image" content="http://blog.thoughtram.io">
+    <meta property="og:publisher" content="http://www.facebook.com/thoughtram">
+
+    <meta property="twitter:card" content="summary">
+    <meta property="twitter:title" content="Developing a zippy component in Angular">
+    <meta property="twitter:site" content="thoughtram Blog">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css" type="text/css">
+  </head>
+  <body class="sub-site">
+    <!-- Add your site or app content here -->
+
+    <!--[if lt IE 10]>
+        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <header class="thtrm-header" role="banner">
+      <div class="thtrm-header-bar">
+        <div class="thtrm-constraint">
+          <a href="http://thoughtram.io" class="thtrm-header-logo-link" title="thoughtram.io Start Page"><h1 class="thtrm-header-logo">thoughtram</h1></a>
+          <div class="thtrm-header-menu-wrapper">
+            <span role="button" tabindex="0" class="thtrm-header-menu-label">Menu</span>
+            <ul class="thtrm-header-menu">
+              <li><a title="Training" class="thtrm-header-menu-item" href="http://thoughtram.io/training.html">Training</a></li>
+              <li><a title="Code Review" class="thtrm-header-menu-item" href="http://thoughtram.io/code-review.html">Code Review</a></li>
+              <li><a title="Casts" class="thtrm-header-menu-item " href="http://casts.thoughtram.io">Casts</a></li>
+              <li><a title="Blog" class="thtrm-header-menu-item" href="/">Blog</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main role="main" class="thtrm-main">
+    <div class="thtrm-banner" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%), url('/images/banner/fallback.jpeg');">
+        <hgroup class="thtrm-banner-container">
+          <div class="thtrm-constraint thtrm-constraint--slim">
+            <h2 class="thtrm-banner-text">Developing a zippy component in Angular</h2>
+            <span>by <a href="http://twitter.com/" title="Pascal Precht on Twitter">Pascal Precht</a> on Mar 27, 2015, last updated on Dec 16, 2016<br>16 minute read</span>
+
+          </div>
+        </hgroup>
+      </div>
+      <div class="thtrm-constraint thtrm-constraint--slim">
+
+        <div class="thtrm-article">
+          <section class="thtrm-ad thtrm-section thtrm-section--is-promo is-sticky">
+  <img width="100" src="/images/angular2-shield-inverse.svg">
+  <h3 class="thtrm-section-headline">Need private training?</h3>
+  <p class="thtrm-section-text">Get customized training for your corporation</p>
+  <a href="mailto:hello@thoughtram.io" title="Request Training Quote" id="event-cta" class="thtrm-layout-divider-cta">Request quote <strong>&rarr;</strong></a>
+</section>
+
+
+          
+          <p style="background-color: lightgoldenrodyellow; border: solid 2px #f9dead; padding: 1em; text-align: center; border-radius: 0.3em;">Contents are based on Angular version <strong>>= 2.x</strong> unless explicitely stated differently.</p>
+          
+
+          <s>Even if Angular 2.0.0 is still in early development, we can already start playing with the code since it's up on GitHub and also published as npm module for early adopters.&lt;/sn&gt; We are following the development of Angular 2.0.0 since the beginning on and are also contributing to the project. Just recently we've built a simple zippy component in Angular and in this article we want to show you how.
+
+
+<p style="text-align: center; margin-bottom: -1em;"><strong>Want to see things in action first?</strong></p>
+
+<p class="thtrm-ctas">
+
+  
+    <a href="#demos" class="thtrm-cta thtrm-cta--small"><i class="material-icons">code</i> View Demos</a>
+  
+
+  
+
+</p>
+
+
+
+
+<div class="thtrm-toc is-sticky">
+    <h3 class="no_toc" id="table-of-contents">TABLE OF CONTENTS</h3>
+
+  </div>
+
+## Getting started with Angular 2.0.0
+
+There are several options today to get started with Angular. For instance, we can go to [angular.io](http://angular.io) and use the [quickstart](https://angular.io/docs/js/latest/quickstart.html) guide. Or, we can install the [Angular CLI](http://cli.angulario), which takes care of scaffolding, building and serving Angular applications. In this article we will use <s><a href="http://twitter.com/pkozlowski_os" title="Pawel Kozlowski on Twitter">Pawel Kozlowski's</a> <a href="https://github.com/pkozlowski-opensource/ng2-play" title="ng2-play on GitHub">ng2-play repository</a></s> the Angular CLI, but again, you can use whatever suits you.
+
+We start by installing Angular CLI as a global command on our local machine using npm.
+
+
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span class="gp">$ </span>npm install -g angular-cli</code></pre></div>
+
+
+Once that is done, we can scaffold a new Angular project by running `ng new <PROJECT_NAME>`. Note that the project is scaffolded in the directory where we're in at this moment.
+
+
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span class="gp">$ </span>ng new zippy-app</code></pre></div>
+
+
+Next, we navigate into the project and run `ng serve`, which will essentially build and serve a hello world app on `http://localhost:4200`.
+
+
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span class="gp">$ </span><span class="nb">cd </span>zippy-app
+<span class="gp">$ </span>ng serve</code></pre></div>
+
+
+We open a browser tab on `localhost://4200` and what we see is the text "zippy-app works!". Cool, we're all set up to build a zippy component in Angular!
+
+## Building the zippy component
+
+Before we start building the zippy component with Angular, we need to clarify what we're talking about when using the term "zippy". It turns out that a lot of people think they don't know what a zippy is, even if they do, just because of the naming.
+
+Long story short: this, is a zippy.
+
+<iframe src="http://embed.plnkr.co/1djdpE5uFLfYpYO8qBnm/preview?deferRun" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe>
+
+
+
+Also known as "accordion". You can click the summary text and the actual content toggles accordingly. If you take a look at this particular plunk, you'll see that we actually don't need to do any special implementation to get this working. We have the `<details>` element that does the job for us. But how can we implement such a thing in Angular?
+
+We start off by adding a new file `src/app/my-zippy.component.ts` and creating a class in ES2015 that we export, so it can be imported by other consumers of this class, by using the ES2015 module system. If you're not familiar with modules in ES2015 you might want to read our article on [using ES2015 with Angular today](/angularjs/es6/2015/01/23/exploring-angular-1.3-using-es6.html).
+
+&gt;&gt; **Special Tip**: We would normaly use Angular CLI to generate a component for us, instead of creating the files manually, but this articles focuses on understanding the building blocks of creating a custom component.
+
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kr">export</span> <span class="kr">class</span> <span class="nx">ZippyComponent</span> <span class="p">{</span>
+
+<span class="p">}</span></code></pre></div>
+
+
+The next thing we want to do, is to make our `ZippyComponent` class an actual component and give it a template so that we can see that it is ready to be used. In order to tell Angular that this particular class is a component, we use something called "Decorators".
+
+Decorators are a way to add metadata to our existing code. Those decorators are actually not supported by ES2015 but have been developed as language extension of the TypeScript transpiler, which is used in this project. We're not required to use decorators though. As mentioned, those are just transpiled to ES5 and then simply used by the framework. However, for simplicity sake we'll use them in this article.
+
+Angular provides us with a couple of decorators so we can express our code in a much more elegant way. In order to build a component, we need the `@Component()` decorator. Decorators can be imported just like classes or other symbols, by using ES2015 module syntax. If you heard about **annotations in traceur** before and wonder how they relate to decorators, you might want to read our article on [the difference between annotations and decorators](http://blog.thoughtram.io/angular/2015/05/03/the-difference-between-annotations-and-decorators.html).
+
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kr">import</span> <span class="p">{</span> <span class="nx">Component</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/core'</span><span class="p">;</span>
+
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">ZippyComponent</span> <span class="p">{</span>
+
+<span class="p">}</span></code></pre></div>
+
+
+The `Component` decorator adds information about what our component's element name will be, what  input properties it has and more. We can also add information about the component's view and template.
+
+We want our zippy component to be usable as `<my-zippy>` element. So all we need to do, is to add a `@Component()` decorator with that particular information. To specify the element name, or rather CSS selector, we need to add a `selector` property that matches a CSS selector.
+
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kr">import</span> <span class="p">{</span> <span class="nx">Component</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/core'</span><span class="p">;</span>
+
+<span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
+  <span class="na">selector</span><span class="p">:</span> <span class="s1">'my-zippy'</span>
+<span class="p">})</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">ZippyComponent</span> <span class="p">{</span>
+
+<span class="p">}</span></code></pre></div>
+
+
+Next, our component needs a template. We add information about the component's view. `templateUrl` tells Angular where to load the component template from. To make `templateUrl` work with relative paths, we add another property `moduleId` with a value `module.id`. To get more information on `moduleId`, make sure to check out our article on [Component-Relative Paths in Angular](/angular/2016/06/08/component-relative-paths-in-angular-2.html)
+
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kr">import</span> <span class="p">{</span> <span class="nx">Component</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/core'</span><span class="p">;</span>
+
+<span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
+  <span class="na">moduleId</span><span class="p">:</span> <span class="nx">module</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+  <span class="na">selector</span><span class="p">:</span> <span class="s1">'my-zippy'</span><span class="p">,</span>
+  <span class="na">templateUrl</span><span class="p">:</span> <span class="s1">'my-zippy.component.html'</span>
+<span class="p">})</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">ZippyComponent</span> <span class="p">{</span>
+
+<span class="p">}</span></code></pre></div>
+
+
+Later at runtime, when Angular compiles this component, it'll fetch `my-zippy.component.html` asynchronously. Let's create a file `src/app/my-zippy.component.html` with the following contents:
+
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"zippy"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"zippy__title"</span><span class="nt">&gt;</span>
+    <span class="ni">&amp;blacktriangledown;</span> Details
+  <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"zippy__content"</span><span class="nt">&gt;</span>
+    This is some content.
+  <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/div&gt;</span></code></pre></div>
+
+
+CSS classes can be ignored for now. They just give us some semantics throughout our template.
+
+Alright, believe it or not, that's basically all we need to do to create a component. Let's use our zippy component inside the application. In order to do that, we need to do things:
+
+- Add our new component to the application module
+- Use `ZippyComponent` in `ZippyAppComponent`'s template
+ 
+Angular comes with a module system that allows us to register directives, components, service and many other things in a single place, so we can use them throughout our application. If we take a look at the `src/app/app.module.ts` file, we see that Angular CLI already created a module for us.  To register `ZippyComponent` on `AppModule`, we import it and add it to the list `AppModule`'s declarations:
+
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kr">import</span> <span class="p">{</span> <span class="nx">NgModule</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/core'</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">BrowserModule</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/platform-browser'</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">ZippyAppComponent</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'./zippy-app.component'</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">ZippyComponent</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'./my-zippy.component'</span><span class="p">;</span>
+
+<span class="err">@</span><span class="nx">NgModule</span><span class="p">({</span>
+  <span class="na">imports</span><span class="p">:</span> <span class="p">[</span><span class="nx">BrowserModule</span><span class="p">],</span>
+  <span class="na">declarations</span><span class="p">:</span> <span class="p">[</span><span class="nx">ZippyAppComponent</span><span class="p">,</span> <span class="nx">ZippyComponent</span><span class="p">],</span> <span class="c1">// we're adding ZippyComponent here</span>
+  <span class="na">bootstrap</span><span class="p">:</span> <span class="p">[</span><span class="nx">ZippyAppComponent</span><span class="p">]</span>
+<span class="p">})</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">AppModule</span> <span class="p">{}</span></code></pre></div>
+
+
+We don't worry too much about the `imports` for now, but we acknowledge that Angular needs `BrowserModule` to make our app run in the browser. The `declarations` property defines all directives and pipes that are used in this module and `bootstrap` tells Angular, which component should be bootstrapped to run the application. `ZippyAppComponent` is our root component and has been generated by Angular CLI as well, `ZippyComponent` is our own custom component that we've just created.
+
+Now, to actually render our zippy component in our application, we need to use it in `ZippyAppComponent`'s template. Let's do that right away:
+
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kr">import</span> <span class="p">{</span> <span class="nx">Component</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/core'</span><span class="p">;</span>
+
+<span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
+  <span class="na">moduleId</span><span class="p">:</span> <span class="nx">module</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+  <span class="na">selector</span><span class="p">:</span> <span class="s1">'zippy-app'</span><span class="p">,</span>
+  <span class="na">template</span><span class="p">:</span> <span class="s1">'&lt;my-zippy&gt;&lt;/my-zippy&gt;'</span>
+<span class="p">})</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">ZippyAppComponent</span> <span class="p">{</span>
+
+<span class="p">}</span></code></pre></div>
+
+
+Nice! Running this in the browser gives us at least something that looks like a zippy component. The next step is to bring our component to life.
+
+## Bringing the component to life
+
+In order to bring this component to life, let's recap quickly what we need:
+
+- Clicking on the zippy title should toggle the content
+- The title of the should be configurable from the outside world, currently hard-coded in the template
+- DOM that is used inside the `<my-zippy>` element should be projected in the zippy content
+
+Let's start with the first one: when clicking on the zippy title, the content should toggle. How do we implement that in Angular?
+
+We know, in Angular 1.x, we'd probably add an `ngClick` directive to the title and set a scope property to `true` or `false` and toggle the zippy content respectively by using either `ngHide` or `ngShow`. We can do pretty much the same in Angular &gt;= 2.x as well, just that we have a bit different semantics.
+
+Instead of adding an `ngClick` directive (which we don't have in Angular 2.x), to call for instance a method `toggle()`, we bind to the `click` event directly using the following template syntax.
+
+
+<div class="highlight"><pre><code class="language-html" data-lang="html">...
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"zippy__title"</span> <span class="err">(</span><span class="na">click</span><span class="err">)="</span><span class="na">toggle</span><span class="err">()"</span><span class="nt">&gt;</span>
+  <span class="ni">&amp;blacktriangledown;</span> Details
+<span class="nt">&lt;/div&gt;</span>
+...</code></pre></div>
+
+
+If you're not familiar with this syntax I recommend you either reading this article on [integrating Web Components with Angular](http://pascalprecht.github.io/2014/10/25/integrating-web-components-with-angularjs/), or this article about [Angular's template syntax demystified](http://blog.thoughtram.io/angular/2015/08/11/angular-2-template-syntax-demystified-part-1.html). [Misko's keynote](https://www.youtube.com/watch?v=-dMBcqwvYA0) from this year's ng-conf is also a nice resource.
+
+Now we're basically listening on a `click` event and execute a **statement**. But where does `toggle()` come from? We can access component methods directly in our template. There's no `$scope` service or controller that provides those methods. Which means, `toggle()` is just a method defined in `ZippyComponent`.
+
+Here's what the implementation of this method could look like:
+
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kr">export</span> <span class="kr">class</span> <span class="nx">ZippyComponent</span> <span class="p">{</span>
+  <span class="nx">toggle</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">visible</span> <span class="o">=</span> <span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">visible</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+
+We simply invert the value of the component's `visible` property. In order to get a decent default state, we set `visible` to `true` when the component is loaded.
+
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kr">export</span> <span class="kr">class</span> <span class="nx">ZippyComponent</span> <span class="p">{</span>
+
+  <span class="nx">visible</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+
+  <span class="nx">toggle</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">visible</span> <span class="o">=</span> <span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">visible</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+
+Now that we have a property that represents the visibility state of the content, we can use it in our template accordingly. Instead of `ngHide` or `ngShow` (which we also don't have in Angular &gt;= 2.x), we can simply bind the value of our `visible` property to our zippy content's `hidden` property, which every DOM element has by default.
+
+
+<div class="highlight"><pre><code class="language-html" data-lang="html">...
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"zippy__content"</span> <span class="err">[</span><span class="na">hidden</span><span class="err">]="!</span><span class="na">visible</span><span class="err">"</span><span class="nt">&gt;</span>
+  This is some content.
+<span class="nt">&lt;/div&gt;</span>
+...</code></pre></div>
+
+
+Again, what we see here is part of the new template syntax in Angular. Angular &gt;= 2.x binds to properties rather than attributes in order to work with Web Components, and this is how you do it. We can now click on the zippy title and the content toggles!
+
+Oh! The little arrow in the title still points down, even if the zippy is closed. We can fix that easily with Angular's interpolation like this:
+
+
+<div class="highlight"><pre><code class="language-html" data-lang="html">...
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"zippy__title"</span> <span class="err">(</span><span class="na">click</span><span class="err">)="</span><span class="na">toggle</span><span class="err">()"</span><span class="nt">&gt;</span>
+  {{ visible ? '<span class="ni">&amp;blacktriangledown;</span>' : '<span class="ni">&amp;blacktriangleright;</span>' }} Details
+<span class="nt">&lt;/div&gt;</span>
+...</code></pre></div>
+
+
+Okay, we're almost there. Let's make the zippy title configurable. We want that consumers of our component can define how they pass a title to it. Here's what our consumer will be able to do:
+
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;zippy</span> <span class="na">title=</span><span class="s">"Details"</span><span class="nt">&gt;&lt;/zippy&gt;</span>
+<span class="nt">&lt;zippy</span> <span class="err">[</span><span class="na">title</span><span class="err">]="'</span><span class="na">Details</span><span class="err">'"</span><span class="nt">&gt;&lt;/zippy&gt;</span>
+<span class="nt">&lt;zippy</span> <span class="err">[</span><span class="na">title</span><span class="err">]="</span><span class="na">evaluatesToTitle</span><span class="err">"</span><span class="nt">&gt;&lt;/zippy&gt;</span></code></pre></div>
+
+
+In Angular &gt;= 2.x, we don't need to specify how scope properties are bound in our component, the consumer does. That means, this gets **a lot** easier in Angular too, because all we need to do is to import the `@Input()` decorator and teach our component about an input property, like this:
+
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kr">import</span> <span class="p">{</span> <span class="nx">Component</span><span class="p">,</span> <span class="nx">Input</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/core'</span><span class="p">;</span>
+
+<span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
+  <span class="na">moduleId</span><span class="p">:</span> <span class="nx">module</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+  <span class="na">selector</span><span class="p">:</span> <span class="s1">'my-zippy'</span><span class="p">,</span>
+  <span class="na">templateUrl</span><span class="p">:</span> <span class="s1">'my-zippy.component.html'</span>
+<span class="p">})</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">ZippyComponent</span> <span class="p">{</span>
+  <span class="err">@</span><span class="nx">Input</span><span class="p">()</span> <span class="nx">title</span><span class="p">;</span>
+  <span class="p">...</span>
+<span class="p">}</span></code></pre></div>
+
+
+Basically what we're doing here, is telling Angular that the value of the `title` **attribute** is projected to the `title` **property**. Input data that flows into the component. If we want to map the `title` property to a different attribute name, we can do so by passing the attribute name to `@Input()`:
+
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
+  <span class="na">moduleId</span><span class="p">:</span> <span class="nx">module</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+  <span class="na">selector</span><span class="p">:</span> <span class="s1">'my-zippy'</span><span class="p">,</span>
+  <span class="na">templateUrl</span><span class="p">:</span> <span class="s1">'my-zippy.component.html'</span>
+<span class="p">})</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">ZippyComponent</span> <span class="p">{</span>
+  <span class="err">@</span><span class="nx">Input</span><span class="p">(</span><span class="s1">'zippyTitle'</span><span class="p">)</span> <span class="nx">title</span><span class="p">;</span>
+  <span class="p">...</span>
+<span class="p">}</span></code></pre></div>
+
+
+But for simplicity's sake, we stick with the shorthand syntax. There's nothing more to do to make the title configurable, let's update the template for `ZippyAppComponent` app.
+
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
+  <span class="na">moduleId</span><span class="p">:</span> <span class="nx">module</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+  <span class="na">selector</span><span class="p">:</span> <span class="s1">'zippy-app'</span><span class="p">,</span>
+  <span class="na">template</span><span class="p">:</span> <span class="s1">'&lt;my-zippy title="Details"&gt;&lt;/zippy&gt;'</span><span class="p">,</span>
+<span class="p">})</span>
+<span class="p">...</span></code></pre></div>
+
+
+Now we need to change the template of zippy to make title to appear at correct place, let's udpate the template for zippy title.
+
+
+<div class="highlight"><pre><code class="language-html" data-lang="html">...
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"zippy__title"</span> <span class="err">(</span><span class="na">click</span><span class="err">)="</span><span class="na">toggle</span><span class="err">()"</span><span class="nt">&gt;</span>
+  {{ visible ? '<span class="ni">&amp;blacktriangledown;</span>' : '<span class="ni">&amp;blacktriangleright;</span>' }} {{title}}
+<span class="nt">&lt;/div&gt;</span>
+...</code></pre></div>
+
+
+## Insertion Points instead of Transclusion
+
+Our component's title is configurable. But what we really want to enable, is that a consumer can decide what goes **into** the component and what not, right?
+
+We could for example use our component like this:
+
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;my-zippy</span> <span class="na">title=</span><span class="s">"Details"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;p&gt;</span>Here's some detailed content.<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;/my-zippy&gt;</span></code></pre></div>
+
+
+In order to make this work, we've used transclusion in Angular 1. We don't need transclusion anymore, since Angular 2.x makes use of Shadow DOM (Emulation) which is part of the Web Components specification. Shadow DOM comes with something called "Content Insertion Points" or "Content Projection", which lets us specify, where DOM from the outside world is projected in the Shadow DOM or view of the component.
+
+I know, it's hard to believe, but all we need to do is adding a `<ng-content>` tag to our component template.
+
+
+<div class="highlight"><pre><code class="language-html" data-lang="html">...
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"zippy__content"</span> <span class="err">[</span><span class="na">hidden</span><span class="err">]="!</span><span class="na">visible</span><span class="err">"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;ng-content&gt;&lt;/ng-content&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+...</code></pre></div>
+
+
+Angular uses Shadow DOM (Emulation) since 2.x by default, so we can just take advantage of that technology. <s>It turns out that insertion points in Shadow DOM are even more powerful than transclusion in Angular.</s> Angular 1.5 introduces [multiple transclusion slots](http://localhost:4000/angular/2015/11/16/multiple-transclusion-and-named-slots.html), so we can explicitly "pick" which DOM is going to be projected into our directive's template. The `<ng-content>` tag lets us define **which** DOM elements are projected too. If you want to learn more about Shadow DOM, I recommend the articles on [html5rocks.com](http://www.html5rocks.com/en/tutorials/webcomponents/shadowdom/) or watch [this talk](https://www.youtube.com/watch?v=gSTNTXtQwaY) from ng-europe.
+
+## Putting it all together
+
+Yay, this is how we build a zippy component in Angular. Just to make sure we're on the same page, here's the complete zippy component code we've written throughout this article:
+
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kr">import</span> <span class="p">{</span> <span class="nx">Component</span><span class="p">,</span> <span class="nx">Input</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/core'</span><span class="p">;</span>
+
+<span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
+  <span class="na">moduleId</span><span class="p">:</span> <span class="nx">module</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+  <span class="na">selector</span><span class="p">:</span> <span class="s1">'my-zippy'</span><span class="p">,</span>
+  <span class="na">templateUrl</span><span class="p">:</span> <span class="s1">'my-zippy.component.html'</span>
+<span class="p">})</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">ZippyComponent</span> <span class="p">{</span>
+
+  <span class="err">@</span><span class="nx">Input</span><span class="p">()</span> <span class="nx">title</span><span class="p">;</span>
+  <span class="nx">visible</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+
+  <span class="nx">toggle</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">visible</span> <span class="o">=</span> <span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">visible</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+
+And here's the template:
+
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"zippy"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;div</span> <span class="err">(</span><span class="na">click</span><span class="err">)="</span><span class="na">toggle</span><span class="err">()"</span> <span class="na">class=</span><span class="s">"zippy__title"</span><span class="nt">&gt;</span>
+    {{ visible ? '<span class="ni">&amp;blacktriangledown;</span>' : '<span class="ni">&amp;blacktriangleright;</span>' }} {{title}}
+  <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;div</span> <span class="err">[</span><span class="na">hidden</span><span class="err">]="!</span><span class="na">visible</span><span class="err">"</span> <span class="na">class=</span><span class="s">"zippy__content"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;ng-content&gt;&lt;/ng-content&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/div&gt;</span></code></pre></div>
+
+
+I've set up a repository so you can play with the code [here](https://github.com/thoughtram/angular-zippy). In fact, I've also added this component to the Angular project. The pull request is <s>pending</s> merged [here](https://github.com/angular/angular/pull/729) <s>and likely to be merged the next few days</s>. At this point I'd like to say thank you to [Victor](http://twitter.com/vberchet) and [Misko](http://twitter.com/mhevery) for helping me out on getting this implemented.
+
+You might notice that it also comes with e2e tests. The component itself even emits it's own events using `EventEmitter`, which we haven't covered in this article. Check out the demos to see event emitters in action!
+</ng-content></ng-content></my-zippy></my-zippy></details></PROJECT_NAME></s>
+
+
+          
+
+
+  <h2 id="demos">Demos</h2>
+  
+  <ul>
+    
+    <li><a href="http://embed.plnkr.co/mbJOYS/" title="Angular Zippy Component (RC4)" target="_blank">Angular Zippy Component (RC4)</a></li>
+    
+    <li><a href="https://embed.plnkr.co/dkorye/" title="Angular Zippy Component (RC5)" target="_blank">Angular Zippy Component (RC5)</a></li>
+    
+  </ul>
+  
+
+
+
+        </div>
+
+        <div class="thtrm-subscriber">
+  <h3>Get updates on new articles and trainings.</h3>
+  <p>Join over 1400 other developers who get our content first.</p>
+  <form action="//thoughtram.us8.list-manage.com/subscribe/post?u=dfbb1507fbced5a20d9dc5698&amp;id=731f22cdca" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" novalidate>
+    <label for="mce-EMAIL"></label>
+    <input type="email" value="" name="EMAIL" placeholder="Your email address..." required>
+    <div style="position: absolute; left: -5000px;"><input type="text" name="b_dfbb1507fbced5a20d9dc5698_731f22cdca" tabindex="-1" value=""></div>
+    <input type="submit" value="Subscribe" name="subscribe" class="thtrm-cta thtrm-cta--small">
+  </form>
+</div>
+
+
+
+        <div class="thtrm-social-links">
+            <!-- Sharingbutton Facebook -->
+            <a class="resp-sharing-button__link" href="https://facebook.com/sharer/sharer.php?u=http%3A%2F%2Fblog.thoughtram.io/angular/2015/03/27/building-a-zippy-component-in-angular-2.html" target="_blank" aria-label="Share on Facebook">
+              <div class="resp-sharing-button resp-sharing-button--facebook resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M18.768,7.465H14.5V5.56c0-0.896,0.594-1.105,1.012-1.105s2.988,0,2.988,0V0.513L14.171,0.5C10.244,0.5,9.5,3.438,9.5,5.32 v2.145h-3v4h3c0,5.212,0,12,0,12h5c0,0,0-6.85,0-12h3.851L18.768,7.465z"/>
+                    </g>
+                </svg>
+                </div>Share on Facebook</div>
+            </a>
+
+            <!-- Sharingbutton Twitter -->
+            <a class="resp-sharing-button__link" href="https://twitter.com/intent/tweet/?text=Developing%20a%20zippy%20component%20in%20Angular&amp;url=http://blog.thoughtram.io/angular/2015/03/27/building-a-zippy-component-in-angular-2.html" target="_blank" aria-label="Share on Twitter">
+              <div class="resp-sharing-button resp-sharing-button--twitter resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M23.444,4.834c-0.814,0.363-1.5,0.375-2.228,0.016c0.938-0.562,0.981-0.957,1.32-2.019c-0.878,0.521-1.851,0.9-2.886,1.104 C18.823,3.053,17.642,2.5,16.335,2.5c-2.51,0-4.544,2.036-4.544,4.544c0,0.356,0.04,0.703,0.117,1.036 C8.132,7.891,4.783,6.082,2.542,3.332C2.151,4.003,1.927,4.784,1.927,5.617c0,1.577,0.803,2.967,2.021,3.782 C3.203,9.375,2.503,9.171,1.891,8.831C1.89,8.85,1.89,8.868,1.89,8.888c0,2.202,1.566,4.038,3.646,4.456 c-0.666,0.181-1.368,0.209-2.053,0.079c0.579,1.804,2.257,3.118,4.245,3.155C5.783,18.102,3.372,18.737,1,18.459 C3.012,19.748,5.399,20.5,7.966,20.5c8.358,0,12.928-6.924,12.928-12.929c0-0.198-0.003-0.393-0.012-0.588 C21.769,6.343,22.835,5.746,23.444,4.834z"/>
+                    </g>
+                </svg>
+                </div>Share on Twitter</div>
+            </a>
+
+            <!-- Sharingbutton Google+ -->
+            <a class="resp-sharing-button__link" href="https://plus.google.com/share?url=http%3A%2F%2Fblog.thoughtram.io/angular/2015/03/27/building-a-zippy-component-in-angular-2.html" target="_blank" aria-label="Share on Google+">
+              <div class="resp-sharing-button resp-sharing-button--google resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M11.366,12.928c-0.729-0.516-1.393-1.273-1.404-1.505c0-0.425,0.038-0.627,0.988-1.368 c1.229-0.962,1.906-2.228,1.906-3.564c0-1.212-0.37-2.289-1.001-3.044h0.488c0.102,0,0.2-0.033,0.282-0.091l1.364-0.989 c0.169-0.121,0.24-0.338,0.176-0.536C14.102,1.635,13.918,1.5,13.709,1.5H7.608c-0.667,0-1.345,0.118-2.011,0.347 c-2.225,0.766-3.778,2.66-3.778,4.605c0,2.755,2.134,4.845,4.987,4.91c-0.056,0.22-0.084,0.434-0.084,0.645 c0,0.425,0.108,0.827,0.33,1.216c-0.026,0-0.051,0-0.079,0c-2.72,0-5.175,1.334-6.107,3.32C0.623,17.06,0.5,17.582,0.5,18.098 c0,0.501,0.129,0.984,0.382,1.438c0.585,1.046,1.843,1.861,3.544,2.289c0.877,0.223,1.82,0.335,2.8,0.335 c0.88,0,1.718-0.114,2.494-0.338c2.419-0.702,3.981-2.482,3.981-4.538C13.701,15.312,13.068,14.132,11.366,12.928z M3.66,17.443 c0-1.435,1.823-2.693,3.899-2.693h0.057c0.451,0.005,0.892,0.072,1.309,0.2c0.142,0.098,0.28,0.192,0.412,0.282 c0.962,0.656,1.597,1.088,1.774,1.783c0.041,0.175,0.063,0.35,0.063,0.519c0,1.787-1.333,2.693-3.961,2.693 C5.221,20.225,3.66,19.002,3.66,17.443z M5.551,3.89c0.324-0.371,0.75-0.566,1.227-0.566l0.055,0 c1.349,0.041,2.639,1.543,2.876,3.349c0.133,1.013-0.092,1.964-0.601,2.544C8.782,9.589,8.363,9.783,7.866,9.783H7.865H7.844 c-1.321-0.04-2.639-1.6-2.875-3.405C4.836,5.37,5.049,4.462,5.551,3.89z"/>
+                        <polygon points="23.5,9.5 20.5,9.5 20.5,6.5 18.5,6.5 18.5,9.5 15.5,9.5 15.5,11.5 18.5,11.5 18.5,14.5 20.5,14.5 20.5,11.5  23.5,11.5   "/>
+                    </g>
+                </svg>
+                </div>Share on Google+</div>
+            </a>
+        </div>
+
+        <h3 class="thtrm-section-headline thtrm-section-headline--with-margin">Author</h3>
+        <div class="thtrm-article-author">
+          <span class="thtrm-article-author-avatar"><img src="/images/author-pascal.jpg" alt="Picture of Pascal Precht"></span>
+          <div class="thtrm-article-author-matter">
+            <h4 class="thtrm-article-author-name">Pascal Precht</h4>
+            <p class="thtrm-article-author-text">Pascal is a front-end engineer and a Angular Developer Expert nominated by Google. He created the angular-translate module, is an Angular 2 contributor and also part of the Angular 2 Docs Authoring team.</p>
+            <p>
+              <a class="thtrm-article-author-cta thtrm-article-author-cta-twitter" href="http://twitter.com/PascalPrecht" title="Pascal Precht on Twitter">Twitter</a>
+              <a class="thtrm-article-author-cta" href="http://github.com/PascalPrecht" title="Pascal Precht on GitHub">GitHub</a>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="thtrm-constraint">
+
+        
+        <h4 class="thtrm-section-headline thtrm-section-headline--with-big-margin thtrm-section-headline--centered">Related Posts</h4>
+        <ul class="thtrm-three-column-list thtrm-three-column-list--with-padding">
+        
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2017/02/27/three-things-you-didnt-know-about-the-async-pipe.html" title="Three things you didn't know about the AsyncPipe">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/three-things-about-the-async-pipe.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Three things you didn't know about the AsyncPipe</h3>
+                <p>This article explains three lesser known features of the AsyncPipe that help us to write better async code.</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2017/02/21/using-zones-in-angular-for-better-performance.html" title="Using Zones in Angular for better performance">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/using-zones-in-angular-for-better-performance.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Using Zones in Angular for better performance</h3>
+                <p>In this article we'll take a look at how to use Zone APIs to improve our app's performance!</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2017/02/02/making-your-angular-app-fast.html" title="Making your Angular apps fast">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/angular-performance-tips.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Making your Angular apps fast</h3>
+                <p>In this article we discuss tips and tricks to make Angular blazingly fast!</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2016/12/27/angular-2-advance-testing-with-custom-matchers.html" title="Testing Angular Directives with Custom Matchers">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/testing-directives-with-custom-matchers2.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Testing Angular Directives with Custom Matchers</h3>
+                <p>Deliver terse, DRY, self-documenting unit tests with Angular using custom Jasmine Matchers and  Helper functions.</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2016/11/28/testing-services-with-http-in-angular-2.html" title="Testing Services with Http in Angular">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/testing-services-with-http-in-angular-2.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Testing Services with Http in Angular</h3>
+                <p>Want to learn how to test services in Angular that have an Http dependency? Read more here!</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2016/10/13/two-way-data-binding-in-angular-2.html" title="Two-way Data Binding in Angular">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/two-way-data-binding-in-angular-2.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Two-way Data Binding in Angular</h3>
+                <p>Two-way data binding was one of the main selling points of Angular. Since version 2.x, we can build directives that...</p>
+              </div>
+            </a>
+          </li>
+        
+        
+        </ul>
+        
+
+      
+      <h4 class="thtrm-section-headline thtrm-section-headline--with-big-margin thtrm-section-headline--centered">You might also be interested in</h4>
+      <ul class="thtrm-three-column-list thtrm-three-column-list--with-padding">
+        
+        <li>
+          <div class="thtrm-article-card thtrm-article-card--with-border" title="Exploring Angular 2 - Article Series">
+            <div class="thtrm-article-card-content ">
+              <h3>Exploring Angular 2 - Article Series</h3>
+              <a class="thtrm-cta thtrm-cta--small" href="http://blog.thoughtram.io/exploring-angular-2" title="Exploring Angular 2 - Article Series">Read more</a>
+            </div>
+          </div>
+        </li>
+        
+        <li>
+          <div class="thtrm-article-card thtrm-article-card--with-border" title="Using ES6 with Angular today">
+            <div class="thtrm-article-card-content ">
+              <h3>Using ES6 with Angular today</h3>
+              <a class="thtrm-cta thtrm-cta--small" href="http://blog.thoughtram.io/angularjs/es6/2015/01/23/exploring-angular-1.3-using-es6.html" title="Using ES6 with Angular today">Read more</a>
+            </div>
+          </div>
+        </li>
+        
+        <li>
+          <div class="thtrm-article-card thtrm-article-card--with-border" title="Integrating Web Components with AngularJS">
+            <div class="thtrm-article-card-content ">
+              <h3>Integrating Web Components with AngularJS</h3>
+              <a class="thtrm-cta thtrm-cta--small" href="http://pascalprecht.github.io/2014/10/25/integrating-web-components-with-angularjs/" title="Integrating Web Components with AngularJS">Read more</a>
+            </div>
+          </div>
+        </li>
+        
+        <li>
+          <div class="thtrm-article-card thtrm-article-card--with-border" title="The difference between Annotations and Decorators">
+            <div class="thtrm-article-card-content ">
+              <h3>The difference between Annotations and Decorators</h3>
+              <a class="thtrm-cta thtrm-cta--small" href="http://blog.thoughtram.io/angular/2015/05/03/the-difference-between-annotations-and-decorators.html" title="The difference between Annotations and Decorators">Read more</a>
+            </div>
+          </div>
+        </li>
+        
+      </ul>
+      
+
+      </div>
+    </main>
+    <footer role="contentinfo" class="thtrm-footer thtrm-footer--slim">
+  <div class="thtrm-footer-text">
+    <img class="thtrm-footer-logo" alt="thoughtram brain" src="/images/thoughtram-brain-white.png">
+    <p>This website was created in collaboration with <a href="http://twitter.com/timche_" title="Tim Cheung on Twitter"><strong>Tim Cheung</strong></a> and <a href="http://twitter.com/tim_hartmann_" title="Tim Hartmann on Twitter"><strong>Tim Hartmann</strong></a>.</p>
+    <p ><a href="http://thoughtram.io/code-of-conduct.html" title="Code of Conduct">Code of Conduct</a> &bullet; <a href="http://thoughtram.io/imprint.html" title="Legal Notice">Legal notice</a></p>
+    <p class="thtrm-footer-bottom">&copy; 2014-2017 thoughtram GmbH</p>
+  </div>
+</footer>
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-51360648-2', 'auto');
+ga('send', 'pageview');
+
+var form = document.getElementById('search-form');
+var eventCta = document.getElementById('event-cta');
+
+if (eventCta) {
+
+  eventCta.addEventListener('click', function (event) {
+    event.preventDefault();
+
+    setTimeout(clickLink, 1000);
+
+    function clickLink() {
+      window.location.replace(eventCta.getAttribute('href'));
+    }
+
+    ga('send', 'event', {
+      eventCategory: 'Event Link',
+      eventAction: 'click',
+      eventLabel: eventCta.getAttribute('title'),
+      hitCallback: clickLink
+    });
+  });
+}
+
+if (form) {
+
+  var searchTerm = document.getElementById('search-term');
+
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    var formSubmitted = false;
+
+    setTimeout(submitForm, 1000);
+
+    function submitForm() {
+      if (!formSubmitted) {
+        formSubmitted = true;
+        form.submit();
+      }
+    }
+
+    ga('send', 'event', {
+      eventCategory: 'Search Form',
+      eventAction: 'submit',
+      eventLabel: searchTerm.value,
+      hitCallback: submitForm
+    });
+  });
+}
+</script>
+
+
+
+    <script src="/scripts/stickyfill.js"></script>
+    <script src="/scripts/linkjuice/dist/linkjuice.js"></script>
+    <script>
+    (function (doc, win) {
+
+      linkjuice.init('.thtrm-article', {
+        selector: ['h2', 'h3'],
+        icon: ''
+      });
+
+      if (win.matchMedia && win.matchMedia('(min-width: 1200px)').matches) {
+        var stickyElements = doc.querySelectorAll('.is-sticky');
+
+        for (var i = stickyElements.length - 1; i >= 0; i--) {
+          var el = stickyElements[i];
+
+          if (el.classList.contains('thtrm-toc')) {
+            el.classList.add('thtrm-toc--sticky');
+            el.classList.add('thtrm-toc--faded');
+          } 
+          if (el.classList.contains('thtrm-ad')) {
+            el.classList.add('thtrm-ad--sticky');
+            el.classList.add('thtrm-ad--description');
+          }
+
+          Stickyfill.add(el);
+        }
+      }
+    }(document, window));
+    </script>
+  </body>
+</html>

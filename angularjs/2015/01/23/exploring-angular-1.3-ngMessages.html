@@ -1,0 +1,562 @@
+
+
+
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="In this article we're going to how the ngMessages module  improves the way we handle validation messages when dealing with forms in Angular apps.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="thoughtram">
+    <title>ngMessages in Angular 1.3 by thoughtram</title>
+    <meta name="google-site-verification" content="o9eGPEgIETEqYGombq7NiQuBIB_qa6gz1yAL7PxKyK0">
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#4D8799">
+    <link rel="icon" sizes="192x192" href="/images/touch/chrome-touch-icon-192x192.png">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="thoughtram">
+    <link rel="apple-touch-icon" href="/images/touch/apple-touch-icon.png">
+
+    <!-- Tile icon for Win8 (144x144 + tile color) -->
+    <meta name="msapplication-TileImage" content="/images/touch/ms-touch-icon-144x144-precomposed.png">
+    <meta name="msapplication-TileColor" content="#4D8799">
+
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="ngMessages in Angular 1.3">
+    <meta property="og:description" content="In this article we're going to how the ngMessages module  improves the way we handle validation messages when dealing with forms in Angular apps.">
+    <meta property="og:url" content="http://blog.thoughtram.io/angularjs/2015/01/23/exploring-angular-1.3-ngMessages.html">
+    <meta property="og:site_name" content="Articles by thoughtram">
+    <meta property="og:image" content="http://blog.thoughtram.io">
+    <meta property="og:publisher" content="http://www.facebook.com/thoughtram">
+
+    <meta property="twitter:card" content="summary">
+    <meta property="twitter:title" content="ngMessages in Angular 1.3">
+    <meta property="twitter:site" content="thoughtram Blog">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css" type="text/css">
+  </head>
+  <body class="sub-site">
+    <!-- Add your site or app content here -->
+
+    <!--[if lt IE 10]>
+        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <header class="thtrm-header" role="banner">
+      <div class="thtrm-header-bar">
+        <div class="thtrm-constraint">
+          <a href="http://thoughtram.io" class="thtrm-header-logo-link" title="thoughtram.io Start Page"><h1 class="thtrm-header-logo">thoughtram</h1></a>
+          <div class="thtrm-header-menu-wrapper">
+            <span role="button" tabindex="0" class="thtrm-header-menu-label">Menu</span>
+            <ul class="thtrm-header-menu">
+              <li><a title="Training" class="thtrm-header-menu-item" href="http://thoughtram.io/training.html">Training</a></li>
+              <li><a title="Code Review" class="thtrm-header-menu-item" href="http://thoughtram.io/code-review.html">Code Review</a></li>
+              <li><a title="Casts" class="thtrm-header-menu-item " href="http://casts.thoughtram.io">Casts</a></li>
+              <li><a title="Blog" class="thtrm-header-menu-item" href="/">Blog</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main role="main" class="thtrm-main">
+    <div class="thtrm-banner" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%), url('/images/banner/fallback.jpeg');">
+        <hgroup class="thtrm-banner-container">
+          <div class="thtrm-constraint thtrm-constraint--slim">
+            <h2 class="thtrm-banner-text">ngMessages in Angular 1.3</h2>
+            <span>by <a href="http://twitter.com/" title="Pascal Precht on Twitter">Pascal Precht</a> on Jan 23, 2015, last updated on Nov 8, 2016<br>11 minute read</span>
+
+          </div>
+        </hgroup>
+      </div>
+      <div class="thtrm-constraint thtrm-constraint--slim">
+
+        <div class="thtrm-article">
+          <section class="thtrm-ad thtrm-section thtrm-section--is-promo is-sticky">
+  <img width="100" src="/images/angular2-shield-inverse.svg">
+  <h3 class="thtrm-section-headline">Need private training?</h3>
+  <p class="thtrm-section-text">Get customized training for your corporation</p>
+  <a href="mailto:hello@thoughtram.io" title="Request Training Quote" id="event-cta" class="thtrm-layout-divider-cta">Request quote <strong>&rarr;</strong></a>
+</section>
+
+
+          
+
+          <p>In one of our articles of our blog series on exploring Angular 1.3, we’ve covered a very nice feature that makes validating forms in Angular a breeze. Right, I’m talking about the <a href="http://blog.thoughtram.io/angularjs/2015/01/11/exploring-angular-1.3-validators-pipeline.html">validators pipeline</a>.</p>
+
+<p>While the validators pipeline seems to make our life a lot easier and we as developers think it can’t get any better, it turns out there’s another bigger feature that adds even more awesomeness to the world of forms when building Angular applications: <strong>ngMessages</strong>.</p>
+
+<p><a href="https://docs.angularjs.org/api/ngMessages">ngMessages</a> is an entire new module that comes with a couple of directives to enhance the support for displaying messages within templates. Which means, even if in this article we’re using it just for forms, we’re not restricted to do so. But let’s start right away and take a look at a scenario that <code>ngMessages</code> tries to solve.</p>
+
+<div class="thtrm-toc is-sticky">
+  <h3 class="no_toc" id="table-of-contents">TABLE OF CONTENTS</h3>
+<ul id="markdown-toc">
+  <li><a href="#displaying-messages-in-forms---the-old-way" id="markdown-toc-displaying-messages-in-forms---the-old-way">Displaying messages in forms - The old way</a></li>
+  <li><a href="#displaying-messages-in-forms-with-ngmessages" id="markdown-toc-displaying-messages-in-forms-with-ngmessages">Displaying messages in forms with <code>ngMessages</code></a></li>
+  <li><a href="#prioritization-and-multiple-messages" id="markdown-toc-prioritization-and-multiple-messages">Prioritization and multiple messages</a></li>
+  <li><a href="#reusing-existing-messages" id="markdown-toc-reusing-existing-messages">Reusing existing messages</a></li>
+</ul>
+
+</div>
+
+<h2 id="displaying-messages-in-forms---the-old-way">Displaying messages in forms - The old way</h2>
+
+<p>Providing a good user experience is always important. When building forms, it’s pretty common to display messages to the user depending on the data that the user entered into the form fields. This, for example, could be a message that tells the user that a specific field is required to be filled out, or a message that says that the given data doesn’t match a certain pattern.</p>
+
+<p>We’ve already learned about the <a href="http://blog.thoughtram.io/angularjs/2015/01/11/exploring-angular-1.3-validators-pipeline.html">validators pipeline</a> that lets us easily determine if the value of a form field is valid or not. Each state of an input element is exposed on the associated scope of a form (as long as a <code>name</code> attribute is applied), which makes it super easy to conditionally display DOM elements that have (validation) messages.</p>
+
+<p>Let’s say we want to build a common login form where the user needs to enter an email address and a password, like this:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;form</span> <span class="na">name=</span><span class="s">"loginForm"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;label&gt;</span>Email:<span class="nt">&lt;/label&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"email"</span> <span class="na">ng-model=</span><span class="s">"email"</span> <span class="na">name=</span><span class="s">"email"</span><span class="nt">&gt;</span>
+
+  <span class="nt">&lt;label&gt;</span>Password:<span class="nt">&lt;/label&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"password"</span> <span class="na">ng-model=</span><span class="s">"password"</span> <span class="na">name=</span><span class="s">"password"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;/form&gt;</span></code></pre></div>
+
+<p>Notice the <code>name</code> attributes on the <code>&lt;form&gt;</code> and <code>&lt;input&gt;</code> elements. These make sure the form’s <code>FormController</code> instance, that holds the state of the form, is exposed on the scope. Giving the <code>&lt;input&gt;</code> elements names exposes <em>their</em> state on the <code>FormController</code>. In other words, <code>loginForm</code> is now an actual expressions on the scope that we can use to evaluate data in our template.</p>
+
+<p>We also specify the <code>type</code> of each <code>&lt;input&gt;</code> which adds some default validations to the fields behind the scenes. In fact, we can visualize the form’s state by adding the following expression to our document:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html">{{ loginForm | json }}</code></pre></div>
+
+<p>While entering an email address, Angular automatically validates the data given to the field and exposes the state to <code>loginForm</code>. That means, as long as we’re entering data which isn’t valid, the <code>$error</code> property of <code>loginForm</code> gets extended with a new object <code>email</code> that has all information about the state of the field.</p>
+
+<div class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span><span class="w">
+  </span><span class="nt">"$error"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"$viewValue"</span><span class="p">:</span><span class="w"> </span><span class="s2">"invalid value"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"$validators"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+        </span><span class="nt">"$asyncValidators"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+        </span><span class="nt">"$parsers"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+        </span><span class="nt">"$formatters"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="kc">null</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="nt">"$viewChangeListeners"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+        </span><span class="nt">"$untouched"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"$touched"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"$pristine"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"$dirty"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"$valid"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"$invalid"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"$error"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nt">"$name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"email"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"$options"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="err">...</span><span class="w">
+</span><span class="err">}</span></code></pre></div>
+
+<p>In addition to that, due to adding <code>name</code> attributes to the field itself, there’s also an <code>email</code> and <code>password</code> property on <code>loginForm</code> which have an <code>$error</code> object themselves. The <code>$error</code> object on form fields is a simple key/value store that represents the error state for each applied validator on a field.</p>
+
+<div class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span><span class="w">
+  </span><span class="err">...</span><span class="w">
+  </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="err">...</span><span class="w">
+    </span><span class="nt">"$error"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="err">...</span><span class="w">
+  </span><span class="err">}</span><span class="w">
+</span><span class="p">}</span></code></pre></div>
+
+<p>So, in order to display a message when there’s an error with the default email validation (which we get automatically by specifying the <code>type</code>), all we need to do is to conditionally add a DOM node to the document like this:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;p</span> <span class="na">ng-if=</span><span class="s">"loginForm.email.$error.email"</span><span class="nt">&gt;</span>
+  Please enter a valid email
+<span class="nt">&lt;/p&gt;</span></code></pre></div>
+
+<p>Again, <code>loginForm.email</code> is the field reference, <code>$error.email</code> is the result of the <code>email</code> validation. To make it more clear, we can extend the example by adding a <code>required</code> attribute to the field, which also adds a validator to the field behind the scenes.</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"email"</span> <span class="na">ng-model=</span><span class="s">"email"</span> <span class="na">name=</span><span class="s">"email"</span> <span class="na">required</span><span class="nt">&gt;</span></code></pre></div>
+
+<p>Displaying an error message accordingly could look like this:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;p</span> <span class="na">ng-if=</span><span class="s">"loginForm.email.$error.required"</span><span class="nt">&gt;</span>
+  Please enter your email
+<span class="nt">&lt;/p&gt;</span></code></pre></div>
+
+<p>I think we get the idea. Now imagine instead of just two different validations, we have five validations for just one field and we want to display a message for each. The markup for our form gets out of control very quickly. Here’s how our <code>password</code> field could be extended with conditional messages.</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;label&gt;</span>Password:<span class="nt">&lt;/label&gt;</span>
+<span class="nt">&lt;input</span>
+  <span class="na">name=</span><span class="s">"password"</span>
+  <span class="na">ng-model=</span><span class="s">"password"</span>
+  <span class="na">type=</span><span class="s">"password"</span>
+  <span class="na">required</span>
+  <span class="na">minlength=</span><span class="s">"8"</span>
+  <span class="na">pattern=</span><span class="s">"..."</span>
+  <span class="na">validator4</span>
+  <span class="na">validator5</span>
+<span class="nt">&gt;</span>
+<span class="nt">&lt;p</span> <span class="na">ng-if=</span><span class="s">"loginForm.email.$error.required"</span><span class="nt">&gt;</span>...
+<span class="nt">&lt;p</span> <span class="na">ng-if=</span><span class="s">"loginForm.email.$error.minlength"</span><span class="nt">&gt;</span>...
+<span class="nt">&lt;p</span> <span class="na">ng-if=</span><span class="s">"loginForm.email.$error.pattern"</span><span class="nt">&gt;</span>...
+<span class="nt">&lt;p</span> <span class="na">ng-if=</span><span class="s">"loginForm.email.$error.validator4"</span><span class="nt">&gt;</span>...
+<span class="nt">&lt;p</span> <span class="na">ng-if=</span><span class="s">"loginForm.email.$error.validator5"</span><span class="nt">&gt;</span>...</code></pre></div>
+
+<p>We probably also want to control what message shows up when, especially when multiple messages occur at the same time. Try to build that with just <code>ngIf</code> directives all over the place. And this is where <code>ngMessages</code> comes into play.</p>
+
+<h2 id="displaying-messages-in-forms-with-ngmessages">Displaying messages in forms with <code>ngMessages</code></h2>
+
+<p><code>ngMessages</code> comes as a separate module. In order to use it, we first need to install it. One way to do so is to use npm:</p>
+
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span class="gp">$ </span>npm install angular-messages</code></pre></div>
+
+<p>Then, we need to embed the actual script in our document:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"path/to/angular-messages.js"</span><span class="nt">&gt;&lt;/script&gt;</span></code></pre></div>
+
+<p>Once done, we declare <code>ngMessages</code> as module dependency of our app and we are ready to go.</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html">angular.module('myApp', ['ngMessages']);</code></pre></div>
+
+<p>Alright. The module is now installed and ready to be used. Let’s take a look at what our login form would look when <code>ngMessages</code> is used. The module comes with two directives - <code>ngMessages</code> and <code>ngMessage</code>.</p>
+
+<p>Whereas <code>ngMessages</code> directive gets an expression that evaluates to an object where each member can control if a certain message is displayed or not, <code>ngMessage</code> directive is in charge of displaying that particular message.</p>
+
+<p>Things are a bit easier to understand when actual code is shown, so here’s what our DOM looks like when <code>ngMessages</code> is used:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;div</span> <span class="na">ng-messages=</span><span class="s">"loginForm.password.$error"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;p</span> <span class="na">ng-message=</span><span class="s">"required"</span><span class="nt">&gt;</span>...<span class="nt">&lt;/p&gt;</span>
+  <span class="nt">&lt;p</span> <span class="na">ng-message=</span><span class="s">"minlength"</span><span class="nt">&gt;</span>...<span class="nt">&lt;/p&gt;</span>
+  <span class="nt">&lt;p</span> <span class="na">ng-message=</span><span class="s">"pattern"</span><span class="nt">&gt;</span>...<span class="nt">&lt;/p&gt;</span>
+  <span class="nt">&lt;p</span> <span class="na">ng-message=</span><span class="s">"validator4"</span><span class="nt">&gt;</span>...<span class="nt">&lt;/p&gt;</span>
+  <span class="nt">&lt;p</span> <span class="na">ng-message=</span><span class="s">"validator5"</span><span class="nt">&gt;</span>...<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;/div&gt;</span></code></pre></div>
+
+<p>We have an element where <code>ngMessages</code> directive is applied. As mentioned earlier, <code>ngMessages</code> gets an expression that evaluates to an object where each member is either <code>true</code> or <code>false</code>. This fits perfectly to what <code>FormController</code> exposes on the scope, when fields have validations errors and a <code>name</code> attribute applied.</p>
+
+<p>With <code>ngMessage</code> directive, we can just conditionally display messages by providing it with a name of a validator that is applied to the corresponding form field. Now, whenever a validator declares the value of the password field invalid, it displays the message that belongs to it.</p>
+
+<p>In case we don’t want to pollute our DOM with additional elements, just to apply the directives, <code>ngMessages</code> and <code>ngMessage</code> are not restricted to attributes. We can also use them as elements. In that case, <code>for</code> and <code>when</code> attributes are needed to pass expressions accordingly.</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;ng-messages</span> <span class="na">for=</span><span class="s">"loginForm.password.$error"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;ng-message</span> <span class="na">when=</span><span class="s">"required"</span><span class="nt">&gt;</span>...<span class="nt">&lt;/ng-message&gt;</span>
+  <span class="nt">&lt;ng-message</span> <span class="na">when=</span><span class="s">"minlength"</span><span class="nt">&gt;</span>...<span class="nt">&lt;/ng-message&gt;</span>
+  <span class="nt">&lt;ng-message</span> <span class="na">when=</span><span class="s">"pattern"</span><span class="nt">&gt;</span>...<span class="nt">&lt;/ng-message&gt;</span>
+  <span class="nt">&lt;ng-message</span> <span class="na">when=</span><span class="s">"validator4"</span><span class="nt">&gt;</span>...<span class="nt">&lt;/ng-message&gt;</span>
+  <span class="nt">&lt;ng-message</span> <span class="na">when=</span><span class="s">"validator5"</span><span class="nt">&gt;</span>...<span class="nt">&lt;/ng-message&gt;</span>
+<span class="nt">&lt;/ng-messages&gt;</span></code></pre></div>
+
+<p>Taking a closer look at this code snippet, you might think this is a very familiar construct. Right. It looks pretty much like using <code>ngSwitch</code> and <code>ngSwitchWhen</code> directives. In fact, it <strong>is</strong> almost the same.</p>
+
+<p>So what is the difference and why do we want to use one version over the other? Well, it turns out <code>ngMessages</code> is much more powerful.</p>
+
+<h2 id="prioritization-and-multiple-messages">Prioritization and multiple messages</h2>
+
+<p>Only one message is displayed at a time by default when using <code>ngMessages</code>. However, there might be cases where we want to display multiple message for a single field at a time. This we cannot do with <code>ngSwitch</code>, since it only renders a single match of the given construct. In order to display multiple messages, we can apply the <code>ng-messages-multiple</code> attribute to our <code>ngMessages</code> directive. This causes all messages to be displayed where the corresponding validations fail.</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;ng-messages</span> <span class="na">ng-messages-multiple</span> <span class="na">for=</span><span class="s">"loginForm.password.$error"</span><span class="nt">&gt;</span>
+  ...
+<span class="nt">&lt;/ng-messages&gt;</span></code></pre></div>
+
+<p>Or, if we want to display a single one, we at least want to prioritize which message shows up when. For example, before we want to display a message that says the given value doesn’t match a particular pattern, we first want to make sure we have at least six characters (<code>minlength</code>) and therefore displaying a message for that first.</p>
+
+<p>We can do so by simply assembling our DOM accordingly. Messages that appear first in the DOM are also displayed first. The following construct displays a message for entering a value that is too short, before it informs the user that the given value doesn’t match certain pattern:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;ng-messages</span> <span class="na">for=</span><span class="s">"loginForm.password.$error"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;ng-message</span> <span class="na">when=</span><span class="s">"minlength"</span><span class="nt">&gt;</span>...<span class="nt">&lt;/ng-message&gt;</span>
+  <span class="nt">&lt;ng-message</span> <span class="na">when=</span><span class="s">"pattern"</span><span class="nt">&gt;</span>...<span class="nt">&lt;/ng-message&gt;</span>
+<span class="nt">&lt;/ng-messages&gt;</span></code></pre></div>
+
+<h2 id="reusing-existing-messages">Reusing existing messages</h2>
+
+<p>It gets even better. It’s pretty common to have the same messages for the same validations across many forms. Instead of redefining the same message over and over again to have it available in each and every form, <code>ngMessages</code> directive expects yet another optional attribute called <code>ng-messages-include</code> that lets us include predefined messages at different places in our application.</p>
+
+<p>All we need to do is to define a template that contains the messages we want to reuse and give it an id so we can reference it via <code>ng-messages-include</code>.</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"script/ng-template"</span> <span class="na">id=</span><span class="s">"required-message"</span><span class="nt">&gt;</span>
+  <span class="o">&lt;</span><span class="nx">ng</span><span class="o">-</span><span class="nx">message</span> <span class="nx">when</span><span class="o">=</span><span class="s2">"required"</span><span class="o">&gt;</span>
+    <span class="nx">This</span> <span class="nx">field</span> <span class="nx">is</span> <span class="nx">required</span><span class="o">!</span>
+  <span class="o">&lt;</span><span class="sr">/ng-messages</span><span class="err">&gt;
+</span><span class="nt">&lt;/script&gt;</span>
+
+<span class="nt">&lt;ng-messages</span> <span class="na">ng-messages-include=</span><span class="s">"required-message"</span> <span class="na">for=</span><span class="s">"loginForm.password.$error"</span><span class="nt">&gt;</span>
+  ...
+<span class="nt">&lt;/ng-messages&gt;</span>
+
+<span class="c">&lt;!-- somewhere else --&gt;</span>
+<span class="nt">&lt;ng-messages</span> <span class="na">ng-messages-include=</span><span class="s">"required-message"</span> <span class="na">for=</span><span class="s">"otherForm.field.$error"</span><span class="nt">&gt;</span>
+  ...
+<span class="nt">&lt;/ng-messages&gt;</span></code></pre></div>
+
+<p style="background: #f47676; border-radius: 0.3em; padding: 1em; border: red 1px solid;"><strong>Breaking change in Angular 1.4</strong>: <br /><code>ngMessagesInclude</code> is no longer an attribute in Angular 1.4. If you're using an Angular version &gt;= 1.4, we recommend reading <a href="http://blog.thoughtram.io/2015/06/06/ng-messages-revisited.html" tile="ngMessages revisited">this article</a> on breaking changes introduced in ngMessages.</p>
+
+<p>If the template is <em>not</em> present in the document, Angular performs a <code>$templateRequest</code> to fetch the template first.</p>
+
+<p>Now we’ve learned that how we can define templates in order to reuse messages at different places in our application. You might think that this is a scenario where <a href="http://webcomponents.org/articles/introduction-to-template-element/">HTML Templates</a> would be a better fit, instead of doing script overloading. I agree on that, since this is what the <code>&lt;template&gt;</code> element has been designed for. Unfortunately, at the time of writing this article, this was not supported, which is why I’ve created a corresponding issue <a href="https://github.com/angular/angular.js/issues/10846">here</a>.</p>
+
+<p>There’s a lot more to cover and I recommend heading over to the official <a href="https://docs.angularjs.org/api/ngMessages">docs</a> to learn everything you need to know. This module is not only a time-saver but also adds some very powerful features to our declarative world.</p>
+
+
+          
+
+
+
+
+        </div>
+
+        <div class="thtrm-subscriber">
+  <h3>Get updates on new articles and trainings.</h3>
+  <p>Join over 1400 other developers who get our content first.</p>
+  <form action="//thoughtram.us8.list-manage.com/subscribe/post?u=dfbb1507fbced5a20d9dc5698&amp;id=731f22cdca" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" novalidate>
+    <label for="mce-EMAIL"></label>
+    <input type="email" value="" name="EMAIL" placeholder="Your email address..." required>
+    <div style="position: absolute; left: -5000px;"><input type="text" name="b_dfbb1507fbced5a20d9dc5698_731f22cdca" tabindex="-1" value=""></div>
+    <input type="submit" value="Subscribe" name="subscribe" class="thtrm-cta thtrm-cta--small">
+  </form>
+</div>
+
+
+
+        <div class="thtrm-social-links">
+            <!-- Sharingbutton Facebook -->
+            <a class="resp-sharing-button__link" href="https://facebook.com/sharer/sharer.php?u=http%3A%2F%2Fblog.thoughtram.io/angularjs/2015/01/23/exploring-angular-1.3-ngMessages.html" target="_blank" aria-label="Share on Facebook">
+              <div class="resp-sharing-button resp-sharing-button--facebook resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M18.768,7.465H14.5V5.56c0-0.896,0.594-1.105,1.012-1.105s2.988,0,2.988,0V0.513L14.171,0.5C10.244,0.5,9.5,3.438,9.5,5.32 v2.145h-3v4h3c0,5.212,0,12,0,12h5c0,0,0-6.85,0-12h3.851L18.768,7.465z"/>
+                    </g>
+                </svg>
+                </div>Share on Facebook</div>
+            </a>
+
+            <!-- Sharingbutton Twitter -->
+            <a class="resp-sharing-button__link" href="https://twitter.com/intent/tweet/?text=ngMessages%20in%20Angular%201.3&amp;url=http://blog.thoughtram.io/angularjs/2015/01/23/exploring-angular-1.3-ngMessages.html" target="_blank" aria-label="Share on Twitter">
+              <div class="resp-sharing-button resp-sharing-button--twitter resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M23.444,4.834c-0.814,0.363-1.5,0.375-2.228,0.016c0.938-0.562,0.981-0.957,1.32-2.019c-0.878,0.521-1.851,0.9-2.886,1.104 C18.823,3.053,17.642,2.5,16.335,2.5c-2.51,0-4.544,2.036-4.544,4.544c0,0.356,0.04,0.703,0.117,1.036 C8.132,7.891,4.783,6.082,2.542,3.332C2.151,4.003,1.927,4.784,1.927,5.617c0,1.577,0.803,2.967,2.021,3.782 C3.203,9.375,2.503,9.171,1.891,8.831C1.89,8.85,1.89,8.868,1.89,8.888c0,2.202,1.566,4.038,3.646,4.456 c-0.666,0.181-1.368,0.209-2.053,0.079c0.579,1.804,2.257,3.118,4.245,3.155C5.783,18.102,3.372,18.737,1,18.459 C3.012,19.748,5.399,20.5,7.966,20.5c8.358,0,12.928-6.924,12.928-12.929c0-0.198-0.003-0.393-0.012-0.588 C21.769,6.343,22.835,5.746,23.444,4.834z"/>
+                    </g>
+                </svg>
+                </div>Share on Twitter</div>
+            </a>
+
+            <!-- Sharingbutton Google+ -->
+            <a class="resp-sharing-button__link" href="https://plus.google.com/share?url=http%3A%2F%2Fblog.thoughtram.io/angularjs/2015/01/23/exploring-angular-1.3-ngMessages.html" target="_blank" aria-label="Share on Google+">
+              <div class="resp-sharing-button resp-sharing-button--google resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M11.366,12.928c-0.729-0.516-1.393-1.273-1.404-1.505c0-0.425,0.038-0.627,0.988-1.368 c1.229-0.962,1.906-2.228,1.906-3.564c0-1.212-0.37-2.289-1.001-3.044h0.488c0.102,0,0.2-0.033,0.282-0.091l1.364-0.989 c0.169-0.121,0.24-0.338,0.176-0.536C14.102,1.635,13.918,1.5,13.709,1.5H7.608c-0.667,0-1.345,0.118-2.011,0.347 c-2.225,0.766-3.778,2.66-3.778,4.605c0,2.755,2.134,4.845,4.987,4.91c-0.056,0.22-0.084,0.434-0.084,0.645 c0,0.425,0.108,0.827,0.33,1.216c-0.026,0-0.051,0-0.079,0c-2.72,0-5.175,1.334-6.107,3.32C0.623,17.06,0.5,17.582,0.5,18.098 c0,0.501,0.129,0.984,0.382,1.438c0.585,1.046,1.843,1.861,3.544,2.289c0.877,0.223,1.82,0.335,2.8,0.335 c0.88,0,1.718-0.114,2.494-0.338c2.419-0.702,3.981-2.482,3.981-4.538C13.701,15.312,13.068,14.132,11.366,12.928z M3.66,17.443 c0-1.435,1.823-2.693,3.899-2.693h0.057c0.451,0.005,0.892,0.072,1.309,0.2c0.142,0.098,0.28,0.192,0.412,0.282 c0.962,0.656,1.597,1.088,1.774,1.783c0.041,0.175,0.063,0.35,0.063,0.519c0,1.787-1.333,2.693-3.961,2.693 C5.221,20.225,3.66,19.002,3.66,17.443z M5.551,3.89c0.324-0.371,0.75-0.566,1.227-0.566l0.055,0 c1.349,0.041,2.639,1.543,2.876,3.349c0.133,1.013-0.092,1.964-0.601,2.544C8.782,9.589,8.363,9.783,7.866,9.783H7.865H7.844 c-1.321-0.04-2.639-1.6-2.875-3.405C4.836,5.37,5.049,4.462,5.551,3.89z"/>
+                        <polygon points="23.5,9.5 20.5,9.5 20.5,6.5 18.5,6.5 18.5,9.5 15.5,9.5 15.5,11.5 18.5,11.5 18.5,14.5 20.5,14.5 20.5,11.5  23.5,11.5   "/>
+                    </g>
+                </svg>
+                </div>Share on Google+</div>
+            </a>
+        </div>
+
+        <h3 class="thtrm-section-headline thtrm-section-headline--with-margin">Author</h3>
+        <div class="thtrm-article-author">
+          <span class="thtrm-article-author-avatar"><img src="/images/author-pascal.jpg" alt="Picture of Pascal Precht"></span>
+          <div class="thtrm-article-author-matter">
+            <h4 class="thtrm-article-author-name">Pascal Precht</h4>
+            <p class="thtrm-article-author-text">Pascal is a front-end engineer and a Angular Developer Expert nominated by Google. He created the angular-translate module, is an Angular 2 contributor and also part of the Angular 2 Docs Authoring team.</p>
+            <p>
+              <a class="thtrm-article-author-cta thtrm-article-author-cta-twitter" href="http://twitter.com/PascalPrecht" title="Pascal Precht on Twitter">Twitter</a>
+              <a class="thtrm-article-author-cta" href="http://github.com/PascalPrecht" title="Pascal Precht on GitHub">GitHub</a>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="thtrm-constraint">
+
+        
+        <h4 class="thtrm-section-headline thtrm-section-headline--with-big-margin thtrm-section-headline--centered">Related Posts</h4>
+        <ul class="thtrm-three-column-list thtrm-three-column-list--with-padding">
+        
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angularjs/2015/02/19/futuristic-routing-in-angular.html" title="Futuristic Routing in Angular">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/fallback.jpeg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Futuristic Routing in Angular</h3>
+                <p>An this article we discuss the new router APIs and how it's going to change the way we implement component...</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angularjs/2015/01/14/exploring-angular-1.3-speed-up-with-applyAsync.html" title="Go fast with $applyAsync in Angular 1.3">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/fallback.jpeg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Go fast with $applyAsync in Angular 1.3</h3>
+                <p>Angular 1.3 comes with a feature to share a running $digest cycle across multiple XHR calls. This articles details how...</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angularjs/2015/01/11/exploring-angular-1.3-validators-pipeline.html" title="Validators Pipeline in Angular 1.3">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/fallback.jpeg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Validators Pipeline in Angular 1.3</h3>
+                <p>In this article we discuss a newly introduced feature called custom validators, so we don't have to hijack parsers and...</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angularjs/2015/01/02/exploring-angular-1.3-bindToController.html" title="Binding to Directive Controllers in Angular 1.3">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/fallback.jpeg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Binding to Directive Controllers in Angular 1.3</h3>
+                <p>In this article we are going to take a look how to bind values to directive controllers to make them...</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angularjs/2014/12/22/exploring-angular-1.3-disabling-debug-info.html" title="Disabling Debug Info in Angular 1.3">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/fallback.jpeg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Disabling Debug Info in Angular 1.3</h3>
+                <p>This article details how to give your app a performance boost in production environments with just a single line of...</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angularjs/2014/12/18/exploring-angular-1.3-es6-style-promises.html" title="ES6 Style Promises in Angular 1.3">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/fallback.jpeg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>ES6 Style Promises in Angular 1.3</h3>
+                <p>Angular 1.3 starts streamlining its promise APIs with the ES2015 standard. This article details what these additions mean to us....</p>
+              </div>
+            </a>
+          </li>
+        
+        
+        </ul>
+        
+
+      
+
+      </div>
+    </main>
+    <footer role="contentinfo" class="thtrm-footer thtrm-footer--slim">
+  <div class="thtrm-footer-text">
+    <img class="thtrm-footer-logo" alt="thoughtram brain" src="/images/thoughtram-brain-white.png">
+    <p>This website was created in collaboration with <a href="http://twitter.com/timche_" title="Tim Cheung on Twitter"><strong>Tim Cheung</strong></a> and <a href="http://twitter.com/tim_hartmann_" title="Tim Hartmann on Twitter"><strong>Tim Hartmann</strong></a>.</p>
+    <p ><a href="http://thoughtram.io/code-of-conduct.html" title="Code of Conduct">Code of Conduct</a> &bullet; <a href="http://thoughtram.io/imprint.html" title="Legal Notice">Legal notice</a></p>
+    <p class="thtrm-footer-bottom">&copy; 2014-2017 thoughtram GmbH</p>
+  </div>
+</footer>
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-51360648-2', 'auto');
+ga('send', 'pageview');
+
+var form = document.getElementById('search-form');
+var eventCta = document.getElementById('event-cta');
+
+if (eventCta) {
+
+  eventCta.addEventListener('click', function (event) {
+    event.preventDefault();
+
+    setTimeout(clickLink, 1000);
+
+    function clickLink() {
+      window.location.replace(eventCta.getAttribute('href'));
+    }
+
+    ga('send', 'event', {
+      eventCategory: 'Event Link',
+      eventAction: 'click',
+      eventLabel: eventCta.getAttribute('title'),
+      hitCallback: clickLink
+    });
+  });
+}
+
+if (form) {
+
+  var searchTerm = document.getElementById('search-term');
+
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    var formSubmitted = false;
+
+    setTimeout(submitForm, 1000);
+
+    function submitForm() {
+      if (!formSubmitted) {
+        formSubmitted = true;
+        form.submit();
+      }
+    }
+
+    ga('send', 'event', {
+      eventCategory: 'Search Form',
+      eventAction: 'submit',
+      eventLabel: searchTerm.value,
+      hitCallback: submitForm
+    });
+  });
+}
+</script>
+
+
+
+    <script src="/scripts/stickyfill.js"></script>
+    <script src="/scripts/linkjuice/dist/linkjuice.js"></script>
+    <script>
+    (function (doc, win) {
+
+      linkjuice.init('.thtrm-article', {
+        selector: ['h2', 'h3'],
+        icon: ''
+      });
+
+      if (win.matchMedia && win.matchMedia('(min-width: 1200px)').matches) {
+        var stickyElements = doc.querySelectorAll('.is-sticky');
+
+        for (var i = stickyElements.length - 1; i >= 0; i--) {
+          var el = stickyElements[i];
+
+          if (el.classList.contains('thtrm-toc')) {
+            el.classList.add('thtrm-toc--sticky');
+            el.classList.add('thtrm-toc--faded');
+          } 
+          if (el.classList.contains('thtrm-ad')) {
+            el.classList.add('thtrm-ad--sticky');
+            el.classList.add('thtrm-ad--description');
+          }
+
+          Stickyfill.add(el);
+        }
+      }
+    }(document, window));
+    </script>
+  </body>
+</html>

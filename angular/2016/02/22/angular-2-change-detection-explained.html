@@ -1,0 +1,670 @@
+
+
+
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Wonder how change detection in Angular works?  This article is a write-up of that talk and discusses change detection and tricks to make is super fast.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="thoughtram">
+    <title>Angular Change Detection Explained by thoughtram</title>
+    <meta name="google-site-verification" content="o9eGPEgIETEqYGombq7NiQuBIB_qa6gz1yAL7PxKyK0">
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#4D8799">
+    <link rel="icon" sizes="192x192" href="/images/touch/chrome-touch-icon-192x192.png">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="thoughtram">
+    <link rel="apple-touch-icon" href="/images/touch/apple-touch-icon.png">
+
+    <!-- Tile icon for Win8 (144x144 + tile color) -->
+    <meta name="msapplication-TileImage" content="/images/touch/ms-touch-icon-144x144-precomposed.png">
+    <meta name="msapplication-TileColor" content="#4D8799">
+
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Angular Change Detection Explained">
+    <meta property="og:description" content="Wonder how change detection in Angular works?  This article is a write-up of that talk and discusses change detection and tricks to make is super fast.">
+    <meta property="og:url" content="http://blog.thoughtram.io/angular/2016/02/22/angular-2-change-detection-explained.html">
+    <meta property="og:site_name" content="Articles by thoughtram">
+    <meta property="og:image" content="http://blog.thoughtram.io/images/change-detection-explained-bg.jpeg">
+    <meta property="og:publisher" content="http://www.facebook.com/thoughtram">
+
+    <meta property="twitter:card" content="summary">
+    <meta property="twitter:title" content="Angular Change Detection Explained">
+    <meta property="twitter:site" content="thoughtram Blog">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css" type="text/css">
+  </head>
+  <body class="sub-site">
+    <!-- Add your site or app content here -->
+
+    <!--[if lt IE 10]>
+        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <header class="thtrm-header" role="banner">
+      <div class="thtrm-header-bar">
+        <div class="thtrm-constraint">
+          <a href="http://thoughtram.io" class="thtrm-header-logo-link" title="thoughtram.io Start Page"><h1 class="thtrm-header-logo">thoughtram</h1></a>
+          <div class="thtrm-header-menu-wrapper">
+            <span role="button" tabindex="0" class="thtrm-header-menu-label">Menu</span>
+            <ul class="thtrm-header-menu">
+              <li><a title="Training" class="thtrm-header-menu-item" href="http://thoughtram.io/training.html">Training</a></li>
+              <li><a title="Code Review" class="thtrm-header-menu-item" href="http://thoughtram.io/code-review.html">Code Review</a></li>
+              <li><a title="Casts" class="thtrm-header-menu-item " href="http://casts.thoughtram.io">Casts</a></li>
+              <li><a title="Blog" class="thtrm-header-menu-item" href="/">Blog</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main role="main" class="thtrm-main">
+    <div class="thtrm-banner" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%), url('/images/change-detection-explained-bg.jpeg');">
+        <hgroup class="thtrm-banner-container">
+          <div class="thtrm-constraint thtrm-constraint--slim">
+            <h2 class="thtrm-banner-text">Angular Change Detection Explained</h2>
+            <span>by <a href="http://twitter.com/" title="Pascal Precht on Twitter">Pascal Precht</a> on Feb 22, 2016, last updated on Dec 18, 2016<br>18 minute read</span>
+
+          </div>
+        </hgroup>
+      </div>
+      <div class="thtrm-constraint thtrm-constraint--slim">
+
+        <div class="thtrm-article">
+          <section class="thtrm-ad thtrm-section thtrm-section--is-promo is-sticky">
+  <img width="100" src="/images/angular2-shield-inverse.svg">
+  <h3 class="thtrm-section-headline">Need private training?</h3>
+  <p class="thtrm-section-text">Get customized training for your corporation</p>
+  <a href="mailto:hello@thoughtram.io" title="Request Training Quote" id="event-cta" class="thtrm-layout-divider-cta">Request quote <strong>&rarr;</strong></a>
+</section>
+
+
+          
+          <p style="background-color: lightgoldenrodyellow; border: solid 2px #f9dead; padding: 1em; text-align: center; border-radius: 0.3em;">Contents are based on Angular version <strong>>= 2.x</strong> unless explicitely stated differently.</p>
+          
+
+          <p><a href="http://ng-nl.org">NG-NL</a> has happened and it was awesome! I had the honour of giving a talk about change detection in Angular and it seemed to be a huge success as attendees liked it a lot. With this article, we’d like to transform the talk into a written version, so everyone can read about how Angular’s change detection works and how to make it faster for our use cases. If you’re interested in the talk, you can view the <a href="http://pascalprecht.github.io/slides/angular-2-change-detection-explained/#/">slides here</a> and <s>as soon as the talk recording is up, you'll find it here as well</s> <a href="https://www.youtube.com/watch?v=CUxD91DWkGM">watch the recording</a> on Youtube.</p>
+
+<p>Now let’s take a look at this beast.</p>
+
+<div class="thtrm-toc is-sticky">
+  <h3 class="no_toc" id="table-of-contents">TABLE OF CONTENTS</h3>
+<ul id="markdown-toc">
+  <li><a href="#whats-change-detection-anyways" id="markdown-toc-whats-change-detection-anyways">What’s Change Detection anyways?</a></li>
+  <li><a href="#what-causes-change" id="markdown-toc-what-causes-change">What causes change?</a></li>
+  <li><a href="#who-notifies-angular" id="markdown-toc-who-notifies-angular">Who notifies Angular?</a></li>
+  <li><a href="#change-detection" id="markdown-toc-change-detection">Change Detection</a></li>
+  <li><a href="#performance" id="markdown-toc-performance">Performance</a></li>
+  <li><a href="#smarter-change-detection" id="markdown-toc-smarter-change-detection">Smarter Change Detection</a></li>
+  <li><a href="#immutable-objects" id="markdown-toc-immutable-objects">Immutable Objects</a></li>
+  <li><a href="#reducing-the-number-of-checks" id="markdown-toc-reducing-the-number-of-checks">Reducing the number of checks</a></li>
+  <li><a href="#observables" id="markdown-toc-observables">Observables</a></li>
+  <li><a href="#theres-more" id="markdown-toc-theres-more">There’s more…</a></li>
+  <li><a href="#credits" id="markdown-toc-credits">Credits</a></li>
+</ul>
+
+</div>
+
+<h2 id="whats-change-detection-anyways">What’s Change Detection anyways?</h2>
+
+<p>The basic task of change detection is to take the internal state of a program and make it somehow visible to the user interface. This state can be any kind of objects, arrays, primitives, … just any kind of JavaScript data structures.</p>
+
+<p>This state might end up as paragraphs, forms, links or buttons in the user interface and specifically on the web, it’s the Document Object Model (DOM). So basically we take data structures as input and generate DOM output to display it to the user. We call this process rendering.</p>
+
+<p><img style="background: #0c4eb2; padding: 0 1em;" src="/images/cd-4.svg" /></p>
+
+<p>However, it gets trickier when a change happens at runtime. Some time later when the DOM has already been rendered. How do we figure out what has changed in our model, and where do we need to update the DOM? Accessing the DOM tree is always expensive, so not only do we need to find out where updates are needed, but we also want to keep that access as tiny as possible.</p>
+
+<p>This can be tackled in many different ways. One way, for instance, is simply making a http request and re-rendering the whole page. Another approach is the concept of diffing the DOM of the new state with the previous state and only render the difference, which is what ReactJS is doing with <strong>Virtual DOM</strong>.</p>
+
+<p><a href="http://twitter.com/teropa">Tero</a> has written an awesome article on <a href="http://teropa.info/blog/2015/03/02/change-and-its-detection-in-javascript-frameworks.html">Change and its detection in JavaScript frameworks</a>, we recommend checking it out if you’re more interested in how different frameworks solve this issue. In this article we’re going to focus on Angular version &gt;= 2.x.</p>
+
+<p>So basically the goal of change detection is always projecting data and its change.</p>
+
+<h2 id="what-causes-change">What causes change?</h2>
+
+<p>Now that we know what change detection is all about, we might wonder, when exactly can such a change happen? When does Angular know that it has to update the view? Well, let’s take a look at the following code:</p>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
+  <span class="na">template</span><span class="p">:</span> <span class="s2">`
+    &lt;h1&gt;{{firstname}} {{lastname}}&lt;/h1&gt;
+    &lt;button (click)="changeName()"&gt;Change name&lt;/button&gt;
+  `</span>
+<span class="p">})</span>
+<span class="kr">class</span> <span class="nx">MyApp</span> <span class="p">{</span>
+
+  <span class="nl">firstname</span><span class="p">:</span><span class="nx">string</span> <span class="o">=</span> <span class="s1">'Pascal'</span><span class="p">;</span>
+  <span class="nl">lastname</span><span class="p">:</span><span class="nx">string</span> <span class="o">=</span> <span class="s1">'Precht'</span><span class="p">;</span>
+
+  <span class="nx">changeName</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">firstname</span> <span class="o">=</span> <span class="s1">'Brad'</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">lastname</span> <span class="o">=</span> <span class="s1">'Green'</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p>If this is the first time you’re seeing an Angular component, you might want to read our article on <a href="/angular/2015/04/09/developing-a-tabs-component-in-angular-2.html">building a tabs component</a>.</p>
+
+<p>The component above simply displays two properties and provides a method to change them when the button in the template is clicked. The moment this particular button is clicked is the moment when application state has changed, because it changes the properties of the component. That’s the moment we want to update the view.</p>
+
+<p>Here’s another one:</p>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="err">@</span><span class="nx">Component</span><span class="p">()</span>
+<span class="kr">class</span> <span class="nx">ContactsApp</span> <span class="kr">implements</span> <span class="nx">OnInit</span><span class="p">{</span>
+
+  <span class="nl">contacts</span><span class="p">:</span><span class="nx">Contact</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[];</span>
+
+  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">http</span><span class="p">:</span> <span class="nx">Http</span><span class="p">)</span> <span class="p">{}</span>
+
+  <span class="nx">ngOnInit</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">http</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'/contacts'</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">res</span> <span class="o">=&gt;</span> <span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">())</span>
+      <span class="p">.</span><span class="nx">subscribe</span><span class="p">(</span><span class="nx">contacts</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">contacts</span> <span class="o">=</span> <span class="nx">contacts</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p>This component holds a list of contacts and when it initializes, it performs a http request. Once this request comes back, the list gets updated. Again, at this point, our application state has changed so we will want to update the view.</p>
+
+<p>Basically application state change can be caused by three things:</p>
+
+<ul>
+  <li><strong>Events</strong> - <code>click</code>, <code>submit</code>, …</li>
+  <li><strong>XHR</strong> - Fetching data from a remote server</li>
+  <li><strong>Timers</strong> - <code>setTimeout()</code>, <code>setInterval()</code></li>
+</ul>
+
+<p>They are all asynchronous. Which brings us to the conclusion that, basically whenever some asynchronous operation has been performed, our application state might have changed. This is when someone needs to tell Angular to update the view.</p>
+
+<h2 id="who-notifies-angular">Who notifies Angular?</h2>
+
+<p>Alright, we now know what causes application state change. But what is it that tells Angular, that at this particular moment, the view has to be updated?</p>
+
+<p>Angular allows us to use native APIs directly. There are no interceptor methods we have to call so Angular gets notified to update the DOM. Is that pure magic?</p>
+
+<p>If you’ve followed our latest articles, you know that <a href="/angular/2016/01/22/understanding-zones.html">Zones</a> take care of this. In fact, Angular comes with its own zone called <code>NgZone</code>, which we’ve written about in our article <a href="/angular/2016/02/01/zones-in-angular-2.html">Zones in Angular</a>. You might want to read that, too.</p>
+
+<p>The short version is, that somewhere in Angular’s source code, there’s this thing called <code>ApplicationRef</code>, which listens to <code>NgZones</code> <code>onTurnDone</code> event. Whenever this event is fired, it executes a <code>tick()</code> function which essentially performs change detection.</p>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="c1">// very simplified version of actual source</span>
+<span class="kr">class</span> <span class="nx">ApplicationRef</span> <span class="p">{</span>
+
+  <span class="nl">changeDetectorRefs</span><span class="p">:</span><span class="nx">ChangeDetectorRef</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[];</span>
+
+  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">zone</span><span class="p">:</span> <span class="nx">NgZone</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">zone</span><span class="p">.</span><span class="nx">onTurnDone</span>
+      <span class="p">.</span><span class="nx">subscribe</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">zone</span><span class="p">.</span><span class="nx">run</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">tick</span><span class="p">());</span>
+  <span class="p">}</span>
+
+  <span class="nx">tick</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">changeDetectorRefs</span>
+      <span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">ref</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">ref</span><span class="p">.</span><span class="nx">detectChanges</span><span class="p">());</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<h2 id="change-detection">Change Detection</h2>
+
+<p>Okay cool, we now know when change detection is triggered, but how is it performed? Well, the first thing we need to notice is that, in Angular, <strong>each component has its own change detector</strong>.</p>
+
+<p><img style="background: #0c4eb2; padding: 0 1em;" src="/images/cd-tree-2.svg" /></p>
+
+<p>This is a significant fact, since this allows us to control, for each component individually, how and when change detection is performed! More on that later.</p>
+
+<p>Let’s assume that somewhere in our component tree an event is fired, maybe a button has been clicked. What happens next? We just learned that zones execute the given handler and notify Angular when the turn is done, which eventually causes Angular to perform change detection.</p>
+
+<p><img style="background: #0c4eb2; padding: 0 1em;" src="/images/cd-tree-7.svg" /></p>
+
+<p>Since each component has its own change detector, and an Angular application consists of a component tree, the logical result is that we’re having a <strong>change detector tree</strong> too. This tree can also be viewed as a directed graph where data always flows from top to bottom.</p>
+
+<p>The reason why data flows from top to bottom, is because change detection is also always performed from top to bottom for every single component, every single time, starting from the root component. This is awesome, as unidirectional data flow is more predictable than cycles. We always know where the data we use in our views comes from, because it can only result from its component.</p>
+
+<p>Another interesting observation is that change detection gets stable after a single pass. Meaning that, if one of our components causes any additional side effects after the first run during change detection, Angular will throw an error.</p>
+
+<h2 id="performance">Performance</h2>
+
+<p>By default, even if we have to check every single component every single time an event happens, Angular is very fast. It can perform hundreds of thousands of checks within a couple of milliseconds. This is mainly due to the fact that <strong>Angular generates VM friendly code</strong>.</p>
+
+<p>What does that mean? Well, when we said that each component has its own change detector, it’s not like there’s this single generic thing in Angular that takes care of change detection for each individual component.</p>
+
+<p>The reason for that is, that it has to be written in a dynamic way, so it can check every component no matter what its model structure looks like. VMs don’t like this sort of dynamic code, because they can’t optimize it. It’s considered <strong>polymorphic</strong> as the shape of the objects isn’t always the same.</p>
+
+<p><strong>Angular creates change detector classes at runtime</strong> for each component, which are monomorphic, because they know exactly what the shape of the component’s model is. VMs can perfectly optimize this code, which makes it very fast to execute. The good thing is that we don’t have to care about that too much, because Angular does it automatically.</p>
+
+<p>Check out <a href="http://twitter.com/victorsavkin">Victor Savkin’s</a> talk on <a href="https://www.youtube.com/watch?v=jvKGQSFQf10">Change Detection Reinvented</a> for a deeper explanation on this.</p>
+
+<h2 id="smarter-change-detection">Smarter Change Detection</h2>
+
+<p>Again, Angular has to check every component every single time an event happens because… well, maybe the application state has changed. But wouldn’t it be great if we could tell Angular to <strong>only</strong> run change detection for the parts of the application that changed their state?</p>
+
+<p>Yes it would, and in fact we can! It turns out there are data structures that give us some guarantees of when something has changed or not - <strong>Immutables</strong> and <strong>Observables</strong>. If we happen to use these structures or types, and we tell Angular about it, change detection can be much much faster. Okay cool, but how so?</p>
+
+<p><strong>Understanding Mutability</strong></p>
+
+<p>In order to understand why and how e.g. immutable data structures can help, we need to understand what mutability means. Assume we have the following component:</p>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
+  <span class="na">template</span><span class="p">:</span> <span class="s1">'&lt;v-card [vData]="vData"&gt;&lt;/v-card&gt;'</span>
+<span class="p">})</span>
+<span class="kr">class</span> <span class="nx">VCardApp</span> <span class="p">{</span>
+
+  <span class="nx">constructor</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">vData</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="na">name</span><span class="p">:</span> <span class="s1">'Christoph Burgdorf'</span><span class="p">,</span>
+      <span class="na">email</span><span class="p">:</span> <span class="s1">'christoph@thoughtram.io'</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="nx">changeData</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">vData</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="s1">'Pascal Precht'</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p><code>VCardApp</code> uses <code>&lt;v-card&gt;</code> as a child component, which has an input property <code>vData</code>. We’re passing data to that component with <code>VCardApp</code>’s own <code>vData</code> property. <code>vData</code> is an object with two properties. In addition, there’s a method <code>changeData()</code>, which changes the name of <code>vData</code>. No magic going on here.</p>
+
+<p>The important part is that <code>changeData()</code> mutates <code>vData</code> by changing its <code>name</code> property. Even though that property is going to be changed, the <code>vData</code> reference itself stays the same.</p>
+
+<p>What happens when change detection is performed, assuming that some event causes <code>changeData()</code> to be executed? First, <code>vData.name</code> gets changed, and then it’s passed to <code>&lt;v-card&gt;</code>. <code>&lt;v-card&gt;</code>’s change detector now checks if the given <code>vData</code> is still the same as before, and yes, it is. The reference hasn’t changed. However, the <code>name</code> property has changed, so Angular will perform change detection for that object nonetheless.</p>
+
+<p>Because objects are mutable by default in JavaScript (except for primitives), Angular has to be conservative and run change detection every single time for every component when an event happens.</p>
+
+<p>This is where immutable data structures come into play.</p>
+
+<h2 id="immutable-objects">Immutable Objects</h2>
+
+<p>Immutable objects give us the guarantee that objects can’t change. Meaning that, if we use immutable objects and we want to make a change on such an object, we’ll always get a new reference with that change, as the original object is immutable.</p>
+
+<p>This pseudo code demonstrates it:</p>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">vData</span> <span class="o">=</span> <span class="nx">someAPIForImmutables</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+              <span class="na">name</span><span class="p">:</span> <span class="s1">'Pascal Precht'</span>
+            <span class="p">});</span>
+
+<span class="kd">var</span> <span class="nx">vData2</span> <span class="o">=</span> <span class="nx">vData</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">'name'</span><span class="p">,</span> <span class="s1">'Christoph Burgdorf'</span><span class="p">);</span>
+
+<span class="nx">vData</span> <span class="o">===</span> <span class="nx">vData2</span> <span class="c1">// false</span></code></pre></div>
+
+<p><code>someAPIForImmutables</code> can be any API we want to use for immutable data structures. However, as we can see, we can’t simply change the <code>name</code> property. We’ll get a new object with that particular change and this object has a new reference.
+Or in short: <strong>If there’s a change, we get a new reference</strong>.</p>
+
+<h2 id="reducing-the-number-of-checks">Reducing the number of checks</h2>
+
+<p>Angular can skip entire change detection subtrees when input properties don’t change. We just learned that a “change” means “new reference”. If we use immutable objects in our Angular app, all we need to do is tell Angular that a component can skip change detection, if its input hasn’t changed.</p>
+
+<p>Let’s see how that works by taking a look at <code>&lt;v-card&gt;</code>:</p>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
+  <span class="na">template</span><span class="p">:</span> <span class="s2">`
+    &lt;h2&gt;{{vData.name}}&lt;/h2&gt;
+    &lt;span&gt;{{vData.email}}&lt;/span&gt;
+  `</span>
+<span class="p">})</span>
+<span class="kr">class</span> <span class="nx">VCardCmp</span> <span class="p">{</span>
+  <span class="err">@</span><span class="nx">Input</span><span class="p">()</span> <span class="nx">vData</span><span class="p">;</span>
+<span class="p">}</span></code></pre></div>
+
+<p>As we can see, <code>VCardCmp</code> only depends on its input properties. Great. We can tell Angular to skip change detection for this component’s subtree if none of its inputs changed by setting the change detection strategy to <code>OnPush</code> like this:</p>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
+  <span class="na">template</span><span class="p">:</span> <span class="s2">`
+    &lt;h2&gt;{{vData.name}}&lt;/h2&gt;
+    &lt;span&gt;{{vData.email}}&lt;/span&gt;
+  `</span><span class="p">,</span>
+  <span class="na">changeDetection</span><span class="p">:</span> <span class="nx">ChangeDetectionStrategy</span><span class="p">.</span><span class="nx">OnPush</span>
+<span class="p">})</span>
+<span class="kr">class</span> <span class="nx">VCardCmp</span> <span class="p">{</span>
+  <span class="err">@</span><span class="nx">Input</span><span class="p">()</span> <span class="nx">vData</span><span class="p">;</span>
+<span class="p">}</span></code></pre></div>
+
+<p>That’s it! Now imagine a bigger component tree. We can skip entire subtrees when immutable objects are used and Angular is informed accordingly.</p>
+
+<p><img style="background: #0c4eb2; padding: 0 1em;" src="/images/cd-tree-8.svg" /></p>
+
+<p><a href="http://twitter.com/jvandemo">Jurgen Van De Moere</a> has written an <a href="http://www.jvandemo.com/how-i-optimized-minesweeper-using-angular-2-and-immutable-js-to-make-it-insanely-fast/">in-depth article</a> on how he made a minesweeper game built with Angular and Immutable.js blazingly fast. Make sure to check that one out.</p>
+
+<h2 id="observables">Observables</h2>
+
+<p>As mentioned earlier, Observables also give us some certain guarantees of when a change has happened. Unlike immutable objects, they don’t give us new references when a change is made. Instead, they fire events we can subscribe to in order to react to them.</p>
+
+<p>So, if we use Observables and we want to use <code>OnPush</code> to skip change detector subtrees, but the reference of these objects will never change, how do we deal with that? It turns out Angular has a <strong>very smart</strong> way to enable paths in the component tree to be checked for certain events, which is exactly what we need in that case.</p>
+
+<p>To understand what that means, let’s take a look at this component:</p>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
+  <span class="na">template</span><span class="p">:</span> <span class="s1">'{{counter}}'</span><span class="p">,</span>
+  <span class="na">changeDetection</span><span class="p">:</span> <span class="nx">ChangeDetectionStrategy</span><span class="p">.</span><span class="nx">OnPush</span>
+<span class="p">})</span>
+<span class="kr">class</span> <span class="nx">CartBadgeCmp</span> <span class="p">{</span>
+
+  <span class="err">@</span><span class="nx">Input</span><span class="p">()</span> <span class="nx">addItemStream</span><span class="p">:</span><span class="nx">Observable</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="nx">counter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+  <span class="nx">ngOnInit</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">addItemStream</span><span class="p">.</span><span class="nx">subscribe</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">counter</span><span class="o">++</span><span class="p">;</span> <span class="c1">// application state changed</span>
+    <span class="p">})</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p>Let’s say we build an e-commerce application with a shopping cart. Whenever a user puts a product into the shopping cart, we want a little counter to show up in our UI, so the user can see the amount of products in the cart.</p>
+
+<p><code>CartBadgeCmp</code> does exactly that. It has a <code>counter</code> and an input property <code>addItemStream</code>, which is a stream of events that gets fired, whenever a product is added to the shopping cart.</p>
+
+<p>We won’t go into much detail on how observables work in this article. If you want to learn more about observables, make sure to read our article on <a href="http://blog.thoughtram.io/angular/2016/01/06/taking-advantage-of-observables-in-angular2.html">taking advantage of Observables in Angular</a>.</p>
+
+<p>In addition, we set the change detection strategy to <code>OnPush</code>, so change detection isn’t performed all the time, only when the component’s input properties change.</p>
+
+<p>However, as mentioned earlier, the reference of <code>addItemStream</code> will never change, so change detection is never performed for this component’s subtree. This is a problem because the component subscribes to that stream in its <code>ngOnInit</code> life cycle hook and increments the counter. This is application state change and we want to have this reflected in our view right?</p>
+
+<p>Here’s what our change detector tree might look like (we’ve set <strong>all</strong> to <code>OnPush</code>). No change detection will be performed when an event happens:</p>
+
+<p><img style="background: #0c4eb2; padding: 0 1em;" src="/images/cd-tree-10.svg" /></p>
+
+<p>How can we inform Angular about this change? How can we tell Angular that change detection <strong>needs</strong> to be performed for this component, even though the entire tree is set to <code>OnPush</code>?</p>
+
+<p>No worries, Angular has us covered. As we’ve learned earlier, change detection is <strong>always</strong> performed from top to bottom. So what we need is a way to detect changes for the entire path of the tree to the component where the change happened. Angular can’t know which path it is, but we do.</p>
+
+<p>We can access a component’s <code>ChangeDetectorRef</code> via <a href="http://blog.thoughtram.io/angular/2015/05/18/dependency-injection-in-angular-2.html">dependency injection</a>, which comes with an API called <code>markForCheck()</code>. This method does exactly what we need! It marks the path from our component until root to be checked for the next change detection run.</p>
+
+<p>Let’s inject it into our component:</p>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">cd</span><span class="p">:</span> <span class="nx">ChangeDetectorRef</span><span class="p">)</span> <span class="p">{}</span></code></pre></div>
+
+<p>Then, tell Angular to mark the path from this component until root to be checked:</p>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">ngOnInit</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">addItemStream</span><span class="p">.</span><span class="nx">subscribe</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">counter</span><span class="o">++</span><span class="p">;</span> <span class="c1">// application state changed</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">cd</span><span class="p">.</span><span class="nx">markForCheck</span><span class="p">();</span> <span class="c1">// marks path</span>
+    <span class="p">})</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p>Boom, that’s it! Here’s what it looks like after the observable event is fired but before change detection kicked in:</p>
+
+<p><img style="background: #0c4eb2; padding: 0 1em;" src="/images/cd-tree-12.svg" /></p>
+
+<p>Now, when change detection is performed, it’ll simply go from top to bottom.</p>
+
+<p><img style="background: #0c4eb2; padding: 0 1em;" src="/images/cd-tree-13.svg" /></p>
+
+<p>How cool is that? Once the change detection run is over, it’ll restore the <code>OnPush</code> state for the entire tree.</p>
+
+<h2 id="theres-more">There’s more…</h2>
+
+<p>In fact there are some more APIs which we haven’t covered in this article, but feel free to check out the slides and/or the recording of the talk.</p>
+
+<p>There are also some demos to play with in this <a href="https://github.com/thoughtram/angular2-change-detection-demos">repository</a>, which you can run on your local machine.</p>
+
+<p>Hopefully this made it a little bit more clear how using immutable data structures or Observables can make our Angular application even faster.</p>
+
+<h2 id="credits">Credits</h2>
+
+<p>I’d like to thank <a href="http://twitter.com/jvandemo">Jurgen Van De Moere</a> for being a <strong>huge</strong> help and support when I was preparing this talk. He spent a lot of time with me discussing my understandings and raised a lot of good questions that helped me put this content together. He also made sure that the demos look as nice as they do. His CSS skills are amazing - Jurgen, thank you so so much for being such a supportive and nice person.</p>
+
+<p>I’d also like to thank <a href="http://twitter.com/victorsavkin">Victor Savkin</a> for answering a lot of my questions regarding change detection in Angular, plus all the very informative articles that he’s written - Thanks Victor!</p>
+
+
+          
+
+
+
+
+        </div>
+
+        <div class="thtrm-subscriber">
+  <h3>Get updates on new articles and trainings.</h3>
+  <p>Join over 1400 other developers who get our content first.</p>
+  <form action="//thoughtram.us8.list-manage.com/subscribe/post?u=dfbb1507fbced5a20d9dc5698&amp;id=731f22cdca" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" novalidate>
+    <label for="mce-EMAIL"></label>
+    <input type="email" value="" name="EMAIL" placeholder="Your email address..." required>
+    <div style="position: absolute; left: -5000px;"><input type="text" name="b_dfbb1507fbced5a20d9dc5698_731f22cdca" tabindex="-1" value=""></div>
+    <input type="submit" value="Subscribe" name="subscribe" class="thtrm-cta thtrm-cta--small">
+  </form>
+</div>
+
+
+
+        <div class="thtrm-social-links">
+            <!-- Sharingbutton Facebook -->
+            <a class="resp-sharing-button__link" href="https://facebook.com/sharer/sharer.php?u=http%3A%2F%2Fblog.thoughtram.io/angular/2016/02/22/angular-2-change-detection-explained.html" target="_blank" aria-label="Share on Facebook">
+              <div class="resp-sharing-button resp-sharing-button--facebook resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M18.768,7.465H14.5V5.56c0-0.896,0.594-1.105,1.012-1.105s2.988,0,2.988,0V0.513L14.171,0.5C10.244,0.5,9.5,3.438,9.5,5.32 v2.145h-3v4h3c0,5.212,0,12,0,12h5c0,0,0-6.85,0-12h3.851L18.768,7.465z"/>
+                    </g>
+                </svg>
+                </div>Share on Facebook</div>
+            </a>
+
+            <!-- Sharingbutton Twitter -->
+            <a class="resp-sharing-button__link" href="https://twitter.com/intent/tweet/?text=Angular%20Change%20Detection%20Explained&amp;url=http://blog.thoughtram.io/angular/2016/02/22/angular-2-change-detection-explained.html" target="_blank" aria-label="Share on Twitter">
+              <div class="resp-sharing-button resp-sharing-button--twitter resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M23.444,4.834c-0.814,0.363-1.5,0.375-2.228,0.016c0.938-0.562,0.981-0.957,1.32-2.019c-0.878,0.521-1.851,0.9-2.886,1.104 C18.823,3.053,17.642,2.5,16.335,2.5c-2.51,0-4.544,2.036-4.544,4.544c0,0.356,0.04,0.703,0.117,1.036 C8.132,7.891,4.783,6.082,2.542,3.332C2.151,4.003,1.927,4.784,1.927,5.617c0,1.577,0.803,2.967,2.021,3.782 C3.203,9.375,2.503,9.171,1.891,8.831C1.89,8.85,1.89,8.868,1.89,8.888c0,2.202,1.566,4.038,3.646,4.456 c-0.666,0.181-1.368,0.209-2.053,0.079c0.579,1.804,2.257,3.118,4.245,3.155C5.783,18.102,3.372,18.737,1,18.459 C3.012,19.748,5.399,20.5,7.966,20.5c8.358,0,12.928-6.924,12.928-12.929c0-0.198-0.003-0.393-0.012-0.588 C21.769,6.343,22.835,5.746,23.444,4.834z"/>
+                    </g>
+                </svg>
+                </div>Share on Twitter</div>
+            </a>
+
+            <!-- Sharingbutton Google+ -->
+            <a class="resp-sharing-button__link" href="https://plus.google.com/share?url=http%3A%2F%2Fblog.thoughtram.io/angular/2016/02/22/angular-2-change-detection-explained.html" target="_blank" aria-label="Share on Google+">
+              <div class="resp-sharing-button resp-sharing-button--google resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M11.366,12.928c-0.729-0.516-1.393-1.273-1.404-1.505c0-0.425,0.038-0.627,0.988-1.368 c1.229-0.962,1.906-2.228,1.906-3.564c0-1.212-0.37-2.289-1.001-3.044h0.488c0.102,0,0.2-0.033,0.282-0.091l1.364-0.989 c0.169-0.121,0.24-0.338,0.176-0.536C14.102,1.635,13.918,1.5,13.709,1.5H7.608c-0.667,0-1.345,0.118-2.011,0.347 c-2.225,0.766-3.778,2.66-3.778,4.605c0,2.755,2.134,4.845,4.987,4.91c-0.056,0.22-0.084,0.434-0.084,0.645 c0,0.425,0.108,0.827,0.33,1.216c-0.026,0-0.051,0-0.079,0c-2.72,0-5.175,1.334-6.107,3.32C0.623,17.06,0.5,17.582,0.5,18.098 c0,0.501,0.129,0.984,0.382,1.438c0.585,1.046,1.843,1.861,3.544,2.289c0.877,0.223,1.82,0.335,2.8,0.335 c0.88,0,1.718-0.114,2.494-0.338c2.419-0.702,3.981-2.482,3.981-4.538C13.701,15.312,13.068,14.132,11.366,12.928z M3.66,17.443 c0-1.435,1.823-2.693,3.899-2.693h0.057c0.451,0.005,0.892,0.072,1.309,0.2c0.142,0.098,0.28,0.192,0.412,0.282 c0.962,0.656,1.597,1.088,1.774,1.783c0.041,0.175,0.063,0.35,0.063,0.519c0,1.787-1.333,2.693-3.961,2.693 C5.221,20.225,3.66,19.002,3.66,17.443z M5.551,3.89c0.324-0.371,0.75-0.566,1.227-0.566l0.055,0 c1.349,0.041,2.639,1.543,2.876,3.349c0.133,1.013-0.092,1.964-0.601,2.544C8.782,9.589,8.363,9.783,7.866,9.783H7.865H7.844 c-1.321-0.04-2.639-1.6-2.875-3.405C4.836,5.37,5.049,4.462,5.551,3.89z"/>
+                        <polygon points="23.5,9.5 20.5,9.5 20.5,6.5 18.5,6.5 18.5,9.5 15.5,9.5 15.5,11.5 18.5,11.5 18.5,14.5 20.5,14.5 20.5,11.5  23.5,11.5   "/>
+                    </g>
+                </svg>
+                </div>Share on Google+</div>
+            </a>
+        </div>
+
+        <h3 class="thtrm-section-headline thtrm-section-headline--with-margin">Author</h3>
+        <div class="thtrm-article-author">
+          <span class="thtrm-article-author-avatar"><img src="/images/author-pascal.jpg" alt="Picture of Pascal Precht"></span>
+          <div class="thtrm-article-author-matter">
+            <h4 class="thtrm-article-author-name">Pascal Precht</h4>
+            <p class="thtrm-article-author-text">Pascal is a front-end engineer and a Angular Developer Expert nominated by Google. He created the angular-translate module, is an Angular 2 contributor and also part of the Angular 2 Docs Authoring team.</p>
+            <p>
+              <a class="thtrm-article-author-cta thtrm-article-author-cta-twitter" href="http://twitter.com/PascalPrecht" title="Pascal Precht on Twitter">Twitter</a>
+              <a class="thtrm-article-author-cta" href="http://github.com/PascalPrecht" title="Pascal Precht on GitHub">GitHub</a>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="thtrm-constraint">
+
+        
+        <h4 class="thtrm-section-headline thtrm-section-headline--with-big-margin thtrm-section-headline--centered">Related Posts</h4>
+        <ul class="thtrm-three-column-list thtrm-three-column-list--with-padding">
+        
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2017/02/27/three-things-you-didnt-know-about-the-async-pipe.html" title="Three things you didn't know about the AsyncPipe">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/three-things-about-the-async-pipe.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Three things you didn't know about the AsyncPipe</h3>
+                <p>This article explains three lesser known features of the AsyncPipe that help us to write better async code.</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2017/02/21/using-zones-in-angular-for-better-performance.html" title="Using Zones in Angular for better performance">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/using-zones-in-angular-for-better-performance.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Using Zones in Angular for better performance</h3>
+                <p>In this article we'll take a look at how to use Zone APIs to improve our app's performance!</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2017/02/02/making-your-angular-app-fast.html" title="Making your Angular apps fast">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/angular-performance-tips.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Making your Angular apps fast</h3>
+                <p>In this article we discuss tips and tricks to make Angular blazingly fast!</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2016/12/27/angular-2-advance-testing-with-custom-matchers.html" title="Testing Angular Directives with Custom Matchers">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/testing-directives-with-custom-matchers2.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Testing Angular Directives with Custom Matchers</h3>
+                <p>Deliver terse, DRY, self-documenting unit tests with Angular using custom Jasmine Matchers and  Helper functions.</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2016/11/28/testing-services-with-http-in-angular-2.html" title="Testing Services with Http in Angular">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/testing-services-with-http-in-angular-2.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Testing Services with Http in Angular</h3>
+                <p>Want to learn how to test services in Angular that have an Http dependency? Read more here!</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2016/10/13/two-way-data-binding-in-angular-2.html" title="Two-way Data Binding in Angular">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/two-way-data-binding-in-angular-2.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Two-way Data Binding in Angular</h3>
+                <p>Two-way data binding was one of the main selling points of Angular. Since version 2.x, we can build directives that...</p>
+              </div>
+            </a>
+          </li>
+        
+        
+        </ul>
+        
+
+      
+
+      </div>
+    </main>
+    <footer role="contentinfo" class="thtrm-footer thtrm-footer--slim">
+  <div class="thtrm-footer-text">
+    <img class="thtrm-footer-logo" alt="thoughtram brain" src="/images/thoughtram-brain-white.png">
+    <p>This website was created in collaboration with <a href="http://twitter.com/timche_" title="Tim Cheung on Twitter"><strong>Tim Cheung</strong></a> and <a href="http://twitter.com/tim_hartmann_" title="Tim Hartmann on Twitter"><strong>Tim Hartmann</strong></a>.</p>
+    <p ><a href="http://thoughtram.io/code-of-conduct.html" title="Code of Conduct">Code of Conduct</a> &bullet; <a href="http://thoughtram.io/imprint.html" title="Legal Notice">Legal notice</a></p>
+    <p class="thtrm-footer-bottom">&copy; 2014-2017 thoughtram GmbH</p>
+  </div>
+</footer>
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-51360648-2', 'auto');
+ga('send', 'pageview');
+
+var form = document.getElementById('search-form');
+var eventCta = document.getElementById('event-cta');
+
+if (eventCta) {
+
+  eventCta.addEventListener('click', function (event) {
+    event.preventDefault();
+
+    setTimeout(clickLink, 1000);
+
+    function clickLink() {
+      window.location.replace(eventCta.getAttribute('href'));
+    }
+
+    ga('send', 'event', {
+      eventCategory: 'Event Link',
+      eventAction: 'click',
+      eventLabel: eventCta.getAttribute('title'),
+      hitCallback: clickLink
+    });
+  });
+}
+
+if (form) {
+
+  var searchTerm = document.getElementById('search-term');
+
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    var formSubmitted = false;
+
+    setTimeout(submitForm, 1000);
+
+    function submitForm() {
+      if (!formSubmitted) {
+        formSubmitted = true;
+        form.submit();
+      }
+    }
+
+    ga('send', 'event', {
+      eventCategory: 'Search Form',
+      eventAction: 'submit',
+      eventLabel: searchTerm.value,
+      hitCallback: submitForm
+    });
+  });
+}
+</script>
+
+
+
+    <script src="/scripts/stickyfill.js"></script>
+    <script src="/scripts/linkjuice/dist/linkjuice.js"></script>
+    <script>
+    (function (doc, win) {
+
+      linkjuice.init('.thtrm-article', {
+        selector: ['h2', 'h3'],
+        icon: ''
+      });
+
+      if (win.matchMedia && win.matchMedia('(min-width: 1200px)').matches) {
+        var stickyElements = doc.querySelectorAll('.is-sticky');
+
+        for (var i = stickyElements.length - 1; i >= 0; i--) {
+          var el = stickyElements[i];
+
+          if (el.classList.contains('thtrm-toc')) {
+            el.classList.add('thtrm-toc--sticky');
+            el.classList.add('thtrm-toc--faded');
+          } 
+          if (el.classList.contains('thtrm-ad')) {
+            el.classList.add('thtrm-ad--sticky');
+            el.classList.add('thtrm-ad--description');
+          }
+
+          Stickyfill.add(el);
+        }
+      }
+    }(document, window));
+    </script>
+  </body>
+</html>

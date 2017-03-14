@@ -1,0 +1,694 @@
+
+
+
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Often, we need to add custom validation capabilities to our application's form. In this article we're going to explore how to implement custom validators.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="thoughtram">
+    <title>Custom Validators in Angular by thoughtram</title>
+    <meta name="google-site-verification" content="o9eGPEgIETEqYGombq7NiQuBIB_qa6gz1yAL7PxKyK0">
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#4D8799">
+    <link rel="icon" sizes="192x192" href="/images/touch/chrome-touch-icon-192x192.png">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="thoughtram">
+    <link rel="apple-touch-icon" href="/images/touch/apple-touch-icon.png">
+
+    <!-- Tile icon for Win8 (144x144 + tile color) -->
+    <meta name="msapplication-TileImage" content="/images/touch/ms-touch-icon-144x144-precomposed.png">
+    <meta name="msapplication-TileColor" content="#4D8799">
+
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Custom Validators in Angular">
+    <meta property="og:description" content="Often, we need to add custom validation capabilities to our application's form. In this article we're going to explore how to implement custom validators.">
+    <meta property="og:url" content="http://blog.thoughtram.io/angular/2016/03/14/custom-validators-in-angular-2.html">
+    <meta property="og:site_name" content="Articles by thoughtram">
+    <meta property="og:image" content="http://blog.thoughtram.io/images/custom-validators-bg.jpeg">
+    <meta property="og:publisher" content="http://www.facebook.com/thoughtram">
+
+    <meta property="twitter:card" content="summary">
+    <meta property="twitter:title" content="Custom Validators in Angular">
+    <meta property="twitter:site" content="thoughtram Blog">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css" type="text/css">
+  </head>
+  <body class="sub-site">
+    <!-- Add your site or app content here -->
+
+    <!--[if lt IE 10]>
+        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <header class="thtrm-header" role="banner">
+      <div class="thtrm-header-bar">
+        <div class="thtrm-constraint">
+          <a href="http://thoughtram.io" class="thtrm-header-logo-link" title="thoughtram.io Start Page"><h1 class="thtrm-header-logo">thoughtram</h1></a>
+          <div class="thtrm-header-menu-wrapper">
+            <span role="button" tabindex="0" class="thtrm-header-menu-label">Menu</span>
+            <ul class="thtrm-header-menu">
+              <li><a title="Training" class="thtrm-header-menu-item" href="http://thoughtram.io/training.html">Training</a></li>
+              <li><a title="Code Review" class="thtrm-header-menu-item" href="http://thoughtram.io/code-review.html">Code Review</a></li>
+              <li><a title="Casts" class="thtrm-header-menu-item " href="http://casts.thoughtram.io">Casts</a></li>
+              <li><a title="Blog" class="thtrm-header-menu-item" href="/">Blog</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main role="main" class="thtrm-main">
+    <div class="thtrm-banner" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%), url('/images/custom-validators-bg.jpeg');">
+        <hgroup class="thtrm-banner-container">
+          <div class="thtrm-constraint thtrm-constraint--slim">
+            <h2 class="thtrm-banner-text">Custom Validators in Angular</h2>
+            <span>by <a href="http://twitter.com/" title="Pascal Precht on Twitter">Pascal Precht</a> on Mar 14, 2016, last updated on Dec 18, 2016<br>16 minute read</span>
+
+          </div>
+        </hgroup>
+      </div>
+      <div class="thtrm-constraint thtrm-constraint--slim">
+
+        <div class="thtrm-article">
+          <section class="thtrm-ad thtrm-section thtrm-section--is-promo is-sticky">
+  <img width="100" src="/images/angular2-shield-inverse.svg">
+  <h3 class="thtrm-section-headline">Need private training?</h3>
+  <p class="thtrm-section-text">Get customized training for your corporation</p>
+  <a href="mailto:hello@thoughtram.io" title="Request Training Quote" id="event-cta" class="thtrm-layout-divider-cta">Request quote <strong>&rarr;</strong></a>
+</section>
+
+
+          
+          <p style="background-color: lightgoldenrodyellow; border: solid 2px #f9dead; padding: 1em; text-align: center; border-radius: 0.3em;">Contents are based on Angular version <strong>>= 2.x</strong> unless explicitely stated differently.</p>
+          
+
+          <p>Forms are part of almost every web application out there. Angular strives for making working with forms a breeze. While there are a couple of built-in validators provided by the framework, we often need to add some custom validation capabilities to our application’s form, in order to fulfill our needs.</p>
+
+<p>We can easily extend the browser vocabulary with additional custom validators and in this article we are going to explore how to do that.</p>
+
+<div class="thtrm-toc is-sticky">
+  <h3 class="no_toc" id="table-of-contents">TABLE OF CONTENTS</h3>
+<ul id="markdown-toc">
+  <li><a href="#built-in-validators" id="markdown-toc-built-in-validators">Built-in Validators</a></li>
+  <li><a href="#building-a-custom-validator" id="markdown-toc-building-a-custom-validator">Building a custom validator</a></li>
+  <li><a href="#building-custom-validator-directives" id="markdown-toc-building-custom-validator-directives">Building custom validator directives</a></li>
+  <li><a href="#custom-validators-with-dependencies" id="markdown-toc-custom-validators-with-dependencies">Custom Validators with dependencies</a></li>
+</ul>
+
+</div>
+
+<h2 id="built-in-validators">Built-in Validators</h2>
+
+<p>Angular comes with a subset of built-in validators out of the box. We can apply them either declaratively as directives on elements in our DOM, in case we’re building a <strong>template-driven</strong> form, or imperatively using the <code>FormControl</code> and <code>FormGroup</code> or <code>FormBuilder</code> APIs, in case we’re building a <strong>reactive</strong> forms. If you don’t know what it’s all about with template-driven and reactive forms, don’t worry, we have an articles about both topics <a href="/angular/2016/03/21/template-driven-forms-in-angular-2.html">here</a> and <a href="/angular/2016/06/22/model-driven-forms-in-angular-2.html">here</a>.</p>
+
+<p>The supported built-in validators, at the time of writing this article, are:</p>
+
+<ul>
+  <li><strong>required</strong> - Requires a form control to have a non-empty value</li>
+  <li><strong>minlength</strong> - Requires a form control to have a value of a minimum length</li>
+  <li><strong>maxlength</strong> - Requires a form control to have a value of a maximum length</li>
+  <li><strong>pattern</strong> - Requires a form control’s value to match a given regex</li>
+</ul>
+
+<p>As mentioned earlier, validators can be applied by simply using their corresponding directives. To make these directives available, we need to import Angular’s <code>FormsModule</code> to our application module first:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">NgModule</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/core'</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">BrowserModule</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/platform-browser'</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">FormsModule</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/forms'</span><span class="p">;</span>
+
+<span class="err">@</span><span class="nx">NgModule</span><span class="p">({</span>
+  <span class="na">imports</span><span class="p">:</span> <span class="p">[</span><span class="nx">BrowserModule</span><span class="p">,</span> <span class="nx">FormsModule</span><span class="p">],</span> <span class="c1">// we add FormsModule here</span>
+  <span class="na">declarations</span><span class="p">:</span> <span class="p">[</span><span class="nx">AppComponent</span><span class="p">],</span>
+  <span class="na">bootstrap</span><span class="p">:</span> <span class="p">[</span><span class="nx">AppComponent</span><span class="p">]</span>
+<span class="p">})</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">AppModule</span> <span class="p">{}</span></code></pre></div>
+
+<p>Once this is done, we can use all directives provided by this module in our application. The following form shows how the built-in validators are applied to dedicated form controls:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;form</span> <span class="na">novalidate</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"name"</span> <span class="na">ngModel</span> <span class="na">required</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"street"</span> <span class="na">ngModel</span> <span class="na">minlength=</span><span class="s">"3"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"city"</span> <span class="na">ngModel</span> <span class="na">maxlength=</span><span class="s">"10"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"zip"</span> <span class="na">ngModel</span> <span class="na">pattern=</span><span class="s">"[A-Za-z]{5}"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;/form&gt;</span></code></pre></div>
+
+<p>Or, if we had a reactive form, we’d need to import the <code>ReactiveFormsModule</code> first:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">ReactiveFormsModule</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/forms'</span><span class="p">;</span>
+
+<span class="err">@</span><span class="nx">NgModule</span><span class="p">({</span>
+  <span class="na">imports</span><span class="p">:</span> <span class="p">[</span><span class="nx">BrowserModule</span><span class="p">,</span> <span class="nx">ReactiveFormsModule</span><span class="p">],</span>
+  <span class="p">...</span>
+<span class="p">})</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">AppModule</span> <span class="p">{}</span></code></pre></div>
+
+<p>And can then build our form either using <code>FormControl</code> and <code>FormGroup</code> APIs:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">()</span>
+<span class="kr">class</span> <span class="nx">Cmp</span> <span class="p">{</span>
+
+  <span class="nl">form</span><span class="p">:</span> <span class="nx">FormGroup</span><span class="p">;</span>
+
+  <span class="nx">ngOnInit</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">form</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FormGroup</span><span class="p">({</span>
+      <span class="na">name</span><span class="p">:</span> <span class="k">new</span> <span class="nx">FormControl</span><span class="p">(</span><span class="s1">''</span><span class="p">,</span> <span class="nx">Validators</span><span class="p">.</span><span class="nx">required</span><span class="p">)),</span>
+      <span class="na">street</span><span class="p">:</span> <span class="k">new</span> <span class="nx">FormControl</span><span class="p">(</span><span class="s1">''</span><span class="p">,</span> <span class="nx">Validators</span><span class="p">.</span><span class="nx">minLength</span><span class="p">(</span><span class="mi">3</span><span class="p">)),</span>
+      <span class="na">city</span><span class="p">:</span> <span class="k">new</span> <span class="nx">FormControl</span><span class="p">(</span><span class="s1">''</span><span class="p">,</span> <span class="nx">Validators</span><span class="p">.</span><span class="nx">maxLength</span><span class="p">(</span><span class="mi">10</span><span class="p">)),</span>
+      <span class="na">zip</span><span class="p">:</span> <span class="k">new</span> <span class="nx">FormControl</span><span class="p">(</span><span class="s1">''</span><span class="p">,</span> <span class="nx">Validators</span><span class="p">.</span><span class="nx">pattern</span><span class="p">(</span><span class="s1">'[A-Za-z]{5}'</span><span class="p">))</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p>Or use the less verbose <code>FormBuilder</code> API that does the same work for us:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">()</span>
+<span class="kr">class</span> <span class="nx">Cmp</span> <span class="p">{</span>
+
+  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">fb</span><span class="p">:</span> <span class="nx">FormBuilder</span><span class="p">)</span> <span class="p">{}</span>
+
+  <span class="nx">ngOnInit</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">form</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">fb</span><span class="p">.</span><span class="nx">group</span><span class="p">({</span>
+      <span class="na">name</span><span class="p">:</span> <span class="p">[</span><span class="s1">''</span><span class="p">,</span> <span class="nx">Validators</span><span class="p">.</span><span class="nx">required</span><span class="p">],</span>
+      <span class="na">street</span><span class="p">:</span> <span class="p">[</span><span class="s1">''</span><span class="p">,</span> <span class="nx">Validators</span><span class="p">.</span><span class="nx">minLength</span><span class="p">(</span><span class="mi">3</span><span class="p">)],</span>
+      <span class="na">city</span><span class="p">:</span> <span class="p">[</span><span class="s1">''</span><span class="p">,</span> <span class="nx">Validators</span><span class="p">.</span><span class="nx">maxLength</span><span class="p">(</span><span class="mi">10</span><span class="p">)],</span>
+      <span class="na">zip</span><span class="p">:</span> <span class="p">[</span><span class="s1">''</span><span class="p">,</span> <span class="nx">Validators</span><span class="p">.</span><span class="nx">pattern</span><span class="p">(</span><span class="s1">'[A-Za-z]{5}'</span><span class="p">)]</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p>We would still need to associate a form model with a form in the DOM using the <code>[formGroup]</code> directive likes this:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;form</span> <span class="na">novalidate</span> <span class="err">[</span><span class="na">formGroup</span><span class="err">]="</span><span class="na">form</span><span class="err">"</span><span class="nt">&gt;</span>
+  ...
+<span class="nt">&lt;/form&gt;</span></code></pre></div>
+
+<p>Observing these two to three different methods of creating a form, we might wonder how it is done that we can use the validator methods imperatively in our component code, and apply them as directives to input controls declaratively in our HTML code.</p>
+
+<p>It turns out there’s really not such a big magic involved, so let’s build our own custom email validator.</p>
+
+<h2 id="building-a-custom-validator">Building a custom validator</h2>
+
+<p>In it’s simplest form, a validator is really just a function that takes a <code>Control</code> and returns either <code>null</code> when it’s valid, or and error object if it’s not. A TypeScript interface for such a validator looks something like this:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">interface</span> <span class="nx">Validator</span><span class="o">&lt;</span><span class="nx">T</span> <span class="kr">extends</span> <span class="nx">FormControl</span><span class="o">&gt;</span> <span class="p">{</span>
+   <span class="p">(</span><span class="na">c</span><span class="p">:</span><span class="nx">T</span><span class="p">):</span> <span class="p">{[</span><span class="na">error</span><span class="p">:</span> <span class="nx">string</span><span class="p">]:</span><span class="nx">any</span><span class="p">};</span>
+<span class="p">}</span></code></pre></div>
+
+<p>Let’s implement a validator function <code>validateEmail</code> which implements that interface. All we need to do is to define a function that takes a <code>FormControl</code>, checks if it’s value matches the regex of an email address, and if not, returns an error object,  or <code>null</code> in case the value is valid.</p>
+
+<p>Here’s what such an implementation could look like:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">FormControl</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/forms'</span><span class="p">;</span>
+
+<span class="kd">function</span> <span class="nx">validateEmail</span><span class="p">(</span><span class="nx">c</span><span class="p">:</span> <span class="nx">FormControl</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">EMAIL_REGEXP</span> <span class="o">=</span> <span class="p">...</span>
+
+  <span class="k">return</span> <span class="nx">EMAIL_REGEXP</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="nx">c</span><span class="p">.</span><span class="nx">value</span><span class="p">)</span> <span class="p">?</span> <span class="kc">null</span> <span class="p">:</span> <span class="p">{</span>
+    <span class="na">validateEmail</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">valid</span><span class="p">:</span> <span class="kc">false</span>
+    <span class="p">}</span>
+  <span class="p">};</span>
+<span class="p">}</span></code></pre></div>
+
+<p>Pretty straight forward right? We import <code>FormControl</code> from <code>@angular/forms</code> to have the type information the function’s signature and simply test a regular expression with the <code>FormControl</code>’s value. That’s it. That’s a validator.</p>
+
+<p>But how do we apply them to other form controls? Well, we’ve seen how <code>Validators.required</code> and the other validators are added to the <code>new FormControl()</code> calls. <code>FormControl()</code> takes an initial value, a synchronous validator and an asynchronous validator. Which means, we do exactly the same with our custom validators.</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">ngOnInit</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">form</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FormGroup</span><span class="p">({</span>
+    <span class="p">...</span>
+    <span class="na">email</span><span class="p">:</span> <span class="k">new</span> <span class="nx">FormControl</span><span class="p">(</span><span class="s1">''</span><span class="p">,</span> <span class="nx">validateEmail</span><span class="p">)</span>
+  <span class="p">});</span>
+<span class="p">}</span></code></pre></div>
+
+<p>Don’t forget to import <code>validateEmail</code> accordinlgy, if necessary. Okay cool, now we know how to add our custom validator to a form control.</p>
+
+<p>However, what if we want to combine multiple validators on a single control? Let’s say our email field is <code>required</code> <strong>and</strong> needs to match the shape of an email address. <code>FormControl</code>s takes a single synchronous and a single asynchronous validator, or, a collection of synchronous and asynchronous validators.
+Here’s what it looks like if we’d combine the <code>required</code> validator with our custom one:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">ngOnInit</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">form</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FormGroup</span><span class="p">({</span>
+    <span class="p">...</span>
+    <span class="na">email</span><span class="p">:</span> <span class="k">new</span> <span class="nx">FormControl</span><span class="p">(</span><span class="s1">''</span><span class="p">,</span> <span class="p">[</span>
+      <span class="nx">Validators</span><span class="p">.</span><span class="nx">required</span><span class="p">,</span>
+      <span class="nx">validateEmail</span>
+    <span class="p">])</span>
+  <span class="p">});</span>
+<span class="p">}</span></code></pre></div>
+
+<h2 id="building-custom-validator-directives">Building custom validator directives</h2>
+
+<p>Now that we’re able to add our custom validator to our form controls imperatively when building model-driven forms, we might also enable our validator to be used in template driven forms. In other words: We need a directive. The validator should be usable like this:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;form</span> <span class="na">novalidate</span><span class="nt">&gt;</span>
+  ...
+  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"email"</span> <span class="na">name=</span><span class="s">"email"</span> <span class="na">ngModel</span> <span class="na">validateEmail</span><span class="nt">&gt;</span>
+<span class="nt">&lt;/form&gt;</span></code></pre></div>
+
+<p><code>validateEmail</code> is applied as an attribute to the <code>&lt;input&gt;</code> DOM element, which already gives us an idea what we need to do. We need to build a directive with a matching selector so it will be executed on all input controls where the directive is applied. Let’s start off with that.</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">Directive</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/core'</span><span class="p">;</span>
+
+<span class="err">@</span><span class="nx">Directive</span><span class="p">({</span>
+  <span class="na">selector</span><span class="p">:</span> <span class="s1">'[validateEmail][ngModel]'</span>
+<span class="p">})</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">EmailValidator</span> <span class="p">{}</span></code></pre></div>
+
+<p>We import the <code>@Directive</code> decorator form <code>@angular/core</code> and use it on a new <code>EmailValidator</code> class. If you’re familiar with the <code>@Component</code> decorator that this is probably not new to you. In fact, <code>@Directive</code> is a superset of <code>@Component</code> which is why most of the configuration properties are available.</p>
+
+<p>Okay, technically we could already make this directive execute in our app, all we need to do is to add it to our module’s <code>declarations</code>:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">EmailValidator</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'./email.validator'</span><span class="p">;</span>
+
+<span class="err">@</span><span class="nx">NgModule</span><span class="p">({</span>
+  <span class="p">...</span>
+  <span class="na">declarations</span><span class="p">:</span> <span class="p">[</span><span class="nx">AppComponent</span><span class="p">,</span> <span class="nx">EmailValidator</span><span class="p">],</span>
+<span class="p">})</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">AppModule</span> <span class="p">{}</span></code></pre></div>
+
+<p>Even though this works, there’s nothing our directive does at the moment. What we want to do is to make sure that our custom validator is executed when Angular compiles this directive. How do we get there?</p>
+
+<p>Angular has an internal mechanism to execute validators on a form control. It maintains a <strong>multi provider</strong> for a dependency token called <code>NG_VALIDATORS</code>. If you’ve read our article on <a href="/angular2/2015/11/23/multi-providers-in-angular-2.html">multi providers in Angular</a>, you know that Angular injects multiple values for a single token that is used for a multi provider. If you haven’t, we highly recommend checking it out as the rest of this article is based on it.</p>
+
+<p>It turns out that <strong>all</strong> built-in validators are already added to the <code>NG_VALIDATORS</code> token. So whenever Angular instantiates a form control and performs validation, it basically injects the dependency for the <code>NG_VALIDATORS</code> token, which is a list of all validators, and executes them one by one on that form control.</p>
+
+<p>Since multi providers can be extended by adding more multi providers to a token, we can consider <code>NG_VALIDATORS</code> as a hook to add our own validators.</p>
+
+<p>Let’s add our validator to the <code>NG_VALIDATORS</code> via our new directive:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">Directive</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/core'</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">NG_VALIDATORS</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/forms'</span><span class="p">;</span>
+
+<span class="err">@</span><span class="nx">Directive</span><span class="p">({</span>
+  <span class="na">selector</span><span class="p">:</span> <span class="s1">'[validateEmail][ngModel]'</span><span class="p">,</span>
+  <span class="na">providers</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span> <span class="na">provide</span><span class="p">:</span> <span class="nx">NG_VALIDATORS</span><span class="p">,</span> <span class="na">useValue</span><span class="p">:</span> <span class="nx">validateEmail</span><span class="p">,</span> <span class="na">multi</span><span class="p">:</span> <span class="kc">true</span> <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">})</span>
+<span class="kr">class</span> <span class="nx">EmailValidator</span> <span class="p">{}</span></code></pre></div>
+
+<p>Again, if you’ve read our article on multi providers, this should look very familiar to you. We basically add a new value to the <code>NG_VALIDATORS</code> token by taking advantage of multi providers. Angular will pick our validator up by injecting what it gets for <code>NG_VALIDATORS</code>, and performs validation on a form control. Awesome, we can now use our validator for reactive<strong>and</strong> for template-driven forms!</p>
+
+<h2 id="custom-validators-with-dependencies">Custom Validators with dependencies</h2>
+
+<p>Sometimes, a custom validator has dependencies so we need a way to inject them. Let’s say our email validator needs an <code>EmailBlackList</code> service, to check if the given control value is not only a valid email address but also not on our email black list (in an ideal world, we’d build a separate validator for checking against an email black list, but we use that as a motivation for now to have a dependency).</p>
+
+<p><strong>The not-so-nice way</strong></p>
+
+<p>One way to handle this is to create a factory function that returns our <code>validateEmail</code> function, which then uses an instance of <code>EmailBlackList</code> service. Here’s what such a factory function could look like:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">FormControl</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/forms'</span><span class="p">;</span>
+
+<span class="kd">function</span> <span class="nx">validateEmailFactory</span><span class="p">(</span><span class="nx">emailBlackList</span><span class="p">:</span> <span class="nx">EmailBlackList</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span><span class="nx">c</span><span class="p">:</span> <span class="nx">FormControl</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">EMAIL_REGEXP</span> <span class="o">=</span> <span class="p">...</span>
+
+    <span class="kd">let</span> <span class="nx">isValid</span> <span class="o">=</span> <span class="cm">/* check validation with emailBlackList */</span>
+
+    <span class="k">return</span> <span class="nx">isValid</span> <span class="p">?</span> <span class="kc">null</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="na">validateEmail</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">valid</span><span class="p">:</span> <span class="kc">false</span>
+      <span class="p">}</span>
+    <span class="p">};</span>
+  <span class="p">};</span>
+<span class="p">}</span></code></pre></div>
+
+<p>This would allow us to register our custom validator via dependency injection like this:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Directive</span><span class="p">({</span>
+  <span class="p">...</span>
+  <span class="na">providers</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="na">provide</span><span class="p">:</span> <span class="nx">NG_VALIDATORS</span><span class="p">,</span>
+      <span class="na">useFactory</span><span class="p">:</span> <span class="p">(</span><span class="nx">emailBlackList</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">validateEmailFactory</span><span class="p">(</span><span class="nx">emailBlackList</span><span class="p">);</span>
+      <span class="p">},</span>
+      <span class="na">deps</span><span class="p">:</span> <span class="p">[</span><span class="nx">EmailBlackList</span><span class="p">]</span>
+      <span class="na">multi</span><span class="p">:</span> <span class="kc">true</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">})</span>
+<span class="kr">class</span> <span class="nx">EmailValidator</span> <span class="p">{}</span></code></pre></div>
+
+<p>We can’t use <code>useValue</code> as provider recipe anymore, because we don’t want to return the factory function, but rather what the factory function <strong>returns</strong>. And since our factory function has a dependency itself, we need to have access to dependency tokens, which is why we use <code>useFactory</code> and <code>deps</code>. If this is entirely new to you, you might want to read our article on <a href="/angular/2015/05/18/dependency-injection-in-angular-2.html">Dependency Injection in Angular</a> before we move on.</p>
+
+<p>Even though this would work, it’s quite a lot of work and also very verbose. We can do better here.</p>
+
+<p><strong>The better way</strong></p>
+
+<p>Wouldn’t it be nice if we could use constructor injection as we’re used to it in Angular? Yes, and guess what, Angular has us covered. It turns out that a validator can also be a <strong>class</strong> as long as it implements a <code>validate(c: FormControl)</code> method. Why is that nice? Well, we can inject our dependency using constructor injection and don’t have to setup a provider factory as we did before.</p>
+
+<p>Here’s what our <code>EmailValidator</code> class would look like when we apply this pattern to it:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Directive</span><span class="p">({</span>
+  <span class="p">...</span>
+<span class="p">})</span>
+<span class="kr">class</span> <span class="nx">EmailValidator</span> <span class="p">{</span>
+  
+  <span class="nl">validator</span><span class="p">:</span> <span class="nb">Function</span><span class="p">;</span>
+
+  <span class="nx">constructor</span><span class="p">(</span><span class="nx">emailBlackList</span><span class="p">:</span> <span class="nx">EmailBlackList</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">validator</span> <span class="o">=</span> <span class="nx">validateEmailFactory</span><span class="p">(</span><span class="nx">emailBlackList</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="nx">validate</span><span class="p">(</span><span class="nx">c</span><span class="p">:</span> <span class="nx">FormControl</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">validator</span><span class="p">(</span><span class="nx">c</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p>However, we now need to adjust the provider for <code>NG_VALIDATORS</code>, because we want to use an instance of <code>EmailValidator</code> to be used for validation, not the factory function. This seems easy to fix, because we know that we create instances of classes for dependency injection using the <code>useClass</code> recipe.</p>
+
+<p>However, we already added <code>EmailValidator</code> to the <code>directives</code> property of our component, which is a provider with the <code>useClass</code> recipe. We want to make sure that we get the exact same instance of <code>EmailValidator</code> on our form control, even though, we define a new provider for it. Luckily we have the <code>useExisting</code> recipe for that. <code>useExisting</code> defines an alias token for but returns the same instance as the original token:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Directive</span><span class="p">({</span>
+  <span class="p">...</span>
+  <span class="na">providers</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span> <span class="na">provide</span><span class="p">:</span> <span class="nx">NG_VALIDATORS</span><span class="p">,</span> <span class="na">useExisting</span><span class="p">:</span> <span class="nx">EmailValidator</span><span class="p">,</span> <span class="na">multi</span><span class="p">:</span> <span class="kc">true</span> <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">})</span>
+<span class="kr">class</span> <span class="nx">EmailValidator</span> <span class="p">{</span>
+  <span class="p">...</span>
+<span class="p">}</span></code></pre></div>
+
+<p><strong>Yikes! This won’t work</strong> . We’re referencing a token (<code>EmailValidator</code>) which is undefined at the point we’re using it because the class definition itself happens later in the code. That’s where <code>forwardRef()</code> comes into play.</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">forwardRef</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/core'</span><span class="p">;</span>
+
+<span class="err">@</span><span class="nx">Directive</span><span class="p">({</span>
+  <span class="p">...</span>
+  <span class="na">providers</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span> <span class="na">provide</span><span class="p">:</span> <span class="nx">NG_VALIDATORS</span><span class="p">,</span> <span class="na">useExisting</span><span class="p">:</span> <span class="nx">forwardRef</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="nx">EmailValidator</span><span class="p">),</span> <span class="na">multi</span><span class="p">:</span> <span class="kc">true</span> <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">})</span>
+<span class="kr">class</span> <span class="nx">EmailValidator</span> <span class="p">{</span>
+  <span class="p">...</span>
+<span class="p">}</span></code></pre></div>
+
+<p>If you don’t know what <code>forwardRef()</code> does, you might want to read our article on <a href="/angular/2015/09/03/forward-references-in-angular-2.html">Forward References in Angular</a>.</p>
+
+<p>Here’s the full code for our custom email validator:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">Directive</span><span class="p">,</span> <span class="nx">forwardRef</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/core'</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">NG_VALIDATORS</span><span class="p">,</span> <span class="nx">FormControl</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/forms'</span><span class="p">;</span>
+
+<span class="kd">function</span> <span class="nx">validateEmailFactory</span><span class="p">(</span><span class="nx">emailBlackList</span><span class="p">:</span> <span class="nx">EmailBlackList</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span><span class="nx">c</span><span class="p">:</span> <span class="nx">FormControl</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">EMAIL_REGEXP</span> <span class="o">=</span> <span class="sr">/^</span><span class="se">[</span><span class="sr">a-z0-9!#$%&amp;'*+</span><span class="se">\/</span><span class="sr">=?^_`{|}~.-</span><span class="se">]</span><span class="sr">+@</span><span class="se">[</span><span class="sr">a-z0-9</span><span class="se">]([</span><span class="sr">a-z0-9-</span><span class="se">]</span><span class="sr">*</span><span class="se">[</span><span class="sr">a-z0-9</span><span class="se">])?(\.[</span><span class="sr">a-z0-9</span><span class="se">]([</span><span class="sr">a-z0-9-</span><span class="se">]</span><span class="sr">*</span><span class="se">[</span><span class="sr">a-z0-9</span><span class="se">])?)</span><span class="sr">*$/i</span><span class="p">;</span>
+
+    <span class="k">return</span> <span class="nx">EMAIL_REGEXP</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="nx">c</span><span class="p">.</span><span class="nx">value</span><span class="p">)</span> <span class="p">?</span> <span class="kc">null</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="na">validateEmail</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">valid</span><span class="p">:</span> <span class="kc">false</span>
+      <span class="p">}</span>
+    <span class="p">};</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+
+<span class="err">@</span><span class="nx">Directive</span><span class="p">({</span>
+  <span class="na">selector</span><span class="p">:</span> <span class="s1">'[validateEmail][ngModel],[validateEmail][formControl]'</span><span class="p">,</span>
+  <span class="na">providers</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span> <span class="na">provide</span><span class="p">:</span> <span class="nx">NG_VALIDATORS</span><span class="p">,</span> <span class="na">useExisting</span><span class="p">:</span> <span class="nx">forwardRef</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="nx">EmailValidator</span><span class="p">),</span> <span class="na">multi</span><span class="p">:</span> <span class="kc">true</span> <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">})</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">EmailValidator</span> <span class="p">{</span>
+
+  <span class="na">validator</span><span class="p">:</span> <span class="nb">Function</span><span class="p">;</span>
+
+  <span class="nx">constructor</span><span class="p">(</span><span class="na">emailBlackList</span><span class="p">:</span> <span class="nx">EmailBlackList</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">validator</span> <span class="o">=</span> <span class="nx">validateEmailFactory</span><span class="p">(</span><span class="nx">emailBlackList</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="nx">validate</span><span class="p">(</span><span class="na">c</span><span class="p">:</span> <span class="nx">FormControl</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">validator</span><span class="p">(</span><span class="nx">c</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p>You might notice that we’ve extended the selector, so that our validator not only works with <code>ngModel</code> but also with <code>formControl</code> directives. If you’re interested in more articles on forms in Angular, we’ve written a couple about <a href="/angular/2016/03/21/template-driven-forms-in-angular-2.html">template-driven forms</a> and <a href="http://blog.thoughtram.io/angular/2016/06/22/model-driven-forms-in-angular-2.html">reactive forms</a>.</p>
+
+
+          
+
+
+
+
+        </div>
+
+        <div class="thtrm-subscriber">
+  <h3>Get updates on new articles and trainings.</h3>
+  <p>Join over 1400 other developers who get our content first.</p>
+  <form action="//thoughtram.us8.list-manage.com/subscribe/post?u=dfbb1507fbced5a20d9dc5698&amp;id=731f22cdca" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" novalidate>
+    <label for="mce-EMAIL"></label>
+    <input type="email" value="" name="EMAIL" placeholder="Your email address..." required>
+    <div style="position: absolute; left: -5000px;"><input type="text" name="b_dfbb1507fbced5a20d9dc5698_731f22cdca" tabindex="-1" value=""></div>
+    <input type="submit" value="Subscribe" name="subscribe" class="thtrm-cta thtrm-cta--small">
+  </form>
+</div>
+
+
+
+        <div class="thtrm-social-links">
+            <!-- Sharingbutton Facebook -->
+            <a class="resp-sharing-button__link" href="https://facebook.com/sharer/sharer.php?u=http%3A%2F%2Fblog.thoughtram.io/angular/2016/03/14/custom-validators-in-angular-2.html" target="_blank" aria-label="Share on Facebook">
+              <div class="resp-sharing-button resp-sharing-button--facebook resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M18.768,7.465H14.5V5.56c0-0.896,0.594-1.105,1.012-1.105s2.988,0,2.988,0V0.513L14.171,0.5C10.244,0.5,9.5,3.438,9.5,5.32 v2.145h-3v4h3c0,5.212,0,12,0,12h5c0,0,0-6.85,0-12h3.851L18.768,7.465z"/>
+                    </g>
+                </svg>
+                </div>Share on Facebook</div>
+            </a>
+
+            <!-- Sharingbutton Twitter -->
+            <a class="resp-sharing-button__link" href="https://twitter.com/intent/tweet/?text=Custom%20Validators%20in%20Angular&amp;url=http://blog.thoughtram.io/angular/2016/03/14/custom-validators-in-angular-2.html" target="_blank" aria-label="Share on Twitter">
+              <div class="resp-sharing-button resp-sharing-button--twitter resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M23.444,4.834c-0.814,0.363-1.5,0.375-2.228,0.016c0.938-0.562,0.981-0.957,1.32-2.019c-0.878,0.521-1.851,0.9-2.886,1.104 C18.823,3.053,17.642,2.5,16.335,2.5c-2.51,0-4.544,2.036-4.544,4.544c0,0.356,0.04,0.703,0.117,1.036 C8.132,7.891,4.783,6.082,2.542,3.332C2.151,4.003,1.927,4.784,1.927,5.617c0,1.577,0.803,2.967,2.021,3.782 C3.203,9.375,2.503,9.171,1.891,8.831C1.89,8.85,1.89,8.868,1.89,8.888c0,2.202,1.566,4.038,3.646,4.456 c-0.666,0.181-1.368,0.209-2.053,0.079c0.579,1.804,2.257,3.118,4.245,3.155C5.783,18.102,3.372,18.737,1,18.459 C3.012,19.748,5.399,20.5,7.966,20.5c8.358,0,12.928-6.924,12.928-12.929c0-0.198-0.003-0.393-0.012-0.588 C21.769,6.343,22.835,5.746,23.444,4.834z"/>
+                    </g>
+                </svg>
+                </div>Share on Twitter</div>
+            </a>
+
+            <!-- Sharingbutton Google+ -->
+            <a class="resp-sharing-button__link" href="https://plus.google.com/share?url=http%3A%2F%2Fblog.thoughtram.io/angular/2016/03/14/custom-validators-in-angular-2.html" target="_blank" aria-label="Share on Google+">
+              <div class="resp-sharing-button resp-sharing-button--google resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M11.366,12.928c-0.729-0.516-1.393-1.273-1.404-1.505c0-0.425,0.038-0.627,0.988-1.368 c1.229-0.962,1.906-2.228,1.906-3.564c0-1.212-0.37-2.289-1.001-3.044h0.488c0.102,0,0.2-0.033,0.282-0.091l1.364-0.989 c0.169-0.121,0.24-0.338,0.176-0.536C14.102,1.635,13.918,1.5,13.709,1.5H7.608c-0.667,0-1.345,0.118-2.011,0.347 c-2.225,0.766-3.778,2.66-3.778,4.605c0,2.755,2.134,4.845,4.987,4.91c-0.056,0.22-0.084,0.434-0.084,0.645 c0,0.425,0.108,0.827,0.33,1.216c-0.026,0-0.051,0-0.079,0c-2.72,0-5.175,1.334-6.107,3.32C0.623,17.06,0.5,17.582,0.5,18.098 c0,0.501,0.129,0.984,0.382,1.438c0.585,1.046,1.843,1.861,3.544,2.289c0.877,0.223,1.82,0.335,2.8,0.335 c0.88,0,1.718-0.114,2.494-0.338c2.419-0.702,3.981-2.482,3.981-4.538C13.701,15.312,13.068,14.132,11.366,12.928z M3.66,17.443 c0-1.435,1.823-2.693,3.899-2.693h0.057c0.451,0.005,0.892,0.072,1.309,0.2c0.142,0.098,0.28,0.192,0.412,0.282 c0.962,0.656,1.597,1.088,1.774,1.783c0.041,0.175,0.063,0.35,0.063,0.519c0,1.787-1.333,2.693-3.961,2.693 C5.221,20.225,3.66,19.002,3.66,17.443z M5.551,3.89c0.324-0.371,0.75-0.566,1.227-0.566l0.055,0 c1.349,0.041,2.639,1.543,2.876,3.349c0.133,1.013-0.092,1.964-0.601,2.544C8.782,9.589,8.363,9.783,7.866,9.783H7.865H7.844 c-1.321-0.04-2.639-1.6-2.875-3.405C4.836,5.37,5.049,4.462,5.551,3.89z"/>
+                        <polygon points="23.5,9.5 20.5,9.5 20.5,6.5 18.5,6.5 18.5,9.5 15.5,9.5 15.5,11.5 18.5,11.5 18.5,14.5 20.5,14.5 20.5,11.5  23.5,11.5   "/>
+                    </g>
+                </svg>
+                </div>Share on Google+</div>
+            </a>
+        </div>
+
+        <h3 class="thtrm-section-headline thtrm-section-headline--with-margin">Author</h3>
+        <div class="thtrm-article-author">
+          <span class="thtrm-article-author-avatar"><img src="/images/author-pascal.jpg" alt="Picture of Pascal Precht"></span>
+          <div class="thtrm-article-author-matter">
+            <h4 class="thtrm-article-author-name">Pascal Precht</h4>
+            <p class="thtrm-article-author-text">Pascal is a front-end engineer and a Angular Developer Expert nominated by Google. He created the angular-translate module, is an Angular 2 contributor and also part of the Angular 2 Docs Authoring team.</p>
+            <p>
+              <a class="thtrm-article-author-cta thtrm-article-author-cta-twitter" href="http://twitter.com/PascalPrecht" title="Pascal Precht on Twitter">Twitter</a>
+              <a class="thtrm-article-author-cta" href="http://github.com/PascalPrecht" title="Pascal Precht on GitHub">GitHub</a>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="thtrm-constraint">
+
+        
+        <h4 class="thtrm-section-headline thtrm-section-headline--with-big-margin thtrm-section-headline--centered">Related Posts</h4>
+        <ul class="thtrm-three-column-list thtrm-three-column-list--with-padding">
+        
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angularjs/2015/01/11/exploring-angular-1.3-validators-pipeline.html" title="Validators Pipeline in Angular 1.3">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/fallback.jpeg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Validators Pipeline in Angular 1.3</h3>
+                <p>In this article we discuss a newly introduced feature called custom validators, so we don't have to hijack parsers and...</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2016/10/13/two-way-data-binding-in-angular-2.html" title="Two-way Data Binding in Angular">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/two-way-data-binding-in-angular-2.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Two-way Data Binding in Angular</h3>
+                <p>Two-way data binding was one of the main selling points of Angular. Since version 2.x, we can build directives that...</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2016/07/27/custom-form-controls-in-angular-2.html" title="Custom Form Controls in Angular">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/custom-form-controls-in-angular-2.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Custom Form Controls in Angular</h3>
+                <p>Angular makes it very easy to create custom form controls. Read on to learn how to do it!</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2016/06/22/model-driven-forms-in-angular-2.html" title="Reactive Forms in Angular">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/model-driven-forms-in-angular-2.jpeg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Reactive Forms in Angular</h3>
+                <p>Angular allows us to build forms in a model-driven fashion. In this article we're going to discuss what that looks...</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2016/03/21/template-driven-forms-in-angular-2.html" title="Template-driven Forms in Angular">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/template-driven-forms.jpeg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Template-driven Forms in Angular</h3>
+                <p>In this article we discuss the template-driven forms in Angular and all the directives that come into play.</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2017/02/27/three-things-you-didnt-know-about-the-async-pipe.html" title="Three things you didn't know about the AsyncPipe">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/three-things-about-the-async-pipe.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Three things you didn't know about the AsyncPipe</h3>
+                <p>This article explains three lesser known features of the AsyncPipe that help us to write better async code.</p>
+              </div>
+            </a>
+          </li>
+        
+        
+        </ul>
+        
+
+      
+
+      </div>
+    </main>
+    <footer role="contentinfo" class="thtrm-footer thtrm-footer--slim">
+  <div class="thtrm-footer-text">
+    <img class="thtrm-footer-logo" alt="thoughtram brain" src="/images/thoughtram-brain-white.png">
+    <p>This website was created in collaboration with <a href="http://twitter.com/timche_" title="Tim Cheung on Twitter"><strong>Tim Cheung</strong></a> and <a href="http://twitter.com/tim_hartmann_" title="Tim Hartmann on Twitter"><strong>Tim Hartmann</strong></a>.</p>
+    <p ><a href="http://thoughtram.io/code-of-conduct.html" title="Code of Conduct">Code of Conduct</a> &bullet; <a href="http://thoughtram.io/imprint.html" title="Legal Notice">Legal notice</a></p>
+    <p class="thtrm-footer-bottom">&copy; 2014-2017 thoughtram GmbH</p>
+  </div>
+</footer>
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-51360648-2', 'auto');
+ga('send', 'pageview');
+
+var form = document.getElementById('search-form');
+var eventCta = document.getElementById('event-cta');
+
+if (eventCta) {
+
+  eventCta.addEventListener('click', function (event) {
+    event.preventDefault();
+
+    setTimeout(clickLink, 1000);
+
+    function clickLink() {
+      window.location.replace(eventCta.getAttribute('href'));
+    }
+
+    ga('send', 'event', {
+      eventCategory: 'Event Link',
+      eventAction: 'click',
+      eventLabel: eventCta.getAttribute('title'),
+      hitCallback: clickLink
+    });
+  });
+}
+
+if (form) {
+
+  var searchTerm = document.getElementById('search-term');
+
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    var formSubmitted = false;
+
+    setTimeout(submitForm, 1000);
+
+    function submitForm() {
+      if (!formSubmitted) {
+        formSubmitted = true;
+        form.submit();
+      }
+    }
+
+    ga('send', 'event', {
+      eventCategory: 'Search Form',
+      eventAction: 'submit',
+      eventLabel: searchTerm.value,
+      hitCallback: submitForm
+    });
+  });
+}
+</script>
+
+
+
+    <script src="/scripts/stickyfill.js"></script>
+    <script src="/scripts/linkjuice/dist/linkjuice.js"></script>
+    <script>
+    (function (doc, win) {
+
+      linkjuice.init('.thtrm-article', {
+        selector: ['h2', 'h3'],
+        icon: ''
+      });
+
+      if (win.matchMedia && win.matchMedia('(min-width: 1200px)').matches) {
+        var stickyElements = doc.querySelectorAll('.is-sticky');
+
+        for (var i = stickyElements.length - 1; i >= 0; i--) {
+          var el = stickyElements[i];
+
+          if (el.classList.contains('thtrm-toc')) {
+            el.classList.add('thtrm-toc--sticky');
+            el.classList.add('thtrm-toc--faded');
+          } 
+          if (el.classList.contains('thtrm-ad')) {
+            el.classList.add('thtrm-ad--sticky');
+            el.classList.add('thtrm-ad--description');
+          }
+
+          Stickyfill.add(el);
+        }
+      }
+    }(document, window));
+    </script>
+  </body>
+</html>

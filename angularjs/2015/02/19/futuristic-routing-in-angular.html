@@ -1,0 +1,651 @@
+
+
+
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="An this article we discuss the new router APIs and how it's going to change the way we implement component based routing in our Angular applications.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="thoughtram">
+    <title>Futuristic Routing in Angular by thoughtram</title>
+    <meta name="google-site-verification" content="o9eGPEgIETEqYGombq7NiQuBIB_qa6gz1yAL7PxKyK0">
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#4D8799">
+    <link rel="icon" sizes="192x192" href="/images/touch/chrome-touch-icon-192x192.png">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="thoughtram">
+    <link rel="apple-touch-icon" href="/images/touch/apple-touch-icon.png">
+
+    <!-- Tile icon for Win8 (144x144 + tile color) -->
+    <meta name="msapplication-TileImage" content="/images/touch/ms-touch-icon-144x144-precomposed.png">
+    <meta name="msapplication-TileColor" content="#4D8799">
+
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Futuristic Routing in Angular">
+    <meta property="og:description" content="An this article we discuss the new router APIs and how it's going to change the way we implement component based routing in our Angular applications.">
+    <meta property="og:url" content="http://blog.thoughtram.io/angularjs/2015/02/19/futuristic-routing-in-angular.html">
+    <meta property="og:site_name" content="Articles by thoughtram">
+    <meta property="og:image" content="http://blog.thoughtram.io">
+    <meta property="og:publisher" content="http://www.facebook.com/thoughtram">
+
+    <meta property="twitter:card" content="summary">
+    <meta property="twitter:title" content="Futuristic Routing in Angular">
+    <meta property="twitter:site" content="thoughtram Blog">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css" type="text/css">
+  </head>
+  <body class="sub-site">
+    <!-- Add your site or app content here -->
+
+    <!--[if lt IE 10]>
+        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <header class="thtrm-header" role="banner">
+      <div class="thtrm-header-bar">
+        <div class="thtrm-constraint">
+          <a href="http://thoughtram.io" class="thtrm-header-logo-link" title="thoughtram.io Start Page"><h1 class="thtrm-header-logo">thoughtram</h1></a>
+          <div class="thtrm-header-menu-wrapper">
+            <span role="button" tabindex="0" class="thtrm-header-menu-label">Menu</span>
+            <ul class="thtrm-header-menu">
+              <li><a title="Training" class="thtrm-header-menu-item" href="http://thoughtram.io/training.html">Training</a></li>
+              <li><a title="Code Review" class="thtrm-header-menu-item" href="http://thoughtram.io/code-review.html">Code Review</a></li>
+              <li><a title="Casts" class="thtrm-header-menu-item " href="http://casts.thoughtram.io">Casts</a></li>
+              <li><a title="Blog" class="thtrm-header-menu-item" href="/">Blog</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main role="main" class="thtrm-main">
+    <div class="thtrm-banner" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%), url('/images/banner/fallback.jpeg');">
+        <hgroup class="thtrm-banner-container">
+          <div class="thtrm-constraint thtrm-constraint--slim">
+            <h2 class="thtrm-banner-text">Futuristic Routing in Angular</h2>
+            <span>by <a href="http://twitter.com/" title="Pascal Precht on Twitter">Pascal Precht</a> on Feb 19, 2015, last updated on Dec 16, 2016<br>18 minute read</span>
+
+          </div>
+        </hgroup>
+      </div>
+      <div class="thtrm-constraint thtrm-constraint--slim">
+
+        <div class="thtrm-article">
+          <section class="thtrm-ad thtrm-section thtrm-section--is-promo is-sticky">
+  <img width="100" src="/images/angular2-shield-inverse.svg">
+  <h3 class="thtrm-section-headline">Need private training?</h3>
+  <p class="thtrm-section-text">Get customized training for your corporation</p>
+  <a href="mailto:hello@thoughtram.io" title="Request Training Quote" id="event-cta" class="thtrm-layout-divider-cta">Request quote <strong>&rarr;</strong></a>
+</section>
+
+
+          
+
+          <p>One of the latest announcements that counts as the most exciting ones, is that the Angular team implements a completely new router for the 2.0 release that is much more flexible and powerful than the original one. Especially, when it comes to more complex application structures. <a href="http://twitter.com/EisenbergEffect">Rob Eisenberg</a>, creator of the recently announced <a href="http://aurelia.io">aurelia</a> framework, gave an introduction talk on the new router at last years <a href="http://ng-europe.org">ngEurope</a> conference and showed us the main concepts that make this router so much better.</p>
+
+<p>It got even better, when the team announced that they plan to back port the new router to the 1.x branch of the Angular framework and having it ready in time for the 1.3 release. Unfortunately it turned out, that it took a bit more effort to make the new router available for both projects, especially considering that both should share as much code as possible. <s>That's why the back port has been postponed to the next bigger 1.4 release, which is targeted to be ready in March, this year (yay!)</s> The router also didn’t make it into the 1.4 release.</p>
+
+<p>That’s right, at the time of writing this article, the new router hasn’t been released yet. However, since we’re following the latest developments of all Angular version 2.0.0 related projects actively on GitHub, we can’t wait to share our thoughts on the new router with you. In this article we explore the new router and discuss it’s concepts and features that we’ve all been waiting for!</p>
+
+<div class="thtrm-toc is-sticky">
+  <h3 class="no_toc" id="table-of-contents">TABLE OF CONTENTS</h3>
+<ul id="markdown-toc">
+  <li><a href="#the-routing-we-know" id="markdown-toc-the-routing-we-know">The Routing we know</a></li>
+  <li><a href="#introducing-the-new-router" id="markdown-toc-introducing-the-new-router">Introducing the new router</a></li>
+  <li><a href="#adding-behaviour-to-components" id="markdown-toc-adding-behaviour-to-components">Adding behaviour to components</a></li>
+  <li><a href="#linking-to-other-components" id="markdown-toc-linking-to-other-components">Linking to other components</a></li>
+  <li><a href="#linking-with-dynamic-parameters" id="markdown-toc-linking-with-dynamic-parameters">Linking with dynamic parameters</a></li>
+  <li><a href="#sibling-components" id="markdown-toc-sibling-components">Sibling Components</a></li>
+  <li><a href="#so-much-more-to-talk-about" id="markdown-toc-so-much-more-to-talk-about">So much more to talk about</a></li>
+</ul>
+
+</div>
+
+<h2 id="the-routing-we-know">The Routing we know</h2>
+
+<p>Before we start off showing what the new router is going to look like, let’s recap what kind of routing Angular comes with. The Angular source tries to be as modular as possible. Code components, that aren’t necessary to get an Angular application running, but provide nice additional functionality that might be needed, are sliced into their own modules.</p>
+
+<p>And so is the basic Angular router. It’s implemented in the <code>ngRoute</code> module and can easily be installed through package managers like npm. Once installed, we can add it as module dependency to our application like so:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'myApp'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'ngRoute'</span><span class="p">]);</span></code></pre></div>
+
+<p>In order to configure routes for our application, we use the <code>$routeProvider</code> that we can access in our app’s config phase. <code>$routeProvider</code> comes with methods like <code>.when()</code> and <code>.otherwise()</code> to define which route maps to which controller and template. Here’s a quick example:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">app</span><span class="p">.</span><span class="nx">config</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">$routeProvider</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">$routeProvider</span>
+    <span class="p">.</span><span class="nx">when</span><span class="p">(</span><span class="s1">'/welcome'</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">template</span><span class="p">:</span> <span class="s1">'welcome.html'</span><span class="p">,</span>
+      <span class="na">controller</span><span class="p">:</span> <span class="s1">'WelcomeController'</span>
+    <span class="p">})</span>
+    <span class="p">.</span><span class="nx">otherwise</span><span class="p">(</span><span class="s1">'/welcome'</span><span class="p">);</span>
+<span class="p">});</span></code></pre></div>
+
+<p>We can see very nicely that the route <code>/welcome</code> maps to the controller <code>WelcomeController</code> and the template <code>welcome.html</code>. In addition, if at runtime a route is given that is not covered by any <code>.when()</code> configuration, the app defaults to <code>/welcome</code> route, that’s what <code>.otherwise()</code> is for.</p>
+
+<p>If we have some additional dependencies that should be resolved before a route’s controller is instantiated, we can do that with the <code>resolve</code> property, which is an object literal that maps each member to a promise that either resolves or rejects later at runtime. These resolved dependencies are available to be injected in the controller instance. In order to instantiate the route’s controller, all specified promises need to resolve. If only one promise gets rejected, the route change is cancelled since the corresponding controller can’t be instantiated.</p>
+
+<p>Here’s an example where a promise needs to be resolved first, before a controller can be instantiated:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">app</span><span class="p">.</span><span class="nx">config</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">$routeProvider</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">$routeProvider</span>
+    <span class="p">.</span><span class="nx">when</span><span class="p">(</span><span class="s1">'/welcome'</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">template</span><span class="p">:</span> <span class="s1">'welcome.html'</span><span class="p">,</span>
+      <span class="na">controller</span><span class="p">:</span> <span class="s1">'WelcomeController'</span><span class="p">,</span>
+      <span class="na">resolve</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">person</span><span class="p">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">WelcomeService</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">WelcomeService</span><span class="p">.</span><span class="nx">getPerson</span><span class="p">();</span> <span class="c1">// returns a promise</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">})</span>
+    <span class="p">.</span><span class="nx">otherwise</span><span class="p">(</span><span class="s1">'/welcome'</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">'WelcomeController'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">person</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// do something with person</span>
+<span class="p">});</span></code></pre></div>
+
+<p>If you’re not familiar with promises we’ve written an <a href="http://blog.thoughtram.io/angularjs/2014/12/18/exploring-angular-1.3-es6-style-promises.html">article</a> that gives a brief introduction. Also, if this <code>resolve</code> property looks completely new to you we recommend reading the <a href="https://docs.angularjs.org/api/ngRoute/provider/$routeProvider">official docs</a>.</p>
+
+<p>Let’s take a quick look at our main template to see where our route templates are loaded and rendered.</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;div</span> <span class="na">ng-view</span><span class="nt">&gt;&lt;/div&gt;</span></code></pre></div>
+
+<p>That’s it. One single entry point where, depending on our route, a template is loaded and it’s corresponding controller is instantiated. And here we already see the first weak points of Angular’s built-in routing implementation. The basic routing we get so far is just a simple URL to controller/template mapping. There’s no way to have sibling or nested components.</p>
+
+<p>Since <code>ngRoute</code> lacks such advanced routing features, the community has built their own router component, that solves all these problems - <a href="http://github.com/angular-ui/ui-router">ui-router</a>.</p>
+
+<p>But of course, the Angular team is listening. And that’s why they implement a new more powerful router that is available for both, the <code>1.x</code> as well as the <code>2.x</code> branch.</p>
+
+<h2 id="introducing-the-new-router">Introducing the new router</h2>
+
+<p>You might have seen that Christoph and I gave a talk on “<a href="http://thoughtram.io/the-best-angular-yet">The Best Angular Yet!</a>” at Amsterdam’s Angular conference <a href="http://ng-nl.org">NG-NL</a>. There we already gave a little sneak peak on what the new router will look like. At the time of writing this article and giving that presentation, the router was still in development, so things might have changed over time but we try to keep this article updated.</p>
+
+<p>The new router will be quite different. One of it’s main goals is that it works for both Angular <code>2.x</code> and Angular <code>&gt;=1.4</code>. That means, both need to share as much code as possible, since Angular version 2.0.0 is written in <s>AtScript</s> TypeScript. There are a couple more differences but we are going to take a look at them step by step.</p>
+
+<p>We can install the new router via npm by running the following shell command:</p>
+
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span class="gp">$ </span>npm install angular-new-router</code></pre></div>
+
+<p>Once installed we can take a look at <code>node_modules/angular-new-router/dist/</code> and see that there are two versions of the router source - <code>router.es5.js</code> and <code>router.js</code>. The former one is an “angularfied” version of the router. So it’s basically the router code in ECMAScript 5 plus some additional Angular 1 specific components like service provider and directives. The latter one is the compiled AtScript code as AMD module so it can be used in other applications as well.</p>
+
+<p>Currently we are interested in the Angular 1 components, so what we need to do is to embed <code>router.es5.js</code> and add the new router module as dependency to our application like this:</p>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'myApp'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'ngComponentRouter'</span><span class="p">]);</span></code></pre></div>
+
+<p>Great! Next up: configuration. Here we’re going to encouter the first big difference when using the new router. As we know, in Angular 1 we have this <code>.config()</code> phase where we have access to service providers in order to configure services that are used later at runtime. That’s why we can use the <code>$routeProvider</code> of <code>ngRoute</code> to configure our routes.</p>
+
+<p>However, it turned out that there are a lot of problems with having a separation between configuration and run phases, which is why there won’t be such a thing in Angular &gt;= 2.0.0. And so there isn’t in the new router. Now you might wonder how we are able to configure our routes with the new router, if there’s no provider that we can access during our application’s <code>.config()</code>.</p>
+
+<p>Well, let’s take a look at some code.</p>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">'AppController'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">$router</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">$router</span><span class="p">.</span><span class="nx">config</span><span class="p">([</span>
+    <span class="p">{</span>
+      <span class="na">path</span><span class="p">:</span> <span class="s1">'/'</span><span class="p">,</span>
+      <span class="na">component</span><span class="p">:</span> <span class="s1">'welcome'</span>
+    <span class="p">}</span>
+  <span class="p">]);</span>
+<span class="p">});</span></code></pre></div>
+
+<p>Oh what’s happening here? All we do is creating a new controller that asks for the <code>$router</code> service, which we use to configure itself. The configuration is pretty straight forward. We use <code>$router.config()</code> and pass it an array with configuration objects that each have a property <code>path</code> to set the route and a property <code>component</code> that sets the name of the component to be instantiated.</p>
+
+<p>We’re going to talk about what a component actually is in a second, but let’s first take a look at our template. So let’s assume we have an HTML document, this is what our application could look like:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;body</span> <span class="na">ng-app=</span><span class="s">"myApp"</span> <span class="na">ng-controller=</span><span class="s">"AppController"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;ng-outlet&gt;&lt;/ng-outlet&gt;</span>
+<span class="nt">&lt;/body&gt;</span></code></pre></div>
+
+<p>Right, there’s no <code>&lt;ng-view&gt;</code> anymore. Instead the new router comes with a directive called <code>&lt;ng-outlet&gt;</code> which can also be used as an attribute in case it’s needed. An outlet basically is a “hole” where component templates are loaded into. So the above code in it’s current state is pretty much the same as using <code>&lt;ng-view&gt;</code> with the old routing system.</p>
+
+<p>But what gets loaded into our outlet you ask? Good question! This is where components come into play. When we configured the router, we said that the route <code>/</code> loads and instantiates the <code>welcome</code> component. But we haven’t talked about what the <code>welcome</code> component actually is.</p>
+
+<p><strong>A component</strong> in Angular 1, when using the new router, <strong>is a controller with a template and an optional router</strong> for that component. So if we say we have a <code>welcome</code> component, we need to create a corresponding controller and template for it. In fact, the new router already comes with a default configuration to load and instantiate components. This configuration behaves as follows:</p>
+
+<ul>
+  <li>Load the component template asynchronously from <code>components/[COMPONENT_NAME]/[COMPONENT_NAME].html</code></li>
+  <li>Instantiate <code>[COMPONENT_NAME]Controller</code></li>
+</ul>
+
+<p>Applying this to our configuration, it means that the router automatically tries to load <code>components/welcome/welcome.html</code> and instantiate <code>WelcomeController</code>.</p>
+
+<p>If we’re not okay with that configuration, we can simply override this default behaviour by using the <code>$componentMapperProvider</code> in our application configuration. It provides us with methods to configure the names of controllers to be instantiated as well as the paths from where to load component templates.</p>
+
+<p>The following code forces the router to load <code>[COMPONENT_NAME].html</code> instead of <code>components/[COMPONENT_NAME]/[COMPONENT_NAME].html</code>:</p>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">config</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">$componentMapperProvider</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">$componentMapperProvider</span><span class="p">.</span><span class="nx">setTemplateMapping</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// name == component name</span>
+    <span class="k">return</span> <span class="nx">name</span> <span class="o">+</span> <span class="s1">'.html'</span><span class="p">;</span>
+  <span class="p">});</span>
+<span class="p">});</span></code></pre></div>
+
+<p>Let’s create <code>WelcomeController</code> (for simplicity reasons I define the controller directly on <code>app</code> rather than introducing a new module for that component, but you can do that of course).</p>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">'WelcomeController'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+
+<span class="p">});</span></code></pre></div>
+
+<p>And here the corresponding template <code>welcome.html</code>:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;h1&gt;</span>Welcome!<span class="nt">&lt;/h1&gt;</span></code></pre></div>
+
+<p>The component is now ready to be loaded and instantiated. Let’s see the code in action:</p>
+
+<iframe src="http://embed.plnkr.co/uc2RuLRa1aYmRI2THRcO/preview?deferRun" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe>
+
+<h2 id="adding-behaviour-to-components">Adding behaviour to components</h2>
+
+<p>Now we have a component with a controller that doesn’t do anything. Adding behaviour to our component works the way we are used to it. We simply define methods and properties on a component’s controller.</p>
+
+<p>Just keep in mind that the new router enforces <code>controller as</code> syntax, which means we have to define our methods and properties on the controller itself instead of <code>$scope</code>. The controller is then exposed with the component name on the scope, which leads us to use <code>welcome</code> as controller reference in our template.</p>
+
+<p>As an example let’s add a property and method to our <code>WelcomeController</code>:</p>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">'WelcomeController'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="s1">'Pascal'</span><span class="p">;</span>
+
+  <span class="k">this</span><span class="p">.</span><span class="nx">changeName</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="s1">'Christoph'</span><span class="p">;</span>
+  <span class="p">};</span>
+<span class="p">});</span></code></pre></div>
+
+<p>In our component template, we can access the controller properties via the <code>welcome</code> identifier like this:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;h1&gt;</span>Welcome!<span class="nt">&lt;/h1&gt;</span>
+<span class="nt">&lt;p&gt;</span>Hello {{welcome.name}}<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;button</span> <span class="na">ng-click=</span><span class="s">"welcome.changeName()"</span><span class="nt">&gt;</span>Change Name!<span class="nt">&lt;/button&gt;</span></code></pre></div>
+
+<p>If you’re not familiar with the <code>controller as</code> syntax. you might want to check out our article on <a href="http://blog.thoughtram.io/angularjs/2015/01/02/exploring-angular-1.3-bindToController.html">Binding to Directive Controllers</a>. Here’s our updated example as runnable app:</p>
+
+<iframe src="http://embed.plnkr.co/ie9d2F/preview?deferRun" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe>
+
+<h2 id="linking-to-other-components">Linking to other components</h2>
+
+<p>In order to have a very easy way to navigate from one component to another, the <code>ngComponentRouter</code> module comes with a <code>routerLink</code> directive that we can use to tell our application, where to navigate. Let’s say we have another component <code>user</code>, we’d extend our application with a new configuration for that component.</p>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">'AppController'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">$router</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">$router</span><span class="p">.</span><span class="nx">config</span><span class="p">([</span>
+    <span class="p">{</span>
+      <span class="na">path</span><span class="p">:</span> <span class="s1">'/'</span><span class="p">,</span>
+      <span class="na">component</span><span class="p">:</span> <span class="s1">'welcome'</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="na">path</span><span class="p">:</span> <span class="s1">'/user'</span><span class="p">,</span>
+      <span class="na">component</span><span class="p">:</span> <span class="s1">'user'</span>
+    <span class="p">}</span>
+  <span class="p">]);</span>
+<span class="p">});</span></code></pre></div>
+
+<p>And as we’ve learned, we also need a corresponding controller and template to actually assemble our component. Here’s our <code>UserController</code>:</p>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">'UserController'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+
+<span class="p">});</span></code></pre></div>
+
+<p>And here’s the template <code>user.html</code>.</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;h1&gt;</span>User<span class="nt">&lt;/h1&gt;</span></code></pre></div>
+
+<p>Now, in order to get there from our <code>welcome</code> component, all we have to do is to add an anchor tag to our <code>welcome</code> component template and us the <code>routerLink</code> directive accordingly.</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;h1&gt;</span>Welcome!<span class="nt">&lt;/h1&gt;</span>
+<span class="nt">&lt;p&gt;</span>Hello {{welcome.name}}<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;button</span> <span class="na">ng-click=</span><span class="s">"welcome.changeName()"</span><span class="nt">&gt;</span>Change Name!<span class="nt">&lt;/button&gt;</span>
+<span class="nt">&lt;p&gt;&lt;a</span> <span class="na">ng-link=</span><span class="s">"user"</span><span class="nt">&gt;</span>User View<span class="nt">&lt;/a&gt;&lt;/p&gt;</span></code></pre></div>
+
+<p>As you can see, we don’t have to set an <code>href</code> attribute, since <code>routerLink</code> takes care of that. The directive itself takes a component name to navigate to once the link is clicked, which in our case is <code>user</code>. Again, here the running code:</p>
+
+<iframe src="http://embed.plnkr.co/dds8KE/preview?deferRun" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe>
+
+<h2 id="linking-with-dynamic-parameters">Linking with dynamic parameters</h2>
+
+<p>Of course, just navigating to a component in some cases isn’t enough. We might have routes that take some additional parameters in order to post process that data accordingly. Our <code>user</code> component doesn’t do anything right now, but we might want to display some data of a certain user depending on a given user id.</p>
+
+<p>Configuring a route that expects query parameters works pretty similar to what we already know when doing that with the original router. We can define placeholders in our route definition by using the <code>:</code> symbol followed by an identifer that is used to later expose the value of that placeholder in a dedicated <code>$routeParams</code> service.</p>
+
+<p>To get a better idea, here’s our updated route configuration that takes an additional user id parameter:</p>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">'AppController'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">$router</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">$router</span><span class="p">.</span><span class="nx">config</span><span class="p">([</span>
+    <span class="p">{</span>
+      <span class="na">path</span><span class="p">:</span> <span class="s1">'/'</span><span class="p">,</span>
+      <span class="na">component</span><span class="p">:</span> <span class="s1">'welcome'</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="na">path</span><span class="p">:</span> <span class="s1">'/user/:userId'</span><span class="p">,</span>
+      <span class="na">component</span><span class="p">:</span> <span class="s1">'user'</span>
+    <span class="p">}</span>
+  <span class="p">]);</span>
+<span class="p">});</span></code></pre></div>
+
+<p>Simple right? As already mentioned, query parameter are exposed on the <code>$routeParams</code> service as simple hash. Which means, in order to access a given user id from that route, all we have to do is to inject <code>$routeParams</code> into our component’s controller and ask for the paramters we’re looking for.</p>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">'UserController'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">$routeParams</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">userId</span> <span class="o">=</span> <span class="nx">$routeParams</span><span class="p">.</span><span class="nx">userId</span><span class="p">;</span>
+<span class="p">});</span></code></pre></div>
+
+<p>Okay cool. But how do we <strong>link</strong> to a component that takes parameters? We’ve learned that <code>ngComponentRouter</code> comes with a <code>routerLink</code> directive that takes a component name. It turns out, we can set parameters, for a route we want to navigate to, with that directive too! All we need to do is to pass a hash literal to specify the values. Here’s our updated <code>welcome</code> component template:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;h1&gt;</span>Welcome!<span class="nt">&lt;/h1&gt;</span>
+<span class="nt">&lt;p&gt;</span>Hello {{welcome.name}}<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;button</span> <span class="na">ng-click=</span><span class="s">"welcome.changeName()"</span><span class="nt">&gt;</span>Change Name!<span class="nt">&lt;/button&gt;</span>
+<span class="nt">&lt;p&gt;&lt;a</span> <span class="na">ng-link=</span><span class="s">"user({ userId: 3 })"</span><span class="nt">&gt;</span>User View<span class="nt">&lt;/a&gt;&lt;/p&gt;</span></code></pre></div>
+
+<p>You can see it in action right here:</p>
+
+<iframe src="http://embed.plnkr.co/2C40t4/preview?deferRun" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe>
+
+<h2 id="sibling-components">Sibling Components</h2>
+
+<p>What we’ve done so far is not a very complex scenario, nor does it show the advantage over Angular’s basic routing with <code>ngRoute</code>. There are other scenarios where the power of the new router really shines. One of them is being able to have sibling components per route. Exactly, we’re finally able to load more than one component at a time!</p>
+
+<p>Imagine, when a user visits our app, we not only want to have a <code>welcome</code> component be loaded, we want to spin up another component for our navigation as well. So we end up with two components at the same time for one single route - <code>navigation</code> and <code>welcome</code>. We can configure our <code>$router</code> accordingly by specifying a <code>components</code> property which describes what components should be loaded for which outlet. Let’s see how that works.</p>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">'AppController'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">$router</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">$router</span><span class="p">.</span><span class="nx">config</span><span class="p">([</span>
+    <span class="p">{</span>
+      <span class="na">path</span><span class="p">:</span> <span class="s1">'/'</span><span class="p">,</span>
+      <span class="na">components</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">navigation</span><span class="p">:</span> <span class="s1">'navigation'</span><span class="p">,</span>
+        <span class="na">main</span><span class="p">:</span> <span class="s1">'welcome'</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">]);</span>
+<span class="p">});</span></code></pre></div>
+
+<p>Here we see that we expect <em>two</em> outlets <code>navigation</code> and <code>main</code> and we say that we want to load the <code>navigation</code> and <code>welcome</code> component respectively. Of course, we now need a <code>NavigationController</code> and <code>navigation.html</code> to make this work. Here’s a simple controller with an even simpler template:</p>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">'NavigationController'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+
+<span class="p">});</span></code></pre></div>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;h2&gt;</span>Navigation<span class="nt">&lt;/h2&gt;</span>
+<span class="nt">&lt;p&gt;</span>Yay, navigation goes here.<span class="nt">&lt;/p&gt;</span></code></pre></div>
+
+<p>Now we need to decide, <em>where</em> our components are actually rendered. We’ve learned that a component has outlets, in fact, a component can have multiple outlets. In our router configuration we said we have an outlet <code>navigation</code> and <code>main</code>. All we need to do is to use the <code>&lt;ng-outlet&gt;</code> directive multiple times and give them the names accordingly.</p>
+
+<p>Here’s our updated <code>index.html</code> that now introduces two outlets, one for each component specified in the router configuration:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;body</span> <span class="na">ng-app=</span><span class="s">"myApp"</span> <span class="na">ng-controller=</span><span class="s">"AppController"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;nav</span> <span class="na">ng-outlet=</span><span class="s">"navigation"</span><span class="nt">&gt;&lt;/nav&gt;</span>
+
+  <span class="nt">&lt;main</span> <span class="na">ng-outlet=</span><span class="s">"main"</span><span class="nt">&gt;&lt;/main&gt;</span>
+<span class="nt">&lt;/body&gt;</span></code></pre></div>
+
+<p>That’s it! Running this code in the browser shows that now two sibling components are loaded for one route.</p>
+
+<h2 id="so-much-more-to-talk-about">So much more to talk about</h2>
+
+<p>Following the development on the new router and also actively contributing to it, there’ve been a couple of questions popping up that we haven’t covered in this article yet. In fact, most of them aren’t answered yet but you can follow them on GitHub since we’ve created issues accordingly. To give you an idea of what questions we are talking about, we’ve asked ourself for example if a <a href="https://github.com/angular/router/issues/117">component can have it’s own sub components and outlets</a> or <a href="https://github.com/angular/router/issues/118">how to link to routes that have multiple outlets</a>.</p>
+
+<p>We also haven’t talked about nested routing and or if there’s a <a href="https://github.com/angular/router/issues/100"><code>resolve</code> equivalent</a> in the new router, but once we have answers to all these questions, we either going to update this article or write separate ones that cover each topic isolated.</p>
+
+<p>In the meantime check out the official <a href="http://github.com/angular/router">repository</a> or take a look at the <a href="http://angular.github.io/router/">online documentation</a>. Don’t forget to contribute, we always need your help!</p>
+
+
+          
+
+
+
+
+        </div>
+
+        <div class="thtrm-subscriber">
+  <h3>Get updates on new articles and trainings.</h3>
+  <p>Join over 1400 other developers who get our content first.</p>
+  <form action="//thoughtram.us8.list-manage.com/subscribe/post?u=dfbb1507fbced5a20d9dc5698&amp;id=731f22cdca" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" novalidate>
+    <label for="mce-EMAIL"></label>
+    <input type="email" value="" name="EMAIL" placeholder="Your email address..." required>
+    <div style="position: absolute; left: -5000px;"><input type="text" name="b_dfbb1507fbced5a20d9dc5698_731f22cdca" tabindex="-1" value=""></div>
+    <input type="submit" value="Subscribe" name="subscribe" class="thtrm-cta thtrm-cta--small">
+  </form>
+</div>
+
+
+
+        <div class="thtrm-social-links">
+            <!-- Sharingbutton Facebook -->
+            <a class="resp-sharing-button__link" href="https://facebook.com/sharer/sharer.php?u=http%3A%2F%2Fblog.thoughtram.io/angularjs/2015/02/19/futuristic-routing-in-angular.html" target="_blank" aria-label="Share on Facebook">
+              <div class="resp-sharing-button resp-sharing-button--facebook resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M18.768,7.465H14.5V5.56c0-0.896,0.594-1.105,1.012-1.105s2.988,0,2.988,0V0.513L14.171,0.5C10.244,0.5,9.5,3.438,9.5,5.32 v2.145h-3v4h3c0,5.212,0,12,0,12h5c0,0,0-6.85,0-12h3.851L18.768,7.465z"/>
+                    </g>
+                </svg>
+                </div>Share on Facebook</div>
+            </a>
+
+            <!-- Sharingbutton Twitter -->
+            <a class="resp-sharing-button__link" href="https://twitter.com/intent/tweet/?text=Futuristic%20Routing%20in%20Angular&amp;url=http://blog.thoughtram.io/angularjs/2015/02/19/futuristic-routing-in-angular.html" target="_blank" aria-label="Share on Twitter">
+              <div class="resp-sharing-button resp-sharing-button--twitter resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M23.444,4.834c-0.814,0.363-1.5,0.375-2.228,0.016c0.938-0.562,0.981-0.957,1.32-2.019c-0.878,0.521-1.851,0.9-2.886,1.104 C18.823,3.053,17.642,2.5,16.335,2.5c-2.51,0-4.544,2.036-4.544,4.544c0,0.356,0.04,0.703,0.117,1.036 C8.132,7.891,4.783,6.082,2.542,3.332C2.151,4.003,1.927,4.784,1.927,5.617c0,1.577,0.803,2.967,2.021,3.782 C3.203,9.375,2.503,9.171,1.891,8.831C1.89,8.85,1.89,8.868,1.89,8.888c0,2.202,1.566,4.038,3.646,4.456 c-0.666,0.181-1.368,0.209-2.053,0.079c0.579,1.804,2.257,3.118,4.245,3.155C5.783,18.102,3.372,18.737,1,18.459 C3.012,19.748,5.399,20.5,7.966,20.5c8.358,0,12.928-6.924,12.928-12.929c0-0.198-0.003-0.393-0.012-0.588 C21.769,6.343,22.835,5.746,23.444,4.834z"/>
+                    </g>
+                </svg>
+                </div>Share on Twitter</div>
+            </a>
+
+            <!-- Sharingbutton Google+ -->
+            <a class="resp-sharing-button__link" href="https://plus.google.com/share?url=http%3A%2F%2Fblog.thoughtram.io/angularjs/2015/02/19/futuristic-routing-in-angular.html" target="_blank" aria-label="Share on Google+">
+              <div class="resp-sharing-button resp-sharing-button--google resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M11.366,12.928c-0.729-0.516-1.393-1.273-1.404-1.505c0-0.425,0.038-0.627,0.988-1.368 c1.229-0.962,1.906-2.228,1.906-3.564c0-1.212-0.37-2.289-1.001-3.044h0.488c0.102,0,0.2-0.033,0.282-0.091l1.364-0.989 c0.169-0.121,0.24-0.338,0.176-0.536C14.102,1.635,13.918,1.5,13.709,1.5H7.608c-0.667,0-1.345,0.118-2.011,0.347 c-2.225,0.766-3.778,2.66-3.778,4.605c0,2.755,2.134,4.845,4.987,4.91c-0.056,0.22-0.084,0.434-0.084,0.645 c0,0.425,0.108,0.827,0.33,1.216c-0.026,0-0.051,0-0.079,0c-2.72,0-5.175,1.334-6.107,3.32C0.623,17.06,0.5,17.582,0.5,18.098 c0,0.501,0.129,0.984,0.382,1.438c0.585,1.046,1.843,1.861,3.544,2.289c0.877,0.223,1.82,0.335,2.8,0.335 c0.88,0,1.718-0.114,2.494-0.338c2.419-0.702,3.981-2.482,3.981-4.538C13.701,15.312,13.068,14.132,11.366,12.928z M3.66,17.443 c0-1.435,1.823-2.693,3.899-2.693h0.057c0.451,0.005,0.892,0.072,1.309,0.2c0.142,0.098,0.28,0.192,0.412,0.282 c0.962,0.656,1.597,1.088,1.774,1.783c0.041,0.175,0.063,0.35,0.063,0.519c0,1.787-1.333,2.693-3.961,2.693 C5.221,20.225,3.66,19.002,3.66,17.443z M5.551,3.89c0.324-0.371,0.75-0.566,1.227-0.566l0.055,0 c1.349,0.041,2.639,1.543,2.876,3.349c0.133,1.013-0.092,1.964-0.601,2.544C8.782,9.589,8.363,9.783,7.866,9.783H7.865H7.844 c-1.321-0.04-2.639-1.6-2.875-3.405C4.836,5.37,5.049,4.462,5.551,3.89z"/>
+                        <polygon points="23.5,9.5 20.5,9.5 20.5,6.5 18.5,6.5 18.5,9.5 15.5,9.5 15.5,11.5 18.5,11.5 18.5,14.5 20.5,14.5 20.5,11.5  23.5,11.5   "/>
+                    </g>
+                </svg>
+                </div>Share on Google+</div>
+            </a>
+        </div>
+
+        <h3 class="thtrm-section-headline thtrm-section-headline--with-margin">Author</h3>
+        <div class="thtrm-article-author">
+          <span class="thtrm-article-author-avatar"><img src="/images/author-pascal.jpg" alt="Picture of Pascal Precht"></span>
+          <div class="thtrm-article-author-matter">
+            <h4 class="thtrm-article-author-name">Pascal Precht</h4>
+            <p class="thtrm-article-author-text">Pascal is a front-end engineer and a Angular Developer Expert nominated by Google. He created the angular-translate module, is an Angular 2 contributor and also part of the Angular 2 Docs Authoring team.</p>
+            <p>
+              <a class="thtrm-article-author-cta thtrm-article-author-cta-twitter" href="http://twitter.com/PascalPrecht" title="Pascal Precht on Twitter">Twitter</a>
+              <a class="thtrm-article-author-cta" href="http://github.com/PascalPrecht" title="Pascal Precht on GitHub">GitHub</a>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="thtrm-constraint">
+
+        
+        <h4 class="thtrm-section-headline thtrm-section-headline--with-big-margin thtrm-section-headline--centered">Related Posts</h4>
+        <ul class="thtrm-three-column-list thtrm-three-column-list--with-padding">
+        
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2016/10/10/resolving-route-data-in-angular-2.html" title="Resolving route data in Angular">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/resolving-route-data-in-angular-2.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Resolving route data in Angular</h3>
+                <p>We often want to make sure that certain data is available before a component is instantiated via routing. In this...</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2016/07/18/guards-in-angular-2.html" title="Protecting Routes using Guards in Angular">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/protecting-routes-using-guards-in-angular-2.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Protecting Routes using Guards in Angular</h3>
+                <p>Angular's router enables protecting routes using guards and in this article we're going to discuss how to implement them.</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2016/06/14/routing-in-angular-2-revisited.html" title="Routing in Angular revisited">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/routing-in-angular-2-revisited.jpeg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Routing in Angular revisited</h3>
+                <p>Learn how to implement basic routing in your Angular application using the latest and greatest APIs!</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2015/06/16/routing-in-angular-2.html" title="Routing in Angular">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/fallback.jpeg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Routing in Angular</h3>
+                <p>Learn how to route between components. In this article we explore how to use the new router in Angular.</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angularjs/2015/01/23/exploring-angular-1.3-ngMessages.html" title="ngMessages in Angular 1.3">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/fallback.jpeg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>ngMessages in Angular 1.3</h3>
+                <p>In this article we're going to how the ngMessages module improves the way we handle validation messages when dealing with...</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angularjs/2015/01/14/exploring-angular-1.3-speed-up-with-applyAsync.html" title="Go fast with $applyAsync in Angular 1.3">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/fallback.jpeg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Go fast with $applyAsync in Angular 1.3</h3>
+                <p>Angular 1.3 comes with a feature to share a running $digest cycle across multiple XHR calls. This articles details how...</p>
+              </div>
+            </a>
+          </li>
+        
+        
+        </ul>
+        
+
+      
+
+      </div>
+    </main>
+    <footer role="contentinfo" class="thtrm-footer thtrm-footer--slim">
+  <div class="thtrm-footer-text">
+    <img class="thtrm-footer-logo" alt="thoughtram brain" src="/images/thoughtram-brain-white.png">
+    <p>This website was created in collaboration with <a href="http://twitter.com/timche_" title="Tim Cheung on Twitter"><strong>Tim Cheung</strong></a> and <a href="http://twitter.com/tim_hartmann_" title="Tim Hartmann on Twitter"><strong>Tim Hartmann</strong></a>.</p>
+    <p ><a href="http://thoughtram.io/code-of-conduct.html" title="Code of Conduct">Code of Conduct</a> &bullet; <a href="http://thoughtram.io/imprint.html" title="Legal Notice">Legal notice</a></p>
+    <p class="thtrm-footer-bottom">&copy; 2014-2017 thoughtram GmbH</p>
+  </div>
+</footer>
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-51360648-2', 'auto');
+ga('send', 'pageview');
+
+var form = document.getElementById('search-form');
+var eventCta = document.getElementById('event-cta');
+
+if (eventCta) {
+
+  eventCta.addEventListener('click', function (event) {
+    event.preventDefault();
+
+    setTimeout(clickLink, 1000);
+
+    function clickLink() {
+      window.location.replace(eventCta.getAttribute('href'));
+    }
+
+    ga('send', 'event', {
+      eventCategory: 'Event Link',
+      eventAction: 'click',
+      eventLabel: eventCta.getAttribute('title'),
+      hitCallback: clickLink
+    });
+  });
+}
+
+if (form) {
+
+  var searchTerm = document.getElementById('search-term');
+
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    var formSubmitted = false;
+
+    setTimeout(submitForm, 1000);
+
+    function submitForm() {
+      if (!formSubmitted) {
+        formSubmitted = true;
+        form.submit();
+      }
+    }
+
+    ga('send', 'event', {
+      eventCategory: 'Search Form',
+      eventAction: 'submit',
+      eventLabel: searchTerm.value,
+      hitCallback: submitForm
+    });
+  });
+}
+</script>
+
+
+
+    <script src="/scripts/stickyfill.js"></script>
+    <script src="/scripts/linkjuice/dist/linkjuice.js"></script>
+    <script>
+    (function (doc, win) {
+
+      linkjuice.init('.thtrm-article', {
+        selector: ['h2', 'h3'],
+        icon: ''
+      });
+
+      if (win.matchMedia && win.matchMedia('(min-width: 1200px)').matches) {
+        var stickyElements = doc.querySelectorAll('.is-sticky');
+
+        for (var i = stickyElements.length - 1; i >= 0; i--) {
+          var el = stickyElements[i];
+
+          if (el.classList.contains('thtrm-toc')) {
+            el.classList.add('thtrm-toc--sticky');
+            el.classList.add('thtrm-toc--faded');
+          } 
+          if (el.classList.contains('thtrm-ad')) {
+            el.classList.add('thtrm-ad--sticky');
+            el.classList.add('thtrm-ad--description');
+          }
+
+          Stickyfill.add(el);
+        }
+      }
+    }(document, window));
+    </script>
+  </body>
+</html>

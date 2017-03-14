@@ -1,0 +1,580 @@
+
+
+
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="In this article we'll take a closer look at a simple model for a neural net to solve an XOR gate. Even with such a basic task, we can figure out quite a bunch of interesting things.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="thoughtram">
+    <title>Understanding XOR with Keras and TensorFlow by thoughtram</title>
+    <meta name="google-site-verification" content="o9eGPEgIETEqYGombq7NiQuBIB_qa6gz1yAL7PxKyK0">
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#4D8799">
+    <link rel="icon" sizes="192x192" href="/images/touch/chrome-touch-icon-192x192.png">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="thoughtram">
+    <link rel="apple-touch-icon" href="/images/touch/apple-touch-icon.png">
+
+    <!-- Tile icon for Win8 (144x144 + tile color) -->
+    <meta name="msapplication-TileImage" content="/images/touch/ms-touch-icon-144x144-precomposed.png">
+    <meta name="msapplication-TileColor" content="#4D8799">
+
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Understanding XOR with Keras and TensorFlow">
+    <meta property="og:description" content="In this article we'll take a closer look at a simple model for a neural net to solve an XOR gate. Even with such a basic task, we can figure out quite a bunch of interesting things.">
+    <meta property="og:url" content="http://blog.thoughtram.io/machine-learning/2016/11/02/understanding-XOR-with-keras-and-tensorlow.html">
+    <meta property="og:site_name" content="Articles by thoughtram">
+    <meta property="og:image" content="http://blog.thoughtram.io/images/banner/understanding-xor-with-keras-and-tensorflow.jpeg">
+    <meta property="og:publisher" content="http://www.facebook.com/thoughtram">
+
+    <meta property="twitter:card" content="summary">
+    <meta property="twitter:title" content="Understanding XOR with Keras and TensorFlow">
+    <meta property="twitter:site" content="thoughtram Blog">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css" type="text/css">
+  </head>
+  <body class="sub-site">
+    <!-- Add your site or app content here -->
+
+    <!--[if lt IE 10]>
+        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <header class="thtrm-header" role="banner">
+      <div class="thtrm-header-bar">
+        <div class="thtrm-constraint">
+          <a href="http://thoughtram.io" class="thtrm-header-logo-link" title="thoughtram.io Start Page"><h1 class="thtrm-header-logo">thoughtram</h1></a>
+          <div class="thtrm-header-menu-wrapper">
+            <span role="button" tabindex="0" class="thtrm-header-menu-label">Menu</span>
+            <ul class="thtrm-header-menu">
+              <li><a title="Training" class="thtrm-header-menu-item" href="http://thoughtram.io/training.html">Training</a></li>
+              <li><a title="Code Review" class="thtrm-header-menu-item" href="http://thoughtram.io/code-review.html">Code Review</a></li>
+              <li><a title="Casts" class="thtrm-header-menu-item " href="http://casts.thoughtram.io">Casts</a></li>
+              <li><a title="Blog" class="thtrm-header-menu-item" href="/">Blog</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main role="main" class="thtrm-main">
+    <div class="thtrm-banner" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%), url('/images/banner/understanding-xor-with-keras-and-tensorflow.jpeg');">
+        <hgroup class="thtrm-banner-container">
+          <div class="thtrm-constraint thtrm-constraint--slim">
+            <h2 class="thtrm-banner-text">Understanding XOR with Keras and TensorFlow</h2>
+            <span>by <a href="http://twitter.com/" title="Christoph Burgdorf on Twitter">Christoph Burgdorf</a> on Nov 2, 2016, last updated on Nov 8, 2016<br>16 minute read</span>
+
+          </div>
+        </hgroup>
+      </div>
+      <div class="thtrm-constraint thtrm-constraint--slim">
+
+        <div class="thtrm-article">
+          <section class="thtrm-ad thtrm-section thtrm-section--is-promo is-sticky">
+  <img width="100" src="/images/angular2-shield-inverse.svg">
+  <h3 class="thtrm-section-headline">Need private training?</h3>
+  <p class="thtrm-section-text">Get customized training for your corporation</p>
+  <a href="mailto:hello@thoughtram.io" title="Request Training Quote" id="event-cta" class="thtrm-layout-divider-cta">Request quote <strong>&rarr;</strong></a>
+</section>
+
+
+          
+
+          <p>In our <a href="/machine-learning/2016/09/23/beginning-ml-with-keras-and-tensorflow.html">recent article</a> on machine learning we’ve shown how to get started with machine learning without assuming any prior knowledge. We ended up running our very first neural network to implement an <a href="https://en.wikipedia.org/wiki/XOR_gate">XOR gate</a>.</p>
+
+<p>Of course solving XOR is a toy task. Why would you use a neural network to solve a trivial task that a hash map could solve much faster? The answer is simple: When we learn something new, we want to start with bite-sized tasks and take away as much of the complexity as possible. Once we grokked the basics, we can work our way up to the more advanced stuff.</p>
+
+<p>As an absolute machine learning beginner you’re probably still wondering what the code means and how you could have come up with it by yourself. What are all these numbers and what role do they play in solving the XOR problem? If these are youre questions, read on!</p>
+
+<div class="thtrm-toc is-sticky">
+  <h3 class="no_toc" id="table-of-contents">TABLE OF CONTENTS</h3>
+<ul id="markdown-toc">
+  <li><a href="#understanding-the-model-of-our-neural-net" id="markdown-toc-understanding-the-model-of-our-neural-net">Understanding the model of our neural net</a></li>
+  <li><a href="#finding-the-right-model" id="markdown-toc-finding-the-right-model">Finding the right model</a></li>
+  <li><a href="#measure-and-tweak" id="markdown-toc-measure-and-tweak">Measure and tweak</a></li>
+  <li><a href="#solving-xor-with-no-activation-function-at-all" id="markdown-toc-solving-xor-with-no-activation-function-at-all">Solving XOR with no activation function at all.</a></li>
+  <li><a href="#conclusion" id="markdown-toc-conclusion">Conclusion</a></li>
+</ul>
+
+</div>
+
+<h2 id="understanding-the-model-of-our-neural-net">Understanding the model of our neural net</h2>
+
+<p>Let’s take another look at our model from the previous article. We’ll be exploring what it actually means line by line.</p>
+
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">keras.models</span> <span class="kn">import</span> <span class="n">Sequential</span>
+<span class="kn">from</span> <span class="nn">keras.layers.core</span> <span class="kn">import</span> <span class="n">Dense</span>
+
+<span class="c"># the four different states of the XOR gate</span>
+<span class="n">training_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]],</span> <span class="s">"float32"</span><span class="p">)</span>
+
+<span class="c"># the four expected results in the same order</span>
+<span class="n">target_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">]],</span> <span class="s">"float32"</span><span class="p">)</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">()</span>
+<span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="n">input_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">))</span>
+<span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'sigmoid'</span><span class="p">))</span>
+
+<span class="n">model</span><span class="o">.</span><span class="nb">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s">'mean_squared_error'</span><span class="p">,</span>
+              <span class="n">optimizer</span><span class="o">=</span><span class="s">'adam'</span><span class="p">,</span>
+              <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s">'binary_accuracy'</span><span class="p">])</span>
+
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">training_data</span><span class="p">,</span> <span class="n">target_data</span><span class="p">,</span> <span class="n">nb_epoch</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="k">print</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">training_data</span><span class="p">)</span><span class="o">.</span><span class="nb">round</span><span class="p">()</span></code></pre></div>
+
+<p>Let’s focus on the list of imports first. These are all things that we need to bring into scope because we need them in the rest of the code.</p>
+
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">keras.models</span> <span class="kn">import</span> <span class="n">Sequential</span>
+<span class="kn">from</span> <span class="nn">keras.layers.core</span> <span class="kn">import</span> <span class="n">Dense</span></code></pre></div>
+
+<p>The Python ecosystem has pretty strong math support. One of the most popular libraries is <code>numpy</code> which makes working with arrays a joy. <a href="https://keras.io/">Keras</a> also uses numpy internally and expects numpy arrays as inputs. We import <code>numpy</code> and alias it as <code>np</code> which is pretty common thing to do when writing this kind of code.</p>
+
+<p>Keras offers two different APIs to construct a model: a <em>functional</em> and a <em>sequential</em> one. We’re using the sequential API hence the second import of <code>Sequential</code> from <code>keras.models</code>.</p>
+
+<p>Neural networks consist of different layers where input data flows through and gets transformed on its way. There are a bunch of different layer types available in Keras. These different types of layer help us to model individual kinds of neural nets for various machine learning tasks. In our specific case the <code>Dense</code> layer is what we want. We’ll explain it in more detail later on.</p>
+
+<p>What follows are two sets of data.</p>
+
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="c"># the four different states of the XOR gate</span>
+<span class="n">training_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]],</span> <span class="s">"float32"</span><span class="p">)</span>
+
+<span class="c"># the four expected results in the same order</span>
+<span class="n">target_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">]],</span> <span class="s">"float32"</span><span class="p">)</span></code></pre></div>
+
+<p>We initialize <code>training_data</code> as a two-dimensional array (an array of arrays) where each of the inner arrays has exactly two items. As we’ve already described in the previous article, each of these pairs has a corresponding expected result. That’s why we could solve the whole task with a simple hash map but let’s carry on.</p>
+
+<p>We setup <code>target_data</code> as another two-dimensional array. All the inner arrays in <code>target_data</code> contain just a single item though. Each inner array of <code>training_data</code> relates to its counterpart in <code>target_data</code>. At least, that’s essentially what we want the neural net to learn over time. The value <code>[0, 0]</code> means <code>0</code>, <code>[0, 1]</code> means <code>1</code> and so on and so forth.</p>
+
+<p>Let’s get to the most interesting part, the model!</p>
+
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">model</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">()</span>
+<span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="n">input_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">))</span>
+<span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'sigmoid'</span><span class="p">))</span></code></pre></div>
+
+<p>The first line sets up an empty model using the <code>Sequential</code> API. But what’s going on in the second line?</p>
+
+<p>We’re adding a <code>Dense</code> layer to our model which we’ll explain in more detail a bit later. For now, let’s focus on its configuration.  We set <code>input_dim=2</code> because each of our input samples is an array of length <code>2</code> (<code>[0, 1]</code>, <code>[1, 0]</code> etc.). If we had input data such as <code>[0, 1, 1]</code> our <code>input_dim</code> would be <code>3</code>. You get the idea.</p>
+
+<p>The more interesting question is: What does the <code>16</code> stand for? It’s the dimension of the output for this layer. If we think about our model in terms of neurons it means that we have two input neurons (<code>input_dim=2</code>) spreading into 16 neurons in a so called hidden layer.</p>
+
+<p>We also added another layer with an output dimension of <code>1</code> and without an explicit input dimension. In this case the input dimension is implicitly bound to be <code>16</code> since that’s the output dimension of the previous layer.</p>
+
+<p>We can visualize our model like this.</p>
+
+<p><img alt="A neural network" src="/images/xor_model.png" /></p>
+
+<p>Let’s just take it as this for now. We’ll come back to look at what the number of neurons means in a moment.</p>
+
+<p>But there’s one more thing in the current snippet that may scare us: <code>activation='relu'</code>. What does that mean? Do we finally have to talk about the scary math? Not really! Remember that neural networks are all about taking your inputs and transforming them into some output. Obviously there has to be some sort of math in between. There also need to be some moving parts, otherwise there wouldn’t be a chance for the model to learn anything. The moving parts are the so called weights and a <strong>simplified</strong> version of the math looks roughly like this.</p>
+
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">output</span> <span class="o">=</span> <span class="n">activation</span><span class="p">(</span><span class="nb">input</span> <span class="n">x</span> <span class="n">weight</span><span class="p">)</span></code></pre></div>
+
+<p>By setting <code>activation='relu'</code> we specify that we want to use the <a href="https://en.wikipedia.org/wiki/Rectifier_(neural_networks)">relu</a> function as the activation function. But really it doesn’t matter as much as you may think. We could totally change this to use the <a href="https://en.wikipedia.org/wiki/Sigmoid_function">sigmoid</a> function and it would still work. We could even use no activation function at all so that our algorithm essentially becomes.</p>
+
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">output</span> <span class="o">=</span> <span class="nb">input</span> <span class="n">x</span> <span class="n">weight</span></code></pre></div>
+
+<p>Yes, that’s right. You can solve the XOR problem even without any activation function at all. It would just take much more time to train the model. Please don’t get us wrong. We aren’t saying the activation function doesn’t matter. In fact it matters a lot. But for our specific task which is very trivial, it matters less than people may think when they see the code for the very first time.</p>
+
+<p>There’s one last thing we have to do before we can start training our model. We have to configure the learning process by calling <code>model.compile(...)</code> with a set of parameters.</p>
+
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">model</span><span class="o">.</span><span class="nb">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s">'mean_squared_error'</span><span class="p">,</span>
+              <span class="n">optimizer</span><span class="o">=</span><span class="s">'adam'</span><span class="p">,</span>
+              <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s">'binary_accuracy'</span><span class="p">])</span></code></pre></div>
+
+<p>In order for the neural network to be able to make the right adjustments to the weights we need to be able to tell how good our model is performing. Or to be more specific, with neural nets we always want to calculate a number that tells us how bad our model performs and then try to get that number lower.</p>
+
+<p>That number is the so called <em>loss</em> and we can decide how the loss is calculated. Similar to how we picked <code>relu</code> as our activation function we picked <code>mean_squared_error</code> as our loss function simply because it’s a well proven loss function. We could change it to <code>binary_crossentropy</code> and our model would still continue to work. Again, we aren’t saying all loss functions can be used interchangeably. They do serve specific use cases. It’s just that we don’t have to understand all the heavy math behind each function to get going!</p>
+
+<p>That brings us to the next parameter, the optimizer. The job of the optimizer is it to find the right adjustments for the weights. I’m sure by now you may guess how we picked <code>adam</code> as our optimizer of choice. Right, because it’s a well proven one!</p>
+
+<p>The third parameter, <code>metrics</code> is actually much more interesting for our learning efforts. Here we can specify which metrics to collect during the training. We are interested in the <code>binary_accuracy</code> which gives us access to a number that tells us exactly how accurate our predictions are. More on that later.</p>
+
+<p>And that’s all we have to set up before we can start training our model. We kick off the training by calling <code>model.fit(...)</code> with a bunch of parameters.</p>
+
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">training_data</span><span class="p">,</span> <span class="n">target_data</span><span class="p">,</span> <span class="n">nb_epoch</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span></code></pre></div>
+
+<p>The first two params are training and target data, the third one is the number of epochs (learning iterations) and the last one tells keras how much info to print out during the training.</p>
+
+<p>Once the training phase finished we can start making predictions.</p>
+
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">print</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">training_data</span><span class="p">)</span><span class="o">.</span><span class="nb">round</span><span class="p">()</span></code></pre></div>
+
+<p>Please note that in a real world scenario our predictions would be tested against data that the neural network hasn’t seen during the training. That’s because we usually want to see if our model generalizes well. In other words, does it work with new data or does it just memorize all the data and expected results it had seen in the training phase? However, with this toy task there are really only our four states and four expected outputs. No way to proof generalization here.</p>
+
+<p>Also note that we are rounding the output to get clear binary answers. Neural networks  calculate probabilities. If we wouldn’t round we would see something like <code>0.9993...</code> and <code>0.00034...</code> instead of <code>1</code> and <code>0</code> which isn’t exactly what we want.</p>
+
+<h2 id="finding-the-right-model">Finding the right model</h2>
+
+<p>Now that we know what all those numbers mean. Let’s take a closer look at how we configured the layers. Why did we pick the <code>Dense</code> layer in the first place?</p>
+
+<p>The answer is simple: Because our input data is one-dimensional. Wait! Didn’t we just say we setup <code>training_data</code> as a two-dimensional array? Yes, that’s right. It’s an array of arrays but only because it’s an array holding different samples to feed into our network. Each sample though is one-dimensional. That is what counts for when we have to pick between different types of layers. Consider each sample would be an array or arrays instead.</p>
+
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">other_training_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                                 <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]],</span>
+                                <span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                                 <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]]</span>
+                                <span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span>
+                                 <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]],</span>
+                                <span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span>
+                                 <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]]],</span> <span class="s">"float32"</span><span class="p">)</span></code></pre></div>
+
+<p>If that was the case we’d have to pick a different layer because a <code>Dense</code> layer is really only for one-dimensional input. We’ll get to the more advanced use cases with two-dimensional input data in another blog post soon.</p>
+
+<p>Now that we know we have to pick a <code>Dense</code> layer, how do we find the right configuration? We’ve already learned why we set the <code>input_dim</code> to <code>2</code> and that setting the output dimension to <code>16</code> means spreading into 16 neurons in a so called hidden layer. But why 16?</p>
+
+<p>The answer may surprise you but it’s simply a question of measuring the performance of our model and tweaking the size of the model accordingly. Remember that this number affects the number of weights that exists in our model. More weights mean more room for the model to care for certain features in the data we feed to it.</p>
+
+<blockquote>
+  <p><strong>Special Tip:</strong> As a rule of thumb the model should be big enough to deal with the task but not bigger. If the model is too big it may start finding pattern in your data that are actually irrelevant for the problem at hand. Keeping the model at a reasonable size means it’s forced to look at the relevant pattern.</p>
+</blockquote>
+
+<h2 id="measure-and-tweak">Measure and tweak</h2>
+
+<p>Let’s run our code and take a look at the output. If you aren’t sure how to run it please revisit out <a href="/machine-learning/2016/09/23/beginning-ml-with-keras-and-tensorflow.html">previous post</a>.</p>
+
+<div class="highlight"><pre><code class="language-shell" data-lang="shell">Epoch 1/20000
+0s - loss: 0.7443 - binary_accuracy: 0.2500
+Epoch 2/20000
+0s - loss: 0.7428 - binary_accuracy: 0.2500
+...
+Epoch 62/20000
+0s - loss: 0.6881 - binary_accuracy: 0.2500
+Epoch 63/20000
+0s - loss: 0.6876 - binary_accuracy: 0.5000
+...
+0s - loss: 0.6801 - binary_accuracy: 0.5000
+Epoch 81/20000
+0s - loss: 0.6797 - binary_accuracy: 0.7500
+...
+Epoch 283/20000
+0s - loss: 0.5948 - binary_accuracy: 0.7500
+Epoch 284/20000
+0s - loss: 0.5943 - binary_accuracy: 1.0000</code></pre></div>
+
+<p>Since we’ve set <code>verbose=2</code> and <code>metrics=['binary_accuracy']</code> earlier we get all these nice infos after each epoch. The interesting number we want to focus on is <code>binary_accuracy</code>. Guess what the <code>0.2500</code> at the first two epochs mean? If you’re thinking it means that our model predicts one out of our four states correctly you’re damn right. It took us 63 epochs to predict half of the four states correctly. After 284 epochs the model makes perfect predictions for all of our four XOR states.</p>
+
+<p>Now we can start making changes to our model and see how it affects the performance. Let’s try to increase the size of our hidden layer from 16 to 32.</p>
+
+<div class="highlight"><pre><code class="language-shell" data-lang="shell">0s - loss: 0.6023 - binary_accuracy: 0.7500
+Epoch 124/20000
+0s - loss: 0.6015 - binary_accuracy: 1.0000</code></pre></div>
+
+<p>Now, that’s cool! Took us only 124 epochs to get to an accuracy of 100%!</p>
+
+<p>What if we stack in another layer?</p>
+
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="n">input_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">))</span>
+<span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">))</span>
+<span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'sigmoid'</span><span class="p">))</span></code></pre></div>
+
+<p>Interesting. That change brings us down to 56 epochs to solve the task. But would that be the same as just using one hidden layer with a size of 64?</p>
+
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="n">input_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">))</span>
+<span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'sigmoid'</span><span class="p">))</span></code></pre></div>
+
+<p>Turns out, it isn’t. With this configuration our model starts making perfect predictions after 32 epochs.</p>
+
+<p>Notice how we are able to play and figure out lots of interesting details once we start looking at the right metrics?</p>
+
+<h2 id="solving-xor-with-no-activation-function-at-all">Solving XOR with no activation function at all.</h2>
+
+<p>Let’s see if we can hold our claim of solving XOR without any activation function at all. We change our model to look like this.</p>
+
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">model</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">()</span>
+<span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="n">input_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'linear'</span><span class="p">))</span>
+<span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'linear'</span><span class="p">))</span></code></pre></div>
+
+<p>Wait? But this says we actually do use an activation function called <code>linear</code>! What’s going on here?</p>
+
+<p>If we look at the keras source code we’ll see it is defined as <a href="https://github.com/fchollet/keras/blob/25dbe8097fba9a6a429e19d0625d78c3b8731527/keras/activations.py#L45-L49">this</a>.</p>
+
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">linear</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="s">'''
+    The function returns the variable that is passed in, so all types work.
+    '''</span>
+    <span class="k">return</span> <span class="n">x</span></code></pre></div>
+
+<p>The function simply returns it’s input without applying any math, so it’s essentially the same as using no activation function at all.</p>
+
+<p>Honestly, this is just a little fun experiment but if we increase the number of epochs we can see that even with this config we can build up a net to make 100 % correct predictions.</p>
+
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">Epoch</span> <span class="mi">3718</span><span class="o">/</span><span class="mi">20000</span>
+<span class="mi">0</span><span class="n">s</span> <span class="o">-</span> <span class="n">loss</span><span class="p">:</span> <span class="mf">0.2500</span> <span class="o">-</span> <span class="n">binary_accuracy</span><span class="p">:</span> <span class="mf">1.0000</span></code></pre></div>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>Whew! If you made it this far we’ll have to say THANK YOU for bearing so long with us just for the sake of understanding a model to solve XOR. If there’s just one take away we hope it’s that we don’t have to be a mathematician to start with machine learning.</p>
+
+<p>Once we understood some basics and learn how to measure the performance of our network we can figure out a lot of exciting things through trial and error.</p>
+
+
+          
+
+
+
+
+        </div>
+
+        <div class="thtrm-subscriber">
+  <h3>Get updates on new articles and trainings.</h3>
+  <p>Join over 1400 other developers who get our content first.</p>
+  <form action="//thoughtram.us8.list-manage.com/subscribe/post?u=dfbb1507fbced5a20d9dc5698&amp;id=731f22cdca" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" novalidate>
+    <label for="mce-EMAIL"></label>
+    <input type="email" value="" name="EMAIL" placeholder="Your email address..." required>
+    <div style="position: absolute; left: -5000px;"><input type="text" name="b_dfbb1507fbced5a20d9dc5698_731f22cdca" tabindex="-1" value=""></div>
+    <input type="submit" value="Subscribe" name="subscribe" class="thtrm-cta thtrm-cta--small">
+  </form>
+</div>
+
+
+
+        <div class="thtrm-social-links">
+            <!-- Sharingbutton Facebook -->
+            <a class="resp-sharing-button__link" href="https://facebook.com/sharer/sharer.php?u=http%3A%2F%2Fblog.thoughtram.io/machine-learning/2016/11/02/understanding-XOR-with-keras-and-tensorlow.html" target="_blank" aria-label="Share on Facebook">
+              <div class="resp-sharing-button resp-sharing-button--facebook resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M18.768,7.465H14.5V5.56c0-0.896,0.594-1.105,1.012-1.105s2.988,0,2.988,0V0.513L14.171,0.5C10.244,0.5,9.5,3.438,9.5,5.32 v2.145h-3v4h3c0,5.212,0,12,0,12h5c0,0,0-6.85,0-12h3.851L18.768,7.465z"/>
+                    </g>
+                </svg>
+                </div>Share on Facebook</div>
+            </a>
+
+            <!-- Sharingbutton Twitter -->
+            <a class="resp-sharing-button__link" href="https://twitter.com/intent/tweet/?text=Understanding%20XOR%20with%20Keras%20and%20TensorFlow&amp;url=http://blog.thoughtram.io/machine-learning/2016/11/02/understanding-XOR-with-keras-and-tensorlow.html" target="_blank" aria-label="Share on Twitter">
+              <div class="resp-sharing-button resp-sharing-button--twitter resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M23.444,4.834c-0.814,0.363-1.5,0.375-2.228,0.016c0.938-0.562,0.981-0.957,1.32-2.019c-0.878,0.521-1.851,0.9-2.886,1.104 C18.823,3.053,17.642,2.5,16.335,2.5c-2.51,0-4.544,2.036-4.544,4.544c0,0.356,0.04,0.703,0.117,1.036 C8.132,7.891,4.783,6.082,2.542,3.332C2.151,4.003,1.927,4.784,1.927,5.617c0,1.577,0.803,2.967,2.021,3.782 C3.203,9.375,2.503,9.171,1.891,8.831C1.89,8.85,1.89,8.868,1.89,8.888c0,2.202,1.566,4.038,3.646,4.456 c-0.666,0.181-1.368,0.209-2.053,0.079c0.579,1.804,2.257,3.118,4.245,3.155C5.783,18.102,3.372,18.737,1,18.459 C3.012,19.748,5.399,20.5,7.966,20.5c8.358,0,12.928-6.924,12.928-12.929c0-0.198-0.003-0.393-0.012-0.588 C21.769,6.343,22.835,5.746,23.444,4.834z"/>
+                    </g>
+                </svg>
+                </div>Share on Twitter</div>
+            </a>
+
+            <!-- Sharingbutton Google+ -->
+            <a class="resp-sharing-button__link" href="https://plus.google.com/share?url=http%3A%2F%2Fblog.thoughtram.io/machine-learning/2016/11/02/understanding-XOR-with-keras-and-tensorlow.html" target="_blank" aria-label="Share on Google+">
+              <div class="resp-sharing-button resp-sharing-button--google resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M11.366,12.928c-0.729-0.516-1.393-1.273-1.404-1.505c0-0.425,0.038-0.627,0.988-1.368 c1.229-0.962,1.906-2.228,1.906-3.564c0-1.212-0.37-2.289-1.001-3.044h0.488c0.102,0,0.2-0.033,0.282-0.091l1.364-0.989 c0.169-0.121,0.24-0.338,0.176-0.536C14.102,1.635,13.918,1.5,13.709,1.5H7.608c-0.667,0-1.345,0.118-2.011,0.347 c-2.225,0.766-3.778,2.66-3.778,4.605c0,2.755,2.134,4.845,4.987,4.91c-0.056,0.22-0.084,0.434-0.084,0.645 c0,0.425,0.108,0.827,0.33,1.216c-0.026,0-0.051,0-0.079,0c-2.72,0-5.175,1.334-6.107,3.32C0.623,17.06,0.5,17.582,0.5,18.098 c0,0.501,0.129,0.984,0.382,1.438c0.585,1.046,1.843,1.861,3.544,2.289c0.877,0.223,1.82,0.335,2.8,0.335 c0.88,0,1.718-0.114,2.494-0.338c2.419-0.702,3.981-2.482,3.981-4.538C13.701,15.312,13.068,14.132,11.366,12.928z M3.66,17.443 c0-1.435,1.823-2.693,3.899-2.693h0.057c0.451,0.005,0.892,0.072,1.309,0.2c0.142,0.098,0.28,0.192,0.412,0.282 c0.962,0.656,1.597,1.088,1.774,1.783c0.041,0.175,0.063,0.35,0.063,0.519c0,1.787-1.333,2.693-3.961,2.693 C5.221,20.225,3.66,19.002,3.66,17.443z M5.551,3.89c0.324-0.371,0.75-0.566,1.227-0.566l0.055,0 c1.349,0.041,2.639,1.543,2.876,3.349c0.133,1.013-0.092,1.964-0.601,2.544C8.782,9.589,8.363,9.783,7.866,9.783H7.865H7.844 c-1.321-0.04-2.639-1.6-2.875-3.405C4.836,5.37,5.049,4.462,5.551,3.89z"/>
+                        <polygon points="23.5,9.5 20.5,9.5 20.5,6.5 18.5,6.5 18.5,9.5 15.5,9.5 15.5,11.5 18.5,11.5 18.5,14.5 20.5,14.5 20.5,11.5  23.5,11.5   "/>
+                    </g>
+                </svg>
+                </div>Share on Google+</div>
+            </a>
+        </div>
+
+        <h3 class="thtrm-section-headline thtrm-section-headline--with-margin">Author</h3>
+        <div class="thtrm-article-author">
+          <span class="thtrm-article-author-avatar"><img src="/images/author-christoph.jpg" alt="Picture of Christoph Burgdorf"></span>
+          <div class="thtrm-article-author-matter">
+            <h4 class="thtrm-article-author-name">Christoph Burgdorf</h4>
+            <p class="thtrm-article-author-text">Christoph began programming at the age of 10. He is the creator of the Nickel.rs web framework and a contributor of the AngularJS project. Christoph is also part of the Angular 2 Docs Authoring team.</p>
+            <p>
+              <a class="thtrm-article-author-cta thtrm-article-author-cta-twitter" href="http://twitter.com/cburgdorf" title="Christoph Burgdorf on Twitter">Twitter</a>
+              <a class="thtrm-article-author-cta" href="http://github.com/cburgdorf" title="Christoph Burgdorf on GitHub">GitHub</a>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="thtrm-constraint">
+
+        
+        <h4 class="thtrm-section-headline thtrm-section-headline--with-big-margin thtrm-section-headline--centered">Related Posts</h4>
+        <ul class="thtrm-three-column-list thtrm-three-column-list--with-padding">
+        
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/machine-learning/2016/09/23/beginning-ml-with-keras-and-tensorflow.html" title="Beginning Machine Learning with Keras and TensorFlow">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/intro_in_ml.jpeg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Beginning Machine Learning with Keras and TensorFlow</h3>
+                <p>With all the latest accomplishments in the field of artificial intelligence it's really hard not to get excited about AI....</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2017/02/27/three-things-you-didnt-know-about-the-async-pipe.html" title="Three things you didn't know about the AsyncPipe">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/three-things-about-the-async-pipe.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Three things you didn't know about the AsyncPipe</h3>
+                <p>This article explains three lesser known features of the AsyncPipe that help us to write better async code.</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2017/02/21/using-zones-in-angular-for-better-performance.html" title="Using Zones in Angular for better performance">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/using-zones-in-angular-for-better-performance.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Using Zones in Angular for better performance</h3>
+                <p>In this article we'll take a look at how to use Zone APIs to improve our app's performance!</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/announcements/2017/02/09/dominic-joins-thoughtram.html" title="Dominic joins thoughtram">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/dominic.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Dominic joins thoughtram</h3>
+                <p>Today we are happy to announce that we have grown our trainer team. Dominic joins our team!</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2017/02/02/making-your-angular-app-fast.html" title="Making your Angular apps fast">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/angular-performance-tips.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Making your Angular apps fast</h3>
+                <p>In this article we discuss tips and tricks to make Angular blazingly fast!</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/announcements/2017/02/01/announcing-angular-master-class-in-freiburg.html" title="Announcing Angular Master Class in Freiburg">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/announcing-amc-freiburg.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Announcing Angular Master Class in Freiburg</h3>
+                <p>Today we're happy to announce that the will run our Angular Master Class in Freiburg, Germany! Read on for more...</p>
+              </div>
+            </a>
+          </li>
+        
+        
+        </ul>
+        
+
+      
+
+      </div>
+    </main>
+    <footer role="contentinfo" class="thtrm-footer thtrm-footer--slim">
+  <div class="thtrm-footer-text">
+    <img class="thtrm-footer-logo" alt="thoughtram brain" src="/images/thoughtram-brain-white.png">
+    <p>This website was created in collaboration with <a href="http://twitter.com/timche_" title="Tim Cheung on Twitter"><strong>Tim Cheung</strong></a> and <a href="http://twitter.com/tim_hartmann_" title="Tim Hartmann on Twitter"><strong>Tim Hartmann</strong></a>.</p>
+    <p ><a href="http://thoughtram.io/code-of-conduct.html" title="Code of Conduct">Code of Conduct</a> &bullet; <a href="http://thoughtram.io/imprint.html" title="Legal Notice">Legal notice</a></p>
+    <p class="thtrm-footer-bottom">&copy; 2014-2017 thoughtram GmbH</p>
+  </div>
+</footer>
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-51360648-2', 'auto');
+ga('send', 'pageview');
+
+var form = document.getElementById('search-form');
+var eventCta = document.getElementById('event-cta');
+
+if (eventCta) {
+
+  eventCta.addEventListener('click', function (event) {
+    event.preventDefault();
+
+    setTimeout(clickLink, 1000);
+
+    function clickLink() {
+      window.location.replace(eventCta.getAttribute('href'));
+    }
+
+    ga('send', 'event', {
+      eventCategory: 'Event Link',
+      eventAction: 'click',
+      eventLabel: eventCta.getAttribute('title'),
+      hitCallback: clickLink
+    });
+  });
+}
+
+if (form) {
+
+  var searchTerm = document.getElementById('search-term');
+
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    var formSubmitted = false;
+
+    setTimeout(submitForm, 1000);
+
+    function submitForm() {
+      if (!formSubmitted) {
+        formSubmitted = true;
+        form.submit();
+      }
+    }
+
+    ga('send', 'event', {
+      eventCategory: 'Search Form',
+      eventAction: 'submit',
+      eventLabel: searchTerm.value,
+      hitCallback: submitForm
+    });
+  });
+}
+</script>
+
+
+
+    <script src="/scripts/stickyfill.js"></script>
+    <script src="/scripts/linkjuice/dist/linkjuice.js"></script>
+    <script>
+    (function (doc, win) {
+
+      linkjuice.init('.thtrm-article', {
+        selector: ['h2', 'h3'],
+        icon: ''
+      });
+
+      if (win.matchMedia && win.matchMedia('(min-width: 1200px)').matches) {
+        var stickyElements = doc.querySelectorAll('.is-sticky');
+
+        for (var i = stickyElements.length - 1; i >= 0; i--) {
+          var el = stickyElements[i];
+
+          if (el.classList.contains('thtrm-toc')) {
+            el.classList.add('thtrm-toc--sticky');
+            el.classList.add('thtrm-toc--faded');
+          } 
+          if (el.classList.contains('thtrm-ad')) {
+            el.classList.add('thtrm-ad--sticky');
+            el.classList.add('thtrm-ad--description');
+          }
+
+          Stickyfill.add(el);
+        }
+      }
+    }(document, window));
+    </script>
+  </body>
+</html>

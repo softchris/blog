@@ -1,0 +1,562 @@
+
+
+
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Angular 2 introduces it's own kind of template syntax in order to implement different binding strategies. Learn why it's there and how it works.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="thoughtram">
+    <title>Angular Template Syntax Demystified - Part 1 by thoughtram</title>
+    <meta name="google-site-verification" content="o9eGPEgIETEqYGombq7NiQuBIB_qa6gz1yAL7PxKyK0">
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#4D8799">
+    <link rel="icon" sizes="192x192" href="/images/touch/chrome-touch-icon-192x192.png">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="thoughtram">
+    <link rel="apple-touch-icon" href="/images/touch/apple-touch-icon.png">
+
+    <!-- Tile icon for Win8 (144x144 + tile color) -->
+    <meta name="msapplication-TileImage" content="/images/touch/ms-touch-icon-144x144-precomposed.png">
+    <meta name="msapplication-TileColor" content="#4D8799">
+
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Angular Template Syntax Demystified - Part 1">
+    <meta property="og:description" content="Angular 2 introduces it's own kind of template syntax in order to implement different binding strategies. Learn why it's there and how it works.">
+    <meta property="og:url" content="http://blog.thoughtram.io/angular/2015/08/11/angular-2-template-syntax-demystified-part-1.html">
+    <meta property="og:site_name" content="Articles by thoughtram">
+    <meta property="og:image" content="http://blog.thoughtram.io">
+    <meta property="og:publisher" content="http://www.facebook.com/thoughtram">
+
+    <meta property="twitter:card" content="summary">
+    <meta property="twitter:title" content="Angular Template Syntax Demystified - Part 1">
+    <meta property="twitter:site" content="thoughtram Blog">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css" type="text/css">
+  </head>
+  <body class="sub-site">
+    <!-- Add your site or app content here -->
+
+    <!--[if lt IE 10]>
+        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <header class="thtrm-header" role="banner">
+      <div class="thtrm-header-bar">
+        <div class="thtrm-constraint">
+          <a href="http://thoughtram.io" class="thtrm-header-logo-link" title="thoughtram.io Start Page"><h1 class="thtrm-header-logo">thoughtram</h1></a>
+          <div class="thtrm-header-menu-wrapper">
+            <span role="button" tabindex="0" class="thtrm-header-menu-label">Menu</span>
+            <ul class="thtrm-header-menu">
+              <li><a title="Training" class="thtrm-header-menu-item" href="http://thoughtram.io/training.html">Training</a></li>
+              <li><a title="Code Review" class="thtrm-header-menu-item" href="http://thoughtram.io/code-review.html">Code Review</a></li>
+              <li><a title="Casts" class="thtrm-header-menu-item " href="http://casts.thoughtram.io">Casts</a></li>
+              <li><a title="Blog" class="thtrm-header-menu-item" href="/">Blog</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main role="main" class="thtrm-main">
+    <div class="thtrm-banner" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%), url('/images/banner/fallback.jpeg');">
+        <hgroup class="thtrm-banner-container">
+          <div class="thtrm-constraint thtrm-constraint--slim">
+            <h2 class="thtrm-banner-text">Angular Template Syntax Demystified - Part 1</h2>
+            <span>by <a href="http://twitter.com/" title="Pascal Precht on Twitter">Pascal Precht</a> on Aug 11, 2015, last updated on Dec 16, 2016<br>13 minute read</span>
+
+          </div>
+        </hgroup>
+      </div>
+      <div class="thtrm-constraint thtrm-constraint--slim">
+
+        <div class="thtrm-article">
+          <section class="thtrm-ad thtrm-section thtrm-section--is-promo is-sticky">
+  <img width="100" src="/images/angular2-shield-inverse.svg">
+  <h3 class="thtrm-section-headline">Need private training?</h3>
+  <p class="thtrm-section-text">Get customized training for your corporation</p>
+  <a href="mailto:hello@thoughtram.io" title="Request Training Quote" id="event-cta" class="thtrm-layout-divider-cta">Request quote <strong>&rarr;</strong></a>
+</section>
+
+
+          
+          <p style="background-color: lightgoldenrodyellow; border: solid 2px #f9dead; padding: 1em; text-align: center; border-radius: 0.3em;">Contents are based on Angular version <strong>>= 2.x</strong> unless explicitely stated differently.</p>
+          
+
+          <p>I think we’ve been all through this. We see Angular template code the very first time and all of a sudden we have these weird brackets and parentheses spread all over our HTML. Around a year ago I’ve written an article about how to <a href="https://pascalprecht.github.io/2014/10/25/integrating-web-components-with-angularjs/">integrate Web Components with AngularJS</a>, which explains how we can use, or not use, Web Components in AngularJS applications today. If you haven’t read it yet, I highly recommend you doing so. It’s old but the content is still true.</p>
+
+<p>It also touches on the new template syntax in Angular and how it tends to solve the existing issues. However, it still seems a mystery for a lot of people and that’s why we’re going to explore the Angular’s template syntax in this article. <strong>Please note</strong> that this is the first part of “Angular Template Syntax Demystified”. There’s going to be another article soon.</p>
+
+<div class="thtrm-toc is-sticky">
+  <h3 class="no_toc" id="table-of-contents">TABLE OF CONTENTS</h3>
+<ul id="markdown-toc">
+  <li><a href="#what-it-looks-like" id="markdown-toc-what-it-looks-like">What it looks like</a></li>
+  <li><a href="#property-binding" id="markdown-toc-property-binding">Property Binding</a></li>
+  <li><a href="#event-binding" id="markdown-toc-event-binding">Event Binding</a></li>
+  <li><a href="#two-way-data-binding" id="markdown-toc-two-way-data-binding">Two-way Data Binding</a></li>
+</ul>
+
+</div>
+
+<h2 id="what-it-looks-like">What it looks like</h2>
+
+<p>Just to make sure that everyone knows what we are talking about when mentioning “weird” brackets and parentheses in our HTML, we’re going to make a quick recap on what this template syntax looks like.</p>
+
+<p>If you’ve read the <a href="https://angular.io/docs/js/latest/guide/">step-by-step guide</a> you’ve probably seen the following syntaxes:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;p&gt;</span>My name: {{ myName}}<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;ul&gt;</span>
+  <span class="nt">&lt;li</span> <span class="err">*</span><span class="na">ngFor=</span><span class="s">"let name of names"</span><span class="nt">&gt;</span>
+    ...
+  <span class="nt">&lt;/li&gt;</span>
+<span class="nt">&lt;/ul&gt;</span>
+<span class="nt">&lt;input</span> <span class="err">#</span><span class="na">myname</span> <span class="err">(</span><span class="na">keyup</span><span class="err">)="</span><span class="na">myControllerMethod</span><span class="err">()"</span><span class="nt">&gt;</span></code></pre></div>
+
+<p>And that’s not all, in fact we could add some more:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;todo</span> <span class="err">[</span><span class="na">todo</span><span class="err">]="</span><span class="na">todo</span><span class="err">"</span><span class="nt">&gt;&lt;/todo&gt;</span>
+<span class="nt">&lt;input</span> <span class="err">[(</span><span class="na">ngModel</span><span class="err">)]="</span><span class="na">foo</span><span class="err">"</span><span class="nt">&gt;</span></code></pre></div>
+
+<p>What we see here is <strong>Event Binding</strong>, <strong>Property Binding</strong>, <strong>Local Variables</strong> and <strong>Template Directives</strong>. In this article we’re going to focus on property, event and two-way binding. But before we explore all of these different syntaxes, let’s answer the first question that comes to our mind when seeing this code:</p>
+
+<p><strong>Is that valid HTML?</strong></p>
+
+<p>The answer is <strong>yes</strong>. Here’s an excerpt of the <a href="http://www.w3.org/TR/html-markup/syntax.html">HTML Syntax Spec</a>:</p>
+
+<blockquote>
+  Attribute names must consist of one or more characters other than the space characters, U+0000 NULL, """, "'", "&gt;", "/", "=", the control characters, and any characters that are not defined by Unicode.
+</blockquote>
+
+<p>Which basically means, any other characters than the ones listed can be used in HTML attribute names. Let’s start off by taking a look at the most important syntax for property binding.</p>
+
+<h2 id="property-binding">Property Binding</h2>
+
+<p>Property binding is the syntax where we use brackets to bind values to an element’s property. But what does that mean? Why do we want to bind to an element’s property? Well, in order to understand why we want to do that, we have to go back to the basics and understand the APIs of a DOM element.</p>
+
+<p>The APIs of a DOM element are:</p>
+
+<ul>
+  <li><strong>Attributes</strong> - Attributes are the things we use in HTML to provide elements with data. In fact, attributes are the only way in plain HTML to put values into an element. However, the type of an attribute value in HTML is always <code>String</code>, which is not always what we want especially when building applications with frameworks like Angular.</li>
+  <li><strong>Properties</strong> - Properties are simply the properties of a DOM object. E.g. if we query a DOM element with <code>document.querySelector()</code>, we get a DOM object back which simply has its own properties and methods. Those properties are no special in any way, they behave like any other object properties in JavaScript. That also means we can assign any kind of value to a property, not just strings.</li>
+  <li><strong>Methods</strong> - As already mentioned, methods are just the functions on a DOM object that we can call and execute in JavaScript. <code>setAttribute()</code> for example is such a method.</li>
+  <li><strong>Events</strong> - Of course, last but not least, we have events. The bread and butter when it comes to notifying subscribers that something happened. Like <code>click</code>, <code>focus</code> or <code>input</code>. DOM elements can also fire their own custom events.</li>
+</ul>
+
+<p>The most interesting part here, is how attributes and properties behave on a DOM object. Especially when we realize, that they behave differently across elements.</p>
+
+<p>Let’s just take this simple <code>input</code> example here:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;input</span> <span class="na">value=</span><span class="s">"thoughtram"</span><span class="nt">&gt;</span></code></pre></div>
+
+<p>We use the <code>value</code> attribute to set the <strong>initial</strong> value of the input element. Let’s see what happens when we access the DOM object and it’s <code>value</code> property:</p>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">input</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s1">'input'</span><span class="p">);</span>
+<span class="nx">input</span><span class="p">.</span><span class="nx">value</span> <span class="c1">// 'thoughtram'</span></code></pre></div>
+
+<p>Alright, we access the <code>value</code> property and as expected, it returns the string <code>thoughtram</code>. But what happens when we change that value and read from its attribute?</p>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">input</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="s1">'Angular Master Class'</span><span class="p">;</span>
+<span class="nx">input</span><span class="p">.</span><span class="nx">getAttribute</span><span class="p">(</span><span class="s1">'value'</span><span class="p">);</span> <span class="c1">// 'thoughtram'</span></code></pre></div>
+
+<p>As we can see, the property value is not reflected back to the attribute. There are very few elements that actually reflect their property value back to its attribute. For example the <code>src</code> property of an <code>img</code> element. Changing its property will also change its attribute. In addition to that, a property can really get any value, whereas an attribute is always a string.</p>
+
+<p>So how could we pass objects to directives in AngularJS? Well, as most of us know, there’s this directive definition object (DDO), which allows us to specify how directives’ scope properties (or controller properties) are bound to the outside world. The following code for example, allows us to pass an expression to a directive via attributes, that actually results in an object once evaluated.</p>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'app'</span><span class="p">,</span> <span class="p">[]).</span><span class="nx">directive</span><span class="p">(</span><span class="s1">'widget'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">{</span>
+    <span class="na">scope</span><span class="p">:</span> <span class="p">{},</span>
+    <span class="na">bindToController</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">obj</span><span class="p">:</span> <span class="s1">'='</span>
+    <span class="p">},</span>
+    <span class="na">controller</span><span class="p">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{},</span>
+    <span class="na">controllerAs</span><span class="p">:</span> <span class="s1">'ctrl'</span><span class="p">,</span>
+    <span class="na">template</span><span class="p">:</span> <span class="s1">'Value: ctrl.obj.foo'</span>
+  <span class="p">}</span>
+<span class="p">});</span></code></pre></div>
+
+<p>If <code>bindToController</code> is new to you, you might want to read <a href="http://blog.thoughtram.io/angularjs/2015/01/02/exploring-angular-1.3-bindToController.html">this article</a>.</p>
+
+<p>From the outside world, we can then pass an object to our <code>widget</code> directive simply with an expression. Let’s say we have a controller like this:</p>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'app'</span><span class="p">,</span> <span class="p">[]).</span><span class="nx">controller</span><span class="p">(</span><span class="s1">'AppController'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">objOnCtrl</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">foo</span><span class="p">:</span> <span class="s1">'Hello World!'</span>
+  <span class="p">};</span>
+<span class="p">});</span></code></pre></div>
+
+<p>And a template like this:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;widget</span> <span class="na">ng-controller=</span><span class="s">"AppController as ctrl"</span> <span class="na">obj=</span><span class="s">"ctrl.objOnCtrl"</span><span class="nt">&gt;</span></code></pre></div>
+
+<p>Angular takes the expression passed to the attribute and parses and evaluates it against the corresponding scope, which allows us to pass other values than strings to directives.</p>
+
+<p>Why can’t we just continue like that in Angular? There are a couple of reasons:</p>
+
+<ul>
+  <li><strong>Predictability</strong> - Looking at our template, we can’t tell what happens to the value of the attribute inside our directive, without knowing the internals of it. We need a way to decide from the outside world how values are bound.</li>
+  <li><strong>Compatibility</strong> - This whole mechanism only works with Angular directives. As soon as we use custom elements that aren’t directives but vanilla Web Components, <code>ctrl.objOnCtrl</code> would just be that string, unless our custom element would come with a similar parsing and evaluating strategy that Angular directives use. Angular should work with any element, no matter if it’s a custom element, a Web Component built with Polymer, or a directive.</li>
+</ul>
+
+<p>That’s why since version 2.x, Angular always binds to properties rather than attributes (as AngularJS does). Every DOM element has properties, regardless of being a native element or a Web Component. In order to tell Angular that we want to bind to a property, we use the brackets syntax. If we’d build our <code>widget</code> directive in Angular, we would need to bind to it’s <code>obj</code> property to assign an object value:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;widget</span> <span class="err">[</span><span class="na">obj</span><span class="err">]="</span><span class="na">objOnComponent</span><span class="err">"</span><span class="nt">&gt;</span></code></pre></div>
+
+<p>Another feature that property binding brings to the table is <strong>escaping</strong>. Just think about the <code>img</code> tag and its <code>src</code> attribute. What happens when the browser ecounters an <code>img</code> tag with a source when parsing the HTML? Right, it tries to request the source of that image. If we’d have HTML like this:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">"{{someExpression}}"</span><span class="nt">&gt;</span></code></pre></div>
+
+<p>It would result in a <code>404</code> error, because the source isn’t a valid URL. That’s why AngularJS has this <code>ng-src</code> directive. It takes an expression, evaluates it and once evaluated, it adds the actual <code>src</code> attribute to the image element, which results in a correct request. Binding to properties escapes automatically, because value will also only be assigned once their expressions are evaluated.</p>
+
+<p>We can still use normal attributes without brackets though. Just keep in mind that normal attributes behave like normal attributes.</p>
+
+<p><strong>What about interpolations?</strong></p>
+
+<p>Good question! Interpolation in Angular has always been one of the biggest features of the framework. If there’s only property binding, how does something like the following work then?</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;p&gt;</span>Hello {{name}}<span class="nt">&lt;/p&gt;</span></code></pre></div>
+
+<p>It turns out, that interpolation syntax is just a shorthand syntax for property binding as well. The code above could be translated to something like this:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;p</span> <span class="err">[</span><span class="na">textContent</span><span class="err">]="</span><span class="na">interpolate</span><span class="err">(['</span><span class="na">Hello</span><span class="err">'],</span> <span class="err">[</span><span class="na">name</span><span class="err">])"</span><span class="nt">&gt;&lt;/p&gt;</span></code></pre></div>
+
+<p><strong>Canonical syntax</strong></p>
+
+<p>Okay cool, now we know what property binding is and why we want to use it, but there’s still a problem we haven’t talked about yet. What if we generate our templates with an HTML preprocessor that doesn’t like the brackets syntax? Guess what, the brackets syntax itself is really just a shorthand for us developers so we can save some key strokes. All property bindings inside a template can be written as:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;ANY</span> <span class="na">bind-</span><span class="err">{</span><span class="na">PROPERTY_NAME</span><span class="err">}="{</span><span class="na">EXPRESSION</span><span class="err">}"</span><span class="nt">&gt;&lt;/ANY&gt;</span></code></pre></div>
+
+<p>Which makes it an alpha numeric version that all preprocessors should be able to deal with.</p>
+
+<h2 id="event-binding">Event Binding</h2>
+
+<p>Binding to properties through HTML is already super powerful. But sometimes we need to be able to react to certain things that happen during runtime of our application. This is what DOM events are for and they are part of our browser platforms since years. Just think of <code>click</code>, <code>input</code> and <code>focus</code> events. However, nowadays it’s also very common for elements to fire their own <strong>custom events</strong>. A Web Component <code>&lt;date-picker&gt;</code> for example, could fire a <code>dateChanged</code> event.</p>
+
+<p>In AngularJS, we have a lot of directives that help us out notifying the framework when an event is fired. That’s why we have things like <code>ng-click</code>, <code>ng-focus</code> etc. They simply notify Angular that an event has been fired and application state could have changed. Without these directives, Angular’s two-way data binding wouldn’t work out-of-the-box. Unfortunately, that doesn’t really scale. How can our <code>&lt;date-picker&gt;</code> Web Component notify Angular that a change has happened? Correct, we would need to create a directive for each and every event and it’s not uncommon for elements to fire more than just one event.</p>
+
+<p>That’s why since version 2.x, in Angular we have the parenthesis syntax where we can bind to <strong>any</strong> event like this:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;date-picker</span> <span class="err">(</span><span class="na">dateChanged</span><span class="err">)="</span><span class="na">statement</span><span class="err">()"</span><span class="nt">&gt;&lt;/date-picker&gt;</span></code></pre></div>
+
+<p>The parentheses simply tell Angular that the expression inside the symbols is an event name that it needs to add an event listener for. <code>statement()</code> is simply the statement expression that gets executed whenever such an event is fired on that element. Having such a generic binding, all directives that intercepted for us in AngularJS will go away in Angular. This framework is getting simpler and simpler.</p>
+
+<p><strong>Event Bubbling</strong></p>
+
+<p>When binding to events in Angular, events are caught on the same element as well as from events that bubble up from child elements. E.g. if we have a DOM structure like this:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;div</span> <span class="err">(</span><span class="na">click</span><span class="err">)="</span><span class="na">statement</span><span class="err">()"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;div&gt;&lt;/div&gt;</span>
+<span class="nt">&lt;/div&gt;</span></code></pre></div>
+
+<p>This will execute the given statement, if the first <code>div</code> or any of it’s child elements are clicked.</p>
+
+<p><strong>Canonical syntax</strong></p>
+
+<p>Of course, using parenthesis is also just a shorthand syntax, so we as developers can save some key strokes. We can always use the canonical syntax, which is <code>on-*</code>.</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;ANY</span> <span class="na">on-</span><span class="err">{</span><span class="na">EVENT_NAME</span><span class="err">}="{</span><span class="na">STATEMENT</span><span class="err">}"</span><span class="nt">&gt;&lt;/ANY&gt;</span></code></pre></div>
+
+<h2 id="two-way-data-binding">Two-way Data Binding</h2>
+
+<p>We talked about property binding and event binding but what about the biggest selling point of AngularJS - two-way data binding?</p>
+
+<p><strong>Since 2.x, Angular doesn’t come with two-way data binding by default</strong>. This feature has been removed intentionally from the framework, because it comes with various drawbacks. But how is something like <code>ng-model</code> in Angular implemented then? <code>ng-model</code> in Angular version &gt;= 2.x gives us two-way data binding, even though under the hood, it simply uses a combination of property and event binding.</p>
+
+<p>Let’s take a look at how that works with the following snippet:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;input</span> <span class="err">[</span><span class="na">value</span><span class="err">]="</span><span class="na">name</span><span class="err">"</span><span class="nt">&gt;</span>
+
+<span class="nt">&lt;p&gt;</span>Hello {{name}}<span class="nt">&lt;/p&gt;</span></code></pre></div>
+
+<p>We already learned what’s happening here. We’re simply binding the value of a <code>name</code> expression to the <code>value</code> property of an input element. In addition we want to output the same value in our view and update it when someone changes the value by typing into the input. This, however, doesn’t work because we’re just writing to the elements property. There’s nothing that tells the expression to update when the value changes through typing.</p>
+
+<p>This can be easily fixed by adding an event binding accordingly:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;input</span> <span class="err">[</span><span class="na">value</span><span class="err">]="</span><span class="na">name</span><span class="err">"</span> <span class="err">(</span><span class="na">input</span><span class="err">)="</span><span class="na">name =</span><span class="err"> </span><span class="s">$event.target.value"</span><span class="nt">&gt;</span>
+
+<span class="nt">&lt;p&gt;</span>Hello {{name}}<span class="nt">&lt;/p&gt;</span></code></pre></div>
+
+<p>We listen to the <code>input</code> event and whenever it is fired, we update the value of our <code>name</code> expression by pulling the new value out of the event object.</p>
+
+<p>Since this is quite a lot of typing to implement such a common scenario, Angular comes with an <code>ngModel</code> directive that saves some key strokes for us, by unifying the property and event binding, and also the extraction of the target’s value. Here’s the exact same code using <code>ngModel</code>:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;input</span> <span class="err">[</span><span class="na">ngModel</span><span class="err">]="</span><span class="na">name</span><span class="err">"</span> <span class="err">(</span><span class="na">ngModelChange</span><span class="err">)="</span><span class="na">name =</span><span class="err"> </span><span class="s">$event"</span><span class="nt">&gt;</span>
+
+<span class="nt">&lt;p&gt;</span>Hello {{name}}<span class="nt">&lt;/p&gt;</span></code></pre></div>
+
+<p>It gets even better! We can shorten that syntax even further by merging both bindings like this:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;input</span> <span class="err">[(</span><span class="na">ngModel</span><span class="err">)]="</span><span class="na">name</span><span class="err">"</span><span class="nt">&gt;</span>
+
+<span class="nt">&lt;p&gt;</span>Hello {{name}}<span class="nt">&lt;/p&gt;</span></code></pre></div>
+
+<p>Two-way data binding is back in town! We can easily build our own directives that support that syntax, but that we’re going to explore in another article.</p>
+
+<p>This was the first part of “Angular Template Syntax Demystified”. We’re going to cover local variables and template directives in a second part, which will be published very soon.</p>
+
+
+          
+
+
+
+
+        </div>
+
+        <div class="thtrm-subscriber">
+  <h3>Get updates on new articles and trainings.</h3>
+  <p>Join over 1400 other developers who get our content first.</p>
+  <form action="//thoughtram.us8.list-manage.com/subscribe/post?u=dfbb1507fbced5a20d9dc5698&amp;id=731f22cdca" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" novalidate>
+    <label for="mce-EMAIL"></label>
+    <input type="email" value="" name="EMAIL" placeholder="Your email address..." required>
+    <div style="position: absolute; left: -5000px;"><input type="text" name="b_dfbb1507fbced5a20d9dc5698_731f22cdca" tabindex="-1" value=""></div>
+    <input type="submit" value="Subscribe" name="subscribe" class="thtrm-cta thtrm-cta--small">
+  </form>
+</div>
+
+
+
+        <div class="thtrm-social-links">
+            <!-- Sharingbutton Facebook -->
+            <a class="resp-sharing-button__link" href="https://facebook.com/sharer/sharer.php?u=http%3A%2F%2Fblog.thoughtram.io/angular/2015/08/11/angular-2-template-syntax-demystified-part-1.html" target="_blank" aria-label="Share on Facebook">
+              <div class="resp-sharing-button resp-sharing-button--facebook resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M18.768,7.465H14.5V5.56c0-0.896,0.594-1.105,1.012-1.105s2.988,0,2.988,0V0.513L14.171,0.5C10.244,0.5,9.5,3.438,9.5,5.32 v2.145h-3v4h3c0,5.212,0,12,0,12h5c0,0,0-6.85,0-12h3.851L18.768,7.465z"/>
+                    </g>
+                </svg>
+                </div>Share on Facebook</div>
+            </a>
+
+            <!-- Sharingbutton Twitter -->
+            <a class="resp-sharing-button__link" href="https://twitter.com/intent/tweet/?text=Angular%20Template%20Syntax%20Demystified%20-%20Part%201&amp;url=http://blog.thoughtram.io/angular/2015/08/11/angular-2-template-syntax-demystified-part-1.html" target="_blank" aria-label="Share on Twitter">
+              <div class="resp-sharing-button resp-sharing-button--twitter resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M23.444,4.834c-0.814,0.363-1.5,0.375-2.228,0.016c0.938-0.562,0.981-0.957,1.32-2.019c-0.878,0.521-1.851,0.9-2.886,1.104 C18.823,3.053,17.642,2.5,16.335,2.5c-2.51,0-4.544,2.036-4.544,4.544c0,0.356,0.04,0.703,0.117,1.036 C8.132,7.891,4.783,6.082,2.542,3.332C2.151,4.003,1.927,4.784,1.927,5.617c0,1.577,0.803,2.967,2.021,3.782 C3.203,9.375,2.503,9.171,1.891,8.831C1.89,8.85,1.89,8.868,1.89,8.888c0,2.202,1.566,4.038,3.646,4.456 c-0.666,0.181-1.368,0.209-2.053,0.079c0.579,1.804,2.257,3.118,4.245,3.155C5.783,18.102,3.372,18.737,1,18.459 C3.012,19.748,5.399,20.5,7.966,20.5c8.358,0,12.928-6.924,12.928-12.929c0-0.198-0.003-0.393-0.012-0.588 C21.769,6.343,22.835,5.746,23.444,4.834z"/>
+                    </g>
+                </svg>
+                </div>Share on Twitter</div>
+            </a>
+
+            <!-- Sharingbutton Google+ -->
+            <a class="resp-sharing-button__link" href="https://plus.google.com/share?url=http%3A%2F%2Fblog.thoughtram.io/angular/2015/08/11/angular-2-template-syntax-demystified-part-1.html" target="_blank" aria-label="Share on Google+">
+              <div class="resp-sharing-button resp-sharing-button--google resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M11.366,12.928c-0.729-0.516-1.393-1.273-1.404-1.505c0-0.425,0.038-0.627,0.988-1.368 c1.229-0.962,1.906-2.228,1.906-3.564c0-1.212-0.37-2.289-1.001-3.044h0.488c0.102,0,0.2-0.033,0.282-0.091l1.364-0.989 c0.169-0.121,0.24-0.338,0.176-0.536C14.102,1.635,13.918,1.5,13.709,1.5H7.608c-0.667,0-1.345,0.118-2.011,0.347 c-2.225,0.766-3.778,2.66-3.778,4.605c0,2.755,2.134,4.845,4.987,4.91c-0.056,0.22-0.084,0.434-0.084,0.645 c0,0.425,0.108,0.827,0.33,1.216c-0.026,0-0.051,0-0.079,0c-2.72,0-5.175,1.334-6.107,3.32C0.623,17.06,0.5,17.582,0.5,18.098 c0,0.501,0.129,0.984,0.382,1.438c0.585,1.046,1.843,1.861,3.544,2.289c0.877,0.223,1.82,0.335,2.8,0.335 c0.88,0,1.718-0.114,2.494-0.338c2.419-0.702,3.981-2.482,3.981-4.538C13.701,15.312,13.068,14.132,11.366,12.928z M3.66,17.443 c0-1.435,1.823-2.693,3.899-2.693h0.057c0.451,0.005,0.892,0.072,1.309,0.2c0.142,0.098,0.28,0.192,0.412,0.282 c0.962,0.656,1.597,1.088,1.774,1.783c0.041,0.175,0.063,0.35,0.063,0.519c0,1.787-1.333,2.693-3.961,2.693 C5.221,20.225,3.66,19.002,3.66,17.443z M5.551,3.89c0.324-0.371,0.75-0.566,1.227-0.566l0.055,0 c1.349,0.041,2.639,1.543,2.876,3.349c0.133,1.013-0.092,1.964-0.601,2.544C8.782,9.589,8.363,9.783,7.866,9.783H7.865H7.844 c-1.321-0.04-2.639-1.6-2.875-3.405C4.836,5.37,5.049,4.462,5.551,3.89z"/>
+                        <polygon points="23.5,9.5 20.5,9.5 20.5,6.5 18.5,6.5 18.5,9.5 15.5,9.5 15.5,11.5 18.5,11.5 18.5,14.5 20.5,14.5 20.5,11.5  23.5,11.5   "/>
+                    </g>
+                </svg>
+                </div>Share on Google+</div>
+            </a>
+        </div>
+
+        <h3 class="thtrm-section-headline thtrm-section-headline--with-margin">Author</h3>
+        <div class="thtrm-article-author">
+          <span class="thtrm-article-author-avatar"><img src="/images/author-pascal.jpg" alt="Picture of Pascal Precht"></span>
+          <div class="thtrm-article-author-matter">
+            <h4 class="thtrm-article-author-name">Pascal Precht</h4>
+            <p class="thtrm-article-author-text">Pascal is a front-end engineer and a Angular Developer Expert nominated by Google. He created the angular-translate module, is an Angular 2 contributor and also part of the Angular 2 Docs Authoring team.</p>
+            <p>
+              <a class="thtrm-article-author-cta thtrm-article-author-cta-twitter" href="http://twitter.com/PascalPrecht" title="Pascal Precht on Twitter">Twitter</a>
+              <a class="thtrm-article-author-cta" href="http://github.com/PascalPrecht" title="Pascal Precht on GitHub">GitHub</a>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="thtrm-constraint">
+
+        
+        <h4 class="thtrm-section-headline thtrm-section-headline--with-big-margin thtrm-section-headline--centered">Related Posts</h4>
+        <ul class="thtrm-three-column-list thtrm-three-column-list--with-padding">
+        
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2017/02/27/three-things-you-didnt-know-about-the-async-pipe.html" title="Three things you didn't know about the AsyncPipe">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/three-things-about-the-async-pipe.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Three things you didn't know about the AsyncPipe</h3>
+                <p>This article explains three lesser known features of the AsyncPipe that help us to write better async code.</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2017/02/21/using-zones-in-angular-for-better-performance.html" title="Using Zones in Angular for better performance">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/using-zones-in-angular-for-better-performance.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Using Zones in Angular for better performance</h3>
+                <p>In this article we'll take a look at how to use Zone APIs to improve our app's performance!</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2017/02/02/making-your-angular-app-fast.html" title="Making your Angular apps fast">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/angular-performance-tips.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Making your Angular apps fast</h3>
+                <p>In this article we discuss tips and tricks to make Angular blazingly fast!</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2016/12/27/angular-2-advance-testing-with-custom-matchers.html" title="Testing Angular Directives with Custom Matchers">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/testing-directives-with-custom-matchers2.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Testing Angular Directives with Custom Matchers</h3>
+                <p>Deliver terse, DRY, self-documenting unit tests with Angular using custom Jasmine Matchers and  Helper functions.</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2016/11/28/testing-services-with-http-in-angular-2.html" title="Testing Services with Http in Angular">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/testing-services-with-http-in-angular-2.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Testing Services with Http in Angular</h3>
+                <p>Want to learn how to test services in Angular that have an Http dependency? Read more here!</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2016/10/13/two-way-data-binding-in-angular-2.html" title="Two-way Data Binding in Angular">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/two-way-data-binding-in-angular-2.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Two-way Data Binding in Angular</h3>
+                <p>Two-way data binding was one of the main selling points of Angular. Since version 2.x, we can build directives that...</p>
+              </div>
+            </a>
+          </li>
+        
+        
+        </ul>
+        
+
+      
+
+      </div>
+    </main>
+    <footer role="contentinfo" class="thtrm-footer thtrm-footer--slim">
+  <div class="thtrm-footer-text">
+    <img class="thtrm-footer-logo" alt="thoughtram brain" src="/images/thoughtram-brain-white.png">
+    <p>This website was created in collaboration with <a href="http://twitter.com/timche_" title="Tim Cheung on Twitter"><strong>Tim Cheung</strong></a> and <a href="http://twitter.com/tim_hartmann_" title="Tim Hartmann on Twitter"><strong>Tim Hartmann</strong></a>.</p>
+    <p ><a href="http://thoughtram.io/code-of-conduct.html" title="Code of Conduct">Code of Conduct</a> &bullet; <a href="http://thoughtram.io/imprint.html" title="Legal Notice">Legal notice</a></p>
+    <p class="thtrm-footer-bottom">&copy; 2014-2017 thoughtram GmbH</p>
+  </div>
+</footer>
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-51360648-2', 'auto');
+ga('send', 'pageview');
+
+var form = document.getElementById('search-form');
+var eventCta = document.getElementById('event-cta');
+
+if (eventCta) {
+
+  eventCta.addEventListener('click', function (event) {
+    event.preventDefault();
+
+    setTimeout(clickLink, 1000);
+
+    function clickLink() {
+      window.location.replace(eventCta.getAttribute('href'));
+    }
+
+    ga('send', 'event', {
+      eventCategory: 'Event Link',
+      eventAction: 'click',
+      eventLabel: eventCta.getAttribute('title'),
+      hitCallback: clickLink
+    });
+  });
+}
+
+if (form) {
+
+  var searchTerm = document.getElementById('search-term');
+
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    var formSubmitted = false;
+
+    setTimeout(submitForm, 1000);
+
+    function submitForm() {
+      if (!formSubmitted) {
+        formSubmitted = true;
+        form.submit();
+      }
+    }
+
+    ga('send', 'event', {
+      eventCategory: 'Search Form',
+      eventAction: 'submit',
+      eventLabel: searchTerm.value,
+      hitCallback: submitForm
+    });
+  });
+}
+</script>
+
+
+
+    <script src="/scripts/stickyfill.js"></script>
+    <script src="/scripts/linkjuice/dist/linkjuice.js"></script>
+    <script>
+    (function (doc, win) {
+
+      linkjuice.init('.thtrm-article', {
+        selector: ['h2', 'h3'],
+        icon: ''
+      });
+
+      if (win.matchMedia && win.matchMedia('(min-width: 1200px)').matches) {
+        var stickyElements = doc.querySelectorAll('.is-sticky');
+
+        for (var i = stickyElements.length - 1; i >= 0; i--) {
+          var el = stickyElements[i];
+
+          if (el.classList.contains('thtrm-toc')) {
+            el.classList.add('thtrm-toc--sticky');
+            el.classList.add('thtrm-toc--faded');
+          } 
+          if (el.classList.contains('thtrm-ad')) {
+            el.classList.add('thtrm-ad--sticky');
+            el.classList.add('thtrm-ad--description');
+          }
+
+          Stickyfill.add(el);
+        }
+      }
+    }(document, window));
+    </script>
+  </body>
+</html>

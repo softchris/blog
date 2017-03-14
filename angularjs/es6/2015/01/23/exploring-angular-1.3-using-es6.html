@@ -1,0 +1,526 @@
+
+
+
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="One of the most exciting upcoming changes for Angular version 2.0.0 is that it's entirely written in ES2015 - the next version of JavaScript. There's no need to wait until Angular version 2.0.0 though. You can start writing your Angular apps with ES20152015 today - even with Angular 1.x. In this post we are going to look at two very exciting ES2015 features and how they can play a role in the context of an Angular application. Modules and Inheritance.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="thoughtram">
+    <title>Using ES2015 with Angular today by thoughtram</title>
+    <meta name="google-site-verification" content="o9eGPEgIETEqYGombq7NiQuBIB_qa6gz1yAL7PxKyK0">
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#4D8799">
+    <link rel="icon" sizes="192x192" href="/images/touch/chrome-touch-icon-192x192.png">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="thoughtram">
+    <link rel="apple-touch-icon" href="/images/touch/apple-touch-icon.png">
+
+    <!-- Tile icon for Win8 (144x144 + tile color) -->
+    <meta name="msapplication-TileImage" content="/images/touch/ms-touch-icon-144x144-precomposed.png">
+    <meta name="msapplication-TileColor" content="#4D8799">
+
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Using ES2015 with Angular today">
+    <meta property="og:description" content="One of the most exciting upcoming changes for Angular version 2.0.0 is that it's entirely written in ES2015 - the next version of JavaScript. There's no need to wait until Angular version 2.0.0 though. You can start writing your Angular apps with ES20152015 today - even with Angular 1.x. In this post we are going to look at two very exciting ES2015 features and how they can play a role in the context of an Angular application. Modules and Inheritance.">
+    <meta property="og:url" content="http://blog.thoughtram.io/angularjs/es6/2015/01/23/exploring-angular-1.3-using-es6.html">
+    <meta property="og:site_name" content="Articles by thoughtram">
+    <meta property="og:image" content="http://blog.thoughtram.io">
+    <meta property="og:publisher" content="http://www.facebook.com/thoughtram">
+
+    <meta property="twitter:card" content="summary">
+    <meta property="twitter:title" content="Using ES2015 with Angular today">
+    <meta property="twitter:site" content="thoughtram Blog">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css" type="text/css">
+  </head>
+  <body class="sub-site">
+    <!-- Add your site or app content here -->
+
+    <!--[if lt IE 10]>
+        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <header class="thtrm-header" role="banner">
+      <div class="thtrm-header-bar">
+        <div class="thtrm-constraint">
+          <a href="http://thoughtram.io" class="thtrm-header-logo-link" title="thoughtram.io Start Page"><h1 class="thtrm-header-logo">thoughtram</h1></a>
+          <div class="thtrm-header-menu-wrapper">
+            <span role="button" tabindex="0" class="thtrm-header-menu-label">Menu</span>
+            <ul class="thtrm-header-menu">
+              <li><a title="Training" class="thtrm-header-menu-item" href="http://thoughtram.io/training.html">Training</a></li>
+              <li><a title="Code Review" class="thtrm-header-menu-item" href="http://thoughtram.io/code-review.html">Code Review</a></li>
+              <li><a title="Casts" class="thtrm-header-menu-item " href="http://casts.thoughtram.io">Casts</a></li>
+              <li><a title="Blog" class="thtrm-header-menu-item" href="/">Blog</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main role="main" class="thtrm-main">
+    <div class="thtrm-banner" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%), url('/images/banner/fallback.jpeg');">
+        <hgroup class="thtrm-banner-container">
+          <div class="thtrm-constraint thtrm-constraint--slim">
+            <h2 class="thtrm-banner-text">Using ES2015 with Angular today</h2>
+            <span>by <a href="http://twitter.com/" title="Christoph Burgdorf on Twitter">Christoph Burgdorf</a> on Jan 23, 2015, last updated on Dec 16, 2016<br>9 minute read</span>
+
+          </div>
+        </hgroup>
+      </div>
+      <div class="thtrm-constraint thtrm-constraint--slim">
+
+        <div class="thtrm-article">
+          <section class="thtrm-ad thtrm-section thtrm-section--is-promo is-sticky">
+  <img width="100" src="/images/angular2-shield-inverse.svg">
+  <h3 class="thtrm-section-headline">Need private training?</h3>
+  <p class="thtrm-section-text">Get customized training for your corporation</p>
+  <a href="mailto:hello@thoughtram.io" title="Request Training Quote" id="event-cta" class="thtrm-layout-divider-cta">Request quote <strong>&rarr;</strong></a>
+</section>
+
+
+          
+
+          <p>One of the most exciting upcoming changes for Angular 2.0 is that it’s entirely written in ES2015 - the next version of JavaScript. There’s no need to wait until Angular 2.0 though. You can start writing your Angular apps with ES2015 today - even with Angular 1.x.</p>
+
+<p>In this post we are going to look at two very exciting ES2015 features and how they can play a role in the context of an Angular application: <strong>Modules</strong> and <strong>Inheritance</strong>.</p>
+
+<h2 id="modules">Modules</h2>
+
+<p>Modules are one of the most exciting features of ES2015. They enable us to decouple our code easier than ever before. The concept isn’t all that new as most programming languages have some kind of module system. Using JavaScript, your best bet so far was to use one of the community projects such as <a href="http://requirejs.org/">requirejs</a>. With ES2015 a proper module standard is coming right into your browser, natively. With modules code can be structured to explicitly import all dependencies that are used in a file. Before a module can imported it first needs to be exported as a module.</p>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">MainController</span> <span class="p">()</span> <span class="p">{</span>
+  
+<span class="p">}</span>
+
+<span class="kr">export</span> <span class="p">{</span> <span class="nx">MainController</span> <span class="p">}</span></code></pre></div>
+
+<p>Once a module has been exported it can easily be imported from another file.</p>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kr">import</span> <span class="p">{</span> <span class="nx">MainController</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'./path/to/MainController'</span><span class="p">;</span></code></pre></div>
+
+<h2 id="inheritance">Inheritance</h2>
+
+<p>First things first: Inheritance is one of the most over abused software patterns of all times. If you aren’t family with the difference of <a href="http://en.wikipedia.org/wiki/Is-a">Is-A and Has-A</a> relationships, please take a moment and read it up. Similary, if you aren’t aware that you should favor <a href="http://en.wikipedia.org/wiki/Composition_over_inheritance">composition over inheritance</a>, please take a moment to read the linked article.</p>
+
+<p>Most programmers that are coming from traditional languages such as Java or C# have been using inheritance for many years. In fact, it has been possible to use inheritance with JavaScript for years, too. Using it without further abstractions has been very clunky though. There is a huge number of libraries and frameworks that invent some kind of it’s own DSL to make inheritance more approachable with JavaScript.</p>
+
+<p>With ES2015 we don’t need to rely on such non standard abstractions anymore. ES2015 defines a few new keywords and syntax additions that allow for easier inheritance. What’s important to know is that it’s really only sugar on top of the good old prototypal inheritance model that we’ve been using for years.</p>
+
+<p>To use inheritance we need to make use of the new <code>class</code> keyword.</p>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kr">class</span> <span class="nx">Vehicle</span> <span class="p">{</span>
+
+    <span class="nx">constructor</span> <span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nx">get</span> <span class="nx">name</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_name</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="kr">export</span> <span class="p">{</span> <span class="nx">Vehicle</span> <span class="p">}</span></code></pre></div>
+
+<p>In the example above we construct a simple <code>Vehicle</code> class which isn’t different from a simple constructor function in ES5. Where the new class syntax really shines is when you want to inherit from another constructor function. Let’s write a <code>Car</code> class that inherits from <code>Vehicle</code>.</p>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kr">import</span> <span class="p">{</span> <span class="nx">Vehicle</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'./Vehicle'</span><span class="p">;</span>
+
+<span class="kr">class</span> <span class="nx">Car</span> <span class="kr">extends</span> <span class="nx">Vehicle</span> <span class="p">{</span>
+
+    <span class="nx">move</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="s1">' is spinning wheels...'</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="kr">export</span> <span class="p">{</span> <span class="nx">Car</span> <span class="p">}</span></code></pre></div>
+
+<p>Seen that? We import <code>Vehicle</code> as a module and extend it by using the new <code>extends</code> keyword. We could have done the same with ES5 but it’s much more boilerplate code. Let’s forget about the nice module seperation for a moment and put both <code>Vehicle</code> and <code>Car</code> into one file for the ES5 version.</p>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="c1">//Vehicle</span>
+<span class="kd">function</span> <span class="nx">Vehicle</span> <span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">Vehicle</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">'name'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">get</span><span class="p">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_name</span><span class="p">;</span> <span class="p">},</span>
+    <span class="na">set</span><span class="p">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="nx">_name</span> <span class="o">=</span> <span class="nx">value</span> <span class="p">}</span>
+<span class="p">});</span>
+
+
+<span class="c1">// Car</span>
+<span class="kd">function</span> <span class="nx">Car</span> <span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">Vehicle</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">name</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="nx">Car</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">Vehicle</span><span class="p">.</span><span class="nx">prototype</span><span class="p">);</span>
+<span class="nx">Car</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">constructor</span> <span class="o">=</span> <span class="nx">Car</span><span class="p">;</span>
+
+<span class="nx">Car</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">move</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="s1">' is spinning wheels...'</span><span class="p">);</span>
+<span class="p">}</span></code></pre></div>
+
+<p>Oh wow, things really got a lot easier with ES2015, no?</p>
+
+<p>Now that we know what modules and inheritance mean in the context of ES2015, let’s take a look at how we can actually use it with Angular today.</p>
+
+<h2 id="angular-and-es-modules">Angular and ES modules</h2>
+
+<p>Let’s first look at ES2015 modules in the context of Angular 1.x.</p>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kr">class</span> <span class="nx">MainController</span> <span class="p">{</span>
+
+    <span class="nx">constructor</span><span class="p">(</span><span class="nx">searchService</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">searchService</span> <span class="o">=</span> <span class="nx">searchService</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nx">search</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">searchService</span>
+            <span class="p">.</span><span class="nx">fetch</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">searchTerm</span><span class="p">)</span>
+            <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">response</span> <span class="o">=&gt;</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">items</span> <span class="o">=</span> <span class="nx">response</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">items</span><span class="p">;</span>
+            <span class="p">});</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="kr">export</span> <span class="p">{</span> <span class="nx">MainController</span> <span class="p">}</span></code></pre></div>
+
+<p>Notice something? There’s no Angular in our controller definition at all. It’s plain old JavaScript code that happens to be in control of something.</p>
+
+<p>The spirit of Angular has always been to stay out of the way of the developer as much as possibles. It embraces simple POJOs instead of special Angular object types. With ES2015 modules it’s even easier to excell on that idea. You can write your controller as a simple constructor function and have it exported as an ES2015 module.</p>
+
+<p>At some point though, we need to make Angular aware of the controller. Otherwise it just won’t play any role in our Angular application.</p>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kr">import</span> <span class="p">{</span> <span class="nx">MainController</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'./MainController'</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">SearchService</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'./SearchService'</span><span class="p">;</span>
+
+<span class="nx">angular</span>
+    <span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'app'</span><span class="p">,</span> <span class="p">[])</span>
+    <span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">'mainController'</span><span class="p">,</span> <span class="nx">MainController</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">service</span><span class="p">(</span><span class="s1">'searchService'</span><span class="p">,</span> <span class="nx">SearchService</span><span class="p">);</span></code></pre></div>
+
+<p>We simply import the <code>MainController</code> in our <code>app.js</code> file that we use to bootstrap our application. In order to register it as a controller, we pass it on to Angular’s <code>controller()</code> method.</p>
+
+<h2 id="angular-and-es2015-inheritance">Angular and ES2015 inheritance</h2>
+
+<p>The good news is, you already know how to use it! We’ve already seen how easy inheritance becomes with ES2015 in our earlier example. Let’s create a <code>PageController</code> and a <code>ProductPageController</code> whereas the <code>PageController</code> simply defines a <code>title()</code> function that should be available in all controllers that derive from <code>PageController</code>. All it does is that it prepends the string <code>Title: </code> to the instance variable <code>_title</code>.</p>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kr">class</span> <span class="nx">PageController</span> <span class="p">{</span>
+
+    <span class="nx">constructor</span><span class="p">(</span><span class="nx">title</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_title</span> <span class="o">=</span> <span class="nx">title</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nx">title</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="s1">'Title: '</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">_title</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="kr">export</span> <span class="p">{</span> <span class="nx">PageController</span> <span class="p">}</span></code></pre></div>
+
+<p>While it’s possible to just set <code>_title</code> to a string from within the constructor of our <code>ProductPageController</code> we are aiming for the cleaner way and instead pass it to the constructor of our <code>PageController</code> by calling <code>super('ES2015 inheritance with Angular');</code></p>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kr">import</span> <span class="p">{</span> <span class="nx">PageController</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'./PageController'</span><span class="p">;</span>
+
+<span class="kr">class</span> <span class="nx">ProductPageController</span> <span class="kr">extends</span> <span class="nx">PageController</span> <span class="p">{</span>
+
+    <span class="nx">constructor</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kr">super</span><span class="p">(</span><span class="s1">'ES2015 inheritance with Angular'</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">export</span> <span class="p">{</span> <span class="nx">ProductPageController</span> <span class="p">}</span></code></pre></div>
+
+<p>That’s probably not the most exciting example in the world but it works! All there’s left to do is to angularize the <code>ProductPageController</code>.</p>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kr">import</span> <span class="p">{</span> <span class="nx">ProductPageController</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'./ProductPageController'</span><span class="p">;</span>
+
+<span class="nx">angular</span>
+    <span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'app'</span><span class="p">,</span> <span class="p">[])</span>
+    <span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">'ProductPageController'</span><span class="p">,</span> <span class="nx">ProductPageController</span><span class="p">);</span></code></pre></div>
+
+<p>Please note that we don’t have to do the same with the <code>PageController</code> as long as it’s not <em>explicitly</em> used as an Angular controller. In our case, it’s only used <em>implicitly</em> by the <code>ProductPageController</code>.</p>
+
+<p><strong>Edit:</strong> Evgeniy <a href="https://plus.google.com/+PascalPrecht/posts/Jre92W8GnJQ">asked on G+</a>:</p>
+
+<blockquote>
+  <p>“how can be ‘title’ argument in constructor of next controller be legit? It doesn’t look like the name of service”.﻿</p>
+</blockquote>
+
+<p><em>The parameters in our constructor <strong>do</strong> work together with Angulars DI. In fact, the constructor is not different from a traditional constructor function. But how can <code>title</code> be legit then? The reason for that to work is that the <code>title</code> parameter is only used by the <code>PageController</code> which isn’t registered with <code>myModule.controller(fn)</code>. The <code>PageController</code> is only used implicitly by the <code>ProductPageController</code>.</em></p>
+
+<p>Easy isn’t it? Can we use that for services, too? Yes, we can but there’s a small gotcha. It doesn’t work with services that are defined using the <code>myModule.factory(fn)</code> API but only for those that are defined using <code>myModule.service(fn)</code>. That’s because services that are defined using the <code>myModule.service(fn)</code> API are instantiated with the <code>new</code> operator under the hood whereas the others are not. For inheritance to work it’s important that our constructor function is instantiated with <code>new</code> though.</p>
+
+<p>There’s one more gotcha <a href="https://plus.google.com/+PascalPrecht/posts/Jre92W8GnJQ">pointed out by Evgeniy</a>: When we use ES2015 classes we lose the ability to use explicit dependency annotation with the inline array notation.</p>
+
+<p>In order to preserve dependency annotations for minification, we need to use the <code>$inject</code> property notation now:</p>
+
+<p><code>MainController.$inject = ['SearchService'];</code></p>
+
+<h2 id="getting-started-with-our-boilerplate">Getting started with our boilerplate</h2>
+
+<p>There are plenty of different ways to get started with ES2015 today. The sheer amount of different ways to approach it can be very confusing. At thoughtram we created a <a href="https://github.com/thoughtram/es6-babel-browserify-boilerplate">boilerplate</a> that makes it quite easy to get rolling. It uses the popular <a href="https://babeljs.io/">babel transpiler</a> to convert ES2015 to ES5 code that works in all current major browsers. The boilerplate also uses <a href="http://browserify.org/">browserify</a> to concat and minify all ES2015 modules into a single file.</p>
+
+
+          
+
+
+
+
+        </div>
+
+        <div class="thtrm-subscriber">
+  <h3>Get updates on new articles and trainings.</h3>
+  <p>Join over 1400 other developers who get our content first.</p>
+  <form action="//thoughtram.us8.list-manage.com/subscribe/post?u=dfbb1507fbced5a20d9dc5698&amp;id=731f22cdca" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" novalidate>
+    <label for="mce-EMAIL"></label>
+    <input type="email" value="" name="EMAIL" placeholder="Your email address..." required>
+    <div style="position: absolute; left: -5000px;"><input type="text" name="b_dfbb1507fbced5a20d9dc5698_731f22cdca" tabindex="-1" value=""></div>
+    <input type="submit" value="Subscribe" name="subscribe" class="thtrm-cta thtrm-cta--small">
+  </form>
+</div>
+
+
+
+        <div class="thtrm-social-links">
+            <!-- Sharingbutton Facebook -->
+            <a class="resp-sharing-button__link" href="https://facebook.com/sharer/sharer.php?u=http%3A%2F%2Fblog.thoughtram.io/angularjs/es6/2015/01/23/exploring-angular-1.3-using-es6.html" target="_blank" aria-label="Share on Facebook">
+              <div class="resp-sharing-button resp-sharing-button--facebook resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M18.768,7.465H14.5V5.56c0-0.896,0.594-1.105,1.012-1.105s2.988,0,2.988,0V0.513L14.171,0.5C10.244,0.5,9.5,3.438,9.5,5.32 v2.145h-3v4h3c0,5.212,0,12,0,12h5c0,0,0-6.85,0-12h3.851L18.768,7.465z"/>
+                    </g>
+                </svg>
+                </div>Share on Facebook</div>
+            </a>
+
+            <!-- Sharingbutton Twitter -->
+            <a class="resp-sharing-button__link" href="https://twitter.com/intent/tweet/?text=Using%20ES2015%20with%20Angular%20today&amp;url=http://blog.thoughtram.io/angularjs/es6/2015/01/23/exploring-angular-1.3-using-es6.html" target="_blank" aria-label="Share on Twitter">
+              <div class="resp-sharing-button resp-sharing-button--twitter resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M23.444,4.834c-0.814,0.363-1.5,0.375-2.228,0.016c0.938-0.562,0.981-0.957,1.32-2.019c-0.878,0.521-1.851,0.9-2.886,1.104 C18.823,3.053,17.642,2.5,16.335,2.5c-2.51,0-4.544,2.036-4.544,4.544c0,0.356,0.04,0.703,0.117,1.036 C8.132,7.891,4.783,6.082,2.542,3.332C2.151,4.003,1.927,4.784,1.927,5.617c0,1.577,0.803,2.967,2.021,3.782 C3.203,9.375,2.503,9.171,1.891,8.831C1.89,8.85,1.89,8.868,1.89,8.888c0,2.202,1.566,4.038,3.646,4.456 c-0.666,0.181-1.368,0.209-2.053,0.079c0.579,1.804,2.257,3.118,4.245,3.155C5.783,18.102,3.372,18.737,1,18.459 C3.012,19.748,5.399,20.5,7.966,20.5c8.358,0,12.928-6.924,12.928-12.929c0-0.198-0.003-0.393-0.012-0.588 C21.769,6.343,22.835,5.746,23.444,4.834z"/>
+                    </g>
+                </svg>
+                </div>Share on Twitter</div>
+            </a>
+
+            <!-- Sharingbutton Google+ -->
+            <a class="resp-sharing-button__link" href="https://plus.google.com/share?url=http%3A%2F%2Fblog.thoughtram.io/angularjs/es6/2015/01/23/exploring-angular-1.3-using-es6.html" target="_blank" aria-label="Share on Google+">
+              <div class="resp-sharing-button resp-sharing-button--google resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M11.366,12.928c-0.729-0.516-1.393-1.273-1.404-1.505c0-0.425,0.038-0.627,0.988-1.368 c1.229-0.962,1.906-2.228,1.906-3.564c0-1.212-0.37-2.289-1.001-3.044h0.488c0.102,0,0.2-0.033,0.282-0.091l1.364-0.989 c0.169-0.121,0.24-0.338,0.176-0.536C14.102,1.635,13.918,1.5,13.709,1.5H7.608c-0.667,0-1.345,0.118-2.011,0.347 c-2.225,0.766-3.778,2.66-3.778,4.605c0,2.755,2.134,4.845,4.987,4.91c-0.056,0.22-0.084,0.434-0.084,0.645 c0,0.425,0.108,0.827,0.33,1.216c-0.026,0-0.051,0-0.079,0c-2.72,0-5.175,1.334-6.107,3.32C0.623,17.06,0.5,17.582,0.5,18.098 c0,0.501,0.129,0.984,0.382,1.438c0.585,1.046,1.843,1.861,3.544,2.289c0.877,0.223,1.82,0.335,2.8,0.335 c0.88,0,1.718-0.114,2.494-0.338c2.419-0.702,3.981-2.482,3.981-4.538C13.701,15.312,13.068,14.132,11.366,12.928z M3.66,17.443 c0-1.435,1.823-2.693,3.899-2.693h0.057c0.451,0.005,0.892,0.072,1.309,0.2c0.142,0.098,0.28,0.192,0.412,0.282 c0.962,0.656,1.597,1.088,1.774,1.783c0.041,0.175,0.063,0.35,0.063,0.519c0,1.787-1.333,2.693-3.961,2.693 C5.221,20.225,3.66,19.002,3.66,17.443z M5.551,3.89c0.324-0.371,0.75-0.566,1.227-0.566l0.055,0 c1.349,0.041,2.639,1.543,2.876,3.349c0.133,1.013-0.092,1.964-0.601,2.544C8.782,9.589,8.363,9.783,7.866,9.783H7.865H7.844 c-1.321-0.04-2.639-1.6-2.875-3.405C4.836,5.37,5.049,4.462,5.551,3.89z"/>
+                        <polygon points="23.5,9.5 20.5,9.5 20.5,6.5 18.5,6.5 18.5,9.5 15.5,9.5 15.5,11.5 18.5,11.5 18.5,14.5 20.5,14.5 20.5,11.5  23.5,11.5   "/>
+                    </g>
+                </svg>
+                </div>Share on Google+</div>
+            </a>
+        </div>
+
+        <h3 class="thtrm-section-headline thtrm-section-headline--with-margin">Author</h3>
+        <div class="thtrm-article-author">
+          <span class="thtrm-article-author-avatar"><img src="/images/author-christoph.jpg" alt="Picture of Christoph Burgdorf"></span>
+          <div class="thtrm-article-author-matter">
+            <h4 class="thtrm-article-author-name">Christoph Burgdorf</h4>
+            <p class="thtrm-article-author-text">Christoph began programming at the age of 10. He is the creator of the Nickel.rs web framework and a contributor of the AngularJS project. Christoph is also part of the Angular 2 Docs Authoring team.</p>
+            <p>
+              <a class="thtrm-article-author-cta thtrm-article-author-cta-twitter" href="http://twitter.com/cburgdorf" title="Christoph Burgdorf on Twitter">Twitter</a>
+              <a class="thtrm-article-author-cta" href="http://github.com/cburgdorf" title="Christoph Burgdorf on GitHub">GitHub</a>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="thtrm-constraint">
+
+        
+        <h4 class="thtrm-section-headline thtrm-section-headline--with-big-margin thtrm-section-headline--centered">Related Posts</h4>
+        <ul class="thtrm-three-column-list thtrm-three-column-list--with-padding">
+        
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angularjs/2016/03/29/exploring-angular-1.5-lifecycle-hooks.html" title="Exploring Angular 1.5: Lifecycle Hooks">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/fallback.jpeg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Exploring Angular 1.5: Lifecycle Hooks</h3>
+                <p>Angular 1.5 is finally out! This article discusses the new lifecycle hooks in Angular.</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/announcements/2016/02/10/sponsoring-angularconnect-again.html" title="Sponsoring AngularConnect. Again.">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/fallback.jpeg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Sponsoring AngularConnect. Again.</h3>
+                <p>Today we are very happy to announce that we're going to sponsor AngularConnect - again! We're also going to run...</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2015/12/10/ng-message-format-the-unheard-feature-in-angular.html" title="ngMessageFormat - Angular's unheard feature">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/fallback.jpeg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>ngMessageFormat - Angular's unheard feature</h3>
+                <p>Angular 1.5 is pretty much around the corner. It turns out that there's a feature that already landed in Angular...</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2015/11/16/multiple-transclusion-and-named-slots.html" title="Multiple Transclusion and named Slots">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/fallback.jpeg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Multiple Transclusion and named Slots</h3>
+                <p>One of those bigger features in the 1.5 release is multiple transclusion via named slots. In this article we're going...</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2015/07/07/service-vs-factory-once-and-for-all.html" title="Service vs Factory - Once and for all">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/service-vs-factory.png);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Service vs Factory - Once and for all</h3>
+                <p>This is yet another article on services vs factories in AngularJS. It explains once and for all, why we mostly...</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2015/06/25/taking-angular-master-class-to-the-next-level.html" title="Taking Angular Master Class to the next level">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/fallback.jpeg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Taking Angular Master Class to the next level</h3>
+                <p>We always collect feedback to make our material and trainings even better. We listened. Here's what we did.</p>
+              </div>
+            </a>
+          </li>
+        
+        
+        </ul>
+        
+
+      
+
+      </div>
+    </main>
+    <footer role="contentinfo" class="thtrm-footer thtrm-footer--slim">
+  <div class="thtrm-footer-text">
+    <img class="thtrm-footer-logo" alt="thoughtram brain" src="/images/thoughtram-brain-white.png">
+    <p>This website was created in collaboration with <a href="http://twitter.com/timche_" title="Tim Cheung on Twitter"><strong>Tim Cheung</strong></a> and <a href="http://twitter.com/tim_hartmann_" title="Tim Hartmann on Twitter"><strong>Tim Hartmann</strong></a>.</p>
+    <p ><a href="http://thoughtram.io/code-of-conduct.html" title="Code of Conduct">Code of Conduct</a> &bullet; <a href="http://thoughtram.io/imprint.html" title="Legal Notice">Legal notice</a></p>
+    <p class="thtrm-footer-bottom">&copy; 2014-2017 thoughtram GmbH</p>
+  </div>
+</footer>
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-51360648-2', 'auto');
+ga('send', 'pageview');
+
+var form = document.getElementById('search-form');
+var eventCta = document.getElementById('event-cta');
+
+if (eventCta) {
+
+  eventCta.addEventListener('click', function (event) {
+    event.preventDefault();
+
+    setTimeout(clickLink, 1000);
+
+    function clickLink() {
+      window.location.replace(eventCta.getAttribute('href'));
+    }
+
+    ga('send', 'event', {
+      eventCategory: 'Event Link',
+      eventAction: 'click',
+      eventLabel: eventCta.getAttribute('title'),
+      hitCallback: clickLink
+    });
+  });
+}
+
+if (form) {
+
+  var searchTerm = document.getElementById('search-term');
+
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    var formSubmitted = false;
+
+    setTimeout(submitForm, 1000);
+
+    function submitForm() {
+      if (!formSubmitted) {
+        formSubmitted = true;
+        form.submit();
+      }
+    }
+
+    ga('send', 'event', {
+      eventCategory: 'Search Form',
+      eventAction: 'submit',
+      eventLabel: searchTerm.value,
+      hitCallback: submitForm
+    });
+  });
+}
+</script>
+
+
+
+    <script src="/scripts/stickyfill.js"></script>
+    <script src="/scripts/linkjuice/dist/linkjuice.js"></script>
+    <script>
+    (function (doc, win) {
+
+      linkjuice.init('.thtrm-article', {
+        selector: ['h2', 'h3'],
+        icon: ''
+      });
+
+      if (win.matchMedia && win.matchMedia('(min-width: 1200px)').matches) {
+        var stickyElements = doc.querySelectorAll('.is-sticky');
+
+        for (var i = stickyElements.length - 1; i >= 0; i--) {
+          var el = stickyElements[i];
+
+          if (el.classList.contains('thtrm-toc')) {
+            el.classList.add('thtrm-toc--sticky');
+            el.classList.add('thtrm-toc--faded');
+          } 
+          if (el.classList.contains('thtrm-ad')) {
+            el.classList.add('thtrm-ad--sticky');
+            el.classList.add('thtrm-ad--description');
+          }
+
+          Stickyfill.add(el);
+        }
+      }
+    }(document, window));
+    </script>
+  </body>
+</html>

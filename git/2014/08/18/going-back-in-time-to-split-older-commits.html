@@ -1,0 +1,453 @@
+
+
+
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Rebasing in Git allows you to go back in time to split older commits. In this article we'll explore how to do exactly that!">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="thoughtram">
+    <title>Going back in time to split older commits by thoughtram</title>
+    <meta name="google-site-verification" content="o9eGPEgIETEqYGombq7NiQuBIB_qa6gz1yAL7PxKyK0">
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#4D8799">
+    <link rel="icon" sizes="192x192" href="/images/touch/chrome-touch-icon-192x192.png">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="thoughtram">
+    <link rel="apple-touch-icon" href="/images/touch/apple-touch-icon.png">
+
+    <!-- Tile icon for Win8 (144x144 + tile color) -->
+    <meta name="msapplication-TileImage" content="/images/touch/ms-touch-icon-144x144-precomposed.png">
+    <meta name="msapplication-TileColor" content="#4D8799">
+
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Going back in time to split older commits">
+    <meta property="og:description" content="Rebasing in Git allows you to go back in time to split older commits. In this article we'll explore how to do exactly that!">
+    <meta property="og:url" content="http://blog.thoughtram.io/git/2014/08/18/going-back-in-time-to-split-older-commits.html">
+    <meta property="og:site_name" content="Articles by thoughtram">
+    <meta property="og:image" content="http://blog.thoughtram.io">
+    <meta property="og:publisher" content="http://www.facebook.com/thoughtram">
+
+    <meta property="twitter:card" content="summary">
+    <meta property="twitter:title" content="Going back in time to split older commits">
+    <meta property="twitter:site" content="thoughtram Blog">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css" type="text/css">
+  </head>
+  <body class="sub-site">
+    <!-- Add your site or app content here -->
+
+    <!--[if lt IE 10]>
+        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <header class="thtrm-header" role="banner">
+      <div class="thtrm-header-bar">
+        <div class="thtrm-constraint">
+          <a href="http://thoughtram.io" class="thtrm-header-logo-link" title="thoughtram.io Start Page"><h1 class="thtrm-header-logo">thoughtram</h1></a>
+          <div class="thtrm-header-menu-wrapper">
+            <span role="button" tabindex="0" class="thtrm-header-menu-label">Menu</span>
+            <ul class="thtrm-header-menu">
+              <li><a title="Training" class="thtrm-header-menu-item" href="http://thoughtram.io/training.html">Training</a></li>
+              <li><a title="Code Review" class="thtrm-header-menu-item" href="http://thoughtram.io/code-review.html">Code Review</a></li>
+              <li><a title="Casts" class="thtrm-header-menu-item " href="http://casts.thoughtram.io">Casts</a></li>
+              <li><a title="Blog" class="thtrm-header-menu-item" href="/">Blog</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main role="main" class="thtrm-main">
+    <div class="thtrm-banner" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%), url('/images/banner/fallback.jpeg');">
+        <hgroup class="thtrm-banner-container">
+          <div class="thtrm-constraint thtrm-constraint--slim">
+            <h2 class="thtrm-banner-text">Going back in time to split older commits</h2>
+            <span>by <a href="http://twitter.com/" title="Christoph Burgdorf on Twitter">Christoph Burgdorf</a> on Aug 18, 2014<br>7 minute read</span>
+
+          </div>
+        </hgroup>
+      </div>
+      <div class="thtrm-constraint thtrm-constraint--slim">
+
+        <div class="thtrm-article">
+          <section class="thtrm-ad thtrm-section thtrm-section--is-promo is-sticky">
+  <img width="100" src="/images/angular2-shield-inverse.svg">
+  <h3 class="thtrm-section-headline">Need private training?</h3>
+  <p class="thtrm-section-text">Get customized training for your corporation</p>
+  <a href="mailto:hello@thoughtram.io" title="Request Training Quote" id="event-cta" class="thtrm-layout-divider-cta">Request quote <strong>&rarr;</strong></a>
+</section>
+
+
+          
+
+          <p>Imagine you are working on that radical new feature. It’s going to be brilliant
+but it takes a while. You’ve been working on that for a couple of days now, maybe weeks.</p>
+
+<p>Your feature branch is already six commits ahead of master. You’ve been a good developer and crafted
+meaningful semantical commits. But there’s the thing: you are slowly realizing that this beast will
+still take some more time before it’s really ready to be merged back into master.</p>
+
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">m1</span><span class="o">-</span><span class="n">m2</span><span class="o">-</span><span class="n">m3</span><span class="o">-</span><span class="n">m4</span> <span class="p">(</span><span class="n">master</span><span class="p">)</span>
+         <span class="p">\</span> 
+          <span class="n">f1</span><span class="o">-</span><span class="n">f2</span><span class="o">-</span><span class="n">f3</span><span class="o">-</span><span class="n">f4</span><span class="o">-</span><span class="n">f5</span><span class="o">-</span><span class="n">f6</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span></code></pre></div>
+
+<p>What you also realize is that some parts are actually less coupled to the new feature. They could land in master earlier. Unfortunately the part that you want to port back into master earlier is in a commit somewhere in the middle of your six commits. Even worse, it also contains a change that relies on a previous commits of your feature branch. One could argue that you should have made that two commits in the first place, but then nobody is perfect.</p>
+
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">m1</span><span class="o">-</span><span class="n">m2</span><span class="o">-</span><span class="n">m3</span><span class="o">-</span><span class="n">m4</span> <span class="p">(</span><span class="n">master</span><span class="p">)</span>
+         <span class="p">\</span> 
+          <span class="n">f1</span><span class="o">-</span><span class="n">f2</span><span class="o">-</span><span class="n">f3</span><span class="o">-</span><span class="n">f4</span><span class="o">-</span><span class="n">f5</span><span class="o">-</span><span class="n">f6</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
+                 <span class="o">^</span>
+                 <span class="o">|</span>
+            <span class="n">mixed</span> <span class="n">commit</span></code></pre></div>
+
+<p>At the time that you crafted the commit, you didn’t foresee that you might come into a situation where you want to gradually bring the feature into master. Heck! You wouldn’t have guessed that this whole thing could take us so long.</p>
+
+<p>What you need is a way to go back in history, open up the commit and split it into two commits so that you can seperate out all the things that are safe to be ported back into master by now.</p>
+
+<p>Speaking in terms of a graph, we want to have it like this.</p>
+
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">m1</span><span class="o">-</span><span class="n">m2</span><span class="o">-</span><span class="n">m3</span><span class="o">-</span><span class="n">m4</span> <span class="p">(</span><span class="n">master</span><span class="p">)</span>
+         <span class="p">\</span> 
+          <span class="n">f1</span><span class="o">-</span><span class="n">f2</span><span class="o">-</span><span class="n">f3a</span><span class="o">-</span><span class="n">f3b</span><span class="o">-</span><span class="n">f4</span><span class="o">-</span><span class="n">f5</span><span class="o">-</span><span class="n">f6</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span></code></pre></div>
+
+<p>With the work splitted into two commits, we could just <code>cherry-pick</code> the precious bits into master.</p>
+
+<p>Turns out, git comes with a powerful command <code>git rebase -i</code> which lets us do exactly that. It lets us change the history. Changing the history can be problematic and as a rule of thumb should be avoided as soon as the history is shared with others. In our case though, we are just changing history of our local feature branch. Nobody will get hurt. Promised!</p>
+
+<p>Ok, let’s take a closer look at what exactly happened in commit <code>f3</code>. Turns out we modified two files: <code>userService.js</code> and <code>wishlistService.js</code>. Let’s say that the changes to <code>userService.js</code> could go straight back into master wheras the changes to <code>wishlistService.js</code> could not. Because <code>wishlistService.js</code> does not even exist in master. It was introduced in commit <code>f1</code>.</p>
+
+<p><em>Pro Tip: even if the changes would have been in</em> <strong>one</strong> <em>file, git could handle that. We keep things simple for this blog post though.</em></p>
+
+<p>We’ve set up a <a href="https://github.com/thoughtram/interactive-rebase-demo">public demo repository</a> that we will use for this exercise. To make it easier to follow, each commit message is prefixed with the pseudo SHAs used in the graphs above. What follows is the branch graph as printed by git before we start to split the commit <code>f3</code>.</p>
+
+<p><img src="/css/images/lg_before_split.png" alt="git log before the split" /></p>
+
+<p>Now the first thing we want to do is to checkout our feature branch with <code>git checkout feature</code>. To get started with the rebase we run <code>git rebase -i master</code>.</p>
+
+<p>Now what follows is that git opens a temporary file in the configured editor (defaults to Vim).</p>
+
+<p><img src="/css/images/rebase_first_screen.png" alt="git rebase first screen" /></p>
+
+<p>This file is meant to provide you some options for the rebase and it comes with a little cheat sheet (the blue text). For each commit we could choose between the actions <code>pick</code>, <code>reword</code>, <code>edit</code>, <code>squash</code>, <code>fixup</code> and <code>exec</code>. Each action can also be referred to by its short form <code>p</code>, <code>r</code>, <code>e</code>, <code>s</code>, <code>f</code> and <code>e</code>. It’s out of the scope of this article to describe each and every option so let’s focus on our specific task.</p>
+
+<p>We want to choose the <code>edit</code> option for our <code>f3</code> commit hence we change the contents to look like that.</p>
+
+<p><img src="/css/images/rebase_first_screen2.png" alt="git rebase first screen 2" /></p>
+
+<p>Now we save the file (in Vim <code>&lt;ESC&gt;</code> followed by <code>:wq</code>, followed by <code>&lt;RETURN&gt;</code>). The next thing we notice is that git stops the rebase at the commit for which we choose the <code>edit</code> option.</p>
+
+<p><img src="/css/images/rebase_second_screen.png" alt="git rebase second screen" /></p>
+
+<p>What this means is that git started to apply <code>f1</code>, <code>f2</code> and <code>f3</code> as if it was a regular rebase but then stopped <strong>after</strong> applying <code>f3</code>. In fact, we can prove that if we just look at the log at the point where we stopped.</p>
+
+<p><img src="/css/images/rebase_stopped_lg.png" alt="git rebase stopped" /></p>
+
+<p>To split our commit <code>f3</code> into two commits, all we have to do at this point is to reset gits pointer to the previous commit (<code>f2</code>) while keeping the working directory the same as it is right now. This is exactly what the <code>mixed</code> mode of <code>git reset</code> does. Since <code>mixed</code> is the default mode of <code>git reset</code> we can just write <code>git reset head~1</code>. Let’s do that and also run <code>git status</code> right after it to see what happend.</p>
+
+<p><img src="/css/images/rebase_reset_status.png" alt="git reset status" /></p>
+
+<p>The <code>git status</code> tells us that both our <code>userService.js</code> and our <code>wishlistService.js</code> are modified. If we run <code>git diff</code> we can see that those are exactly the changes of our <code>f3</code> commit.</p>
+
+<p><img src="/css/images/rebase_git_diff.png" alt="git rebase diff" /></p>
+
+<p>If we look at the log again at this point we see that the <code>f3</code> is gone though.</p>
+
+<p><img src="/css/images/rebase_reset_lg.png" alt="git reset lg" /></p>
+
+<p>We are now at the point that we have the changes of our previous <code>f3</code> commit ready to be commited wheras the original <code>f3</code> commit itself is gone. Keep in mind though that we are still in the middle of a rebase. Our <code>f4</code>, <code>f5</code> and <code>f6</code> commits are not lost, they’ll be back in a moment.</p>
+
+<p>Let’s make two new commits: Let’s start with the commit for the changes made to the <code>userService.js</code> which are fine to get picked into master. Run <code>git add userService.js</code> followed by <code>git commit -m "f3a: add updateUser method"</code>.</p>
+
+<p>Great! Let’s create another commit for the changes made to <code>wishlistService.js</code>. Run <code>git add wishlistService.js</code> followed by <code>git commit -m "f3b: add addItems method"</code>.</p>
+
+<p>Let’s take a look at the log again.</p>
+
+<p><img src="/css/images/rebase_after_split_lg.png" alt="git log after the split" /></p>
+
+<p>This is exactly what we wanted except our commits <code>f4</code>, <code>f5</code> and <code>f6</code> are still missing. This is because we are still in the middle of the interactive rebase and we need to tell git to continue with the rebase. This is done with the command <code>git rebase --continue</code>.</p>
+
+<p>Let’s check out the log again.</p>
+
+<p><img src="/css/images/rebase_success.png" alt="git rebase success" /></p>
+
+<p>And that’s it. We now have the history we wanted. The previous <code>f3</code> commit is now splitted into two commits <code>f3a</code> and <code>f3b</code>. The only thing left to do is to <code>cherry-pick</code> the <code>f3a</code> commit over to the <code>master</code> branch.</p>
+
+<p>To finish the last step we first switch to the <code>master</code> branch. We do this with <code>git checkout master</code>. Now we can pick the <code>f3a</code> commit with the <code>cherry-pick</code> command. We can refer to the commit by its SHA key which is <code>bd47ee1</code> in this case.</p>
+
+<p><img src="/css/images/rebase_cherry-pick.png" alt="git cherry-üick" /></p>
+
+<p>We now have the <code>f3a</code> commit sitting on top of latest master. Exactly what we wanted!<br />
+<img src="/css/images/rebase_final_history.png" alt="git final history" /></p>
+
+<p>Given the length of the post this may seem like a lot of effort but it’s really only a matter of seconds for an advanced git user.</p>
+
+<p>The described technique is also part of our <a href="http://thoughtram.io/#git-ninja-class-hanover">Git Ninja Class</a> workshop. If you like to sharpen your git skills you might be interested to join one of our upcoming workshops in <a href="http://thoughtram.io/#git-ninja-class-hanover">Hannover</a> or <a href="http://webbox.io/workshops/git-ninja/">Istanbul</a> in September.</p>
+
+
+          
+
+
+
+
+        </div>
+
+        <div class="thtrm-subscriber">
+  <h3>Get updates on new articles and trainings.</h3>
+  <p>Join over 1400 other developers who get our content first.</p>
+  <form action="//thoughtram.us8.list-manage.com/subscribe/post?u=dfbb1507fbced5a20d9dc5698&amp;id=731f22cdca" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" novalidate>
+    <label for="mce-EMAIL"></label>
+    <input type="email" value="" name="EMAIL" placeholder="Your email address..." required>
+    <div style="position: absolute; left: -5000px;"><input type="text" name="b_dfbb1507fbced5a20d9dc5698_731f22cdca" tabindex="-1" value=""></div>
+    <input type="submit" value="Subscribe" name="subscribe" class="thtrm-cta thtrm-cta--small">
+  </form>
+</div>
+
+
+
+        <div class="thtrm-social-links">
+            <!-- Sharingbutton Facebook -->
+            <a class="resp-sharing-button__link" href="https://facebook.com/sharer/sharer.php?u=http%3A%2F%2Fblog.thoughtram.io/git/2014/08/18/going-back-in-time-to-split-older-commits.html" target="_blank" aria-label="Share on Facebook">
+              <div class="resp-sharing-button resp-sharing-button--facebook resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M18.768,7.465H14.5V5.56c0-0.896,0.594-1.105,1.012-1.105s2.988,0,2.988,0V0.513L14.171,0.5C10.244,0.5,9.5,3.438,9.5,5.32 v2.145h-3v4h3c0,5.212,0,12,0,12h5c0,0,0-6.85,0-12h3.851L18.768,7.465z"/>
+                    </g>
+                </svg>
+                </div>Share on Facebook</div>
+            </a>
+
+            <!-- Sharingbutton Twitter -->
+            <a class="resp-sharing-button__link" href="https://twitter.com/intent/tweet/?text=Going%20back%20in%20time%20to%20split%20older%20commits&amp;url=http://blog.thoughtram.io/git/2014/08/18/going-back-in-time-to-split-older-commits.html" target="_blank" aria-label="Share on Twitter">
+              <div class="resp-sharing-button resp-sharing-button--twitter resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M23.444,4.834c-0.814,0.363-1.5,0.375-2.228,0.016c0.938-0.562,0.981-0.957,1.32-2.019c-0.878,0.521-1.851,0.9-2.886,1.104 C18.823,3.053,17.642,2.5,16.335,2.5c-2.51,0-4.544,2.036-4.544,4.544c0,0.356,0.04,0.703,0.117,1.036 C8.132,7.891,4.783,6.082,2.542,3.332C2.151,4.003,1.927,4.784,1.927,5.617c0,1.577,0.803,2.967,2.021,3.782 C3.203,9.375,2.503,9.171,1.891,8.831C1.89,8.85,1.89,8.868,1.89,8.888c0,2.202,1.566,4.038,3.646,4.456 c-0.666,0.181-1.368,0.209-2.053,0.079c0.579,1.804,2.257,3.118,4.245,3.155C5.783,18.102,3.372,18.737,1,18.459 C3.012,19.748,5.399,20.5,7.966,20.5c8.358,0,12.928-6.924,12.928-12.929c0-0.198-0.003-0.393-0.012-0.588 C21.769,6.343,22.835,5.746,23.444,4.834z"/>
+                    </g>
+                </svg>
+                </div>Share on Twitter</div>
+            </a>
+
+            <!-- Sharingbutton Google+ -->
+            <a class="resp-sharing-button__link" href="https://plus.google.com/share?url=http%3A%2F%2Fblog.thoughtram.io/git/2014/08/18/going-back-in-time-to-split-older-commits.html" target="_blank" aria-label="Share on Google+">
+              <div class="resp-sharing-button resp-sharing-button--google resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M11.366,12.928c-0.729-0.516-1.393-1.273-1.404-1.505c0-0.425,0.038-0.627,0.988-1.368 c1.229-0.962,1.906-2.228,1.906-3.564c0-1.212-0.37-2.289-1.001-3.044h0.488c0.102,0,0.2-0.033,0.282-0.091l1.364-0.989 c0.169-0.121,0.24-0.338,0.176-0.536C14.102,1.635,13.918,1.5,13.709,1.5H7.608c-0.667,0-1.345,0.118-2.011,0.347 c-2.225,0.766-3.778,2.66-3.778,4.605c0,2.755,2.134,4.845,4.987,4.91c-0.056,0.22-0.084,0.434-0.084,0.645 c0,0.425,0.108,0.827,0.33,1.216c-0.026,0-0.051,0-0.079,0c-2.72,0-5.175,1.334-6.107,3.32C0.623,17.06,0.5,17.582,0.5,18.098 c0,0.501,0.129,0.984,0.382,1.438c0.585,1.046,1.843,1.861,3.544,2.289c0.877,0.223,1.82,0.335,2.8,0.335 c0.88,0,1.718-0.114,2.494-0.338c2.419-0.702,3.981-2.482,3.981-4.538C13.701,15.312,13.068,14.132,11.366,12.928z M3.66,17.443 c0-1.435,1.823-2.693,3.899-2.693h0.057c0.451,0.005,0.892,0.072,1.309,0.2c0.142,0.098,0.28,0.192,0.412,0.282 c0.962,0.656,1.597,1.088,1.774,1.783c0.041,0.175,0.063,0.35,0.063,0.519c0,1.787-1.333,2.693-3.961,2.693 C5.221,20.225,3.66,19.002,3.66,17.443z M5.551,3.89c0.324-0.371,0.75-0.566,1.227-0.566l0.055,0 c1.349,0.041,2.639,1.543,2.876,3.349c0.133,1.013-0.092,1.964-0.601,2.544C8.782,9.589,8.363,9.783,7.866,9.783H7.865H7.844 c-1.321-0.04-2.639-1.6-2.875-3.405C4.836,5.37,5.049,4.462,5.551,3.89z"/>
+                        <polygon points="23.5,9.5 20.5,9.5 20.5,6.5 18.5,6.5 18.5,9.5 15.5,9.5 15.5,11.5 18.5,11.5 18.5,14.5 20.5,14.5 20.5,11.5  23.5,11.5   "/>
+                    </g>
+                </svg>
+                </div>Share on Google+</div>
+            </a>
+        </div>
+
+        <h3 class="thtrm-section-headline thtrm-section-headline--with-margin">Author</h3>
+        <div class="thtrm-article-author">
+          <span class="thtrm-article-author-avatar"><img src="/images/author-christoph.jpg" alt="Picture of Christoph Burgdorf"></span>
+          <div class="thtrm-article-author-matter">
+            <h4 class="thtrm-article-author-name">Christoph Burgdorf</h4>
+            <p class="thtrm-article-author-text">Christoph began programming at the age of 10. He is the creator of the Nickel.rs web framework and a contributor of the AngularJS project. Christoph is also part of the Angular 2 Docs Authoring team.</p>
+            <p>
+              <a class="thtrm-article-author-cta thtrm-article-author-cta-twitter" href="http://twitter.com/cburgdorf" title="Christoph Burgdorf on Twitter">Twitter</a>
+              <a class="thtrm-article-author-cta" href="http://github.com/cburgdorf" title="Christoph Burgdorf on GitHub">GitHub</a>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="thtrm-constraint">
+
+        
+        <h4 class="thtrm-section-headline thtrm-section-headline--with-big-margin thtrm-section-headline--centered">Related Posts</h4>
+        <ul class="thtrm-three-column-list thtrm-three-column-list--with-padding">
+        
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/git/rebase-book/2015/02/10/understanding-branches-in-git.html" title="Understanding branches in Git">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/fallback.jpeg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Understanding branches in Git</h3>
+                <p>In this article we will take a deep dive into Git branches. We'll see how simple yet powerful the concept...</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/git/2014/11/18/the-anatomy-of-a-git-commit.html" title="The anatomy of a Git commit">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/fallback.jpeg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>The anatomy of a Git commit</h3>
+                <p>In this article we explore what a Git commit looks like internally and how Git uses cryptographic tooling to enforce...</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/announcements/2014/11/02/git-ninja-class-in-amsterdam.html" title="Git Ninja Class in Amsterdam">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/fallback.jpeg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Git Ninja Class in Amsterdam</h3>
+                <p>We are very happy to announce that, with the help of our new partner De Voorhoede, we'll bring our Git...</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/announcements/2014/07/05/git-ninya-class-comes-to-istanbul.html" title="Git Ninja Class comes to Istanbul">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/fallback.jpeg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Git Ninja Class comes to Istanbul</h3>
+                <p>Today we are happy to announce that our Git Master Class is coming to Istanbul! Read everything about this event...</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/announcements/2014/07/04/tickets-are-on-sale-now.html" title="Tickets are on sale now!">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/fallback.jpeg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Tickets are on sale now!</h3>
+                <p>It's on! You can now buy the first bunch of tickets for our Git Ninja Class workshop in Hannover, Germany!...</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/announcements/2014/06/23/announcing-our-first-workshop.html" title="Announcing our first workshop">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/announcing-our-first-workshop.jpeg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Announcing our first workshop</h3>
+                <p>As announced earlier this month, we were working on our website to launch it as soon as possible. The time...</p>
+              </div>
+            </a>
+          </li>
+        
+        
+        </ul>
+        
+
+      
+
+      </div>
+    </main>
+    <footer role="contentinfo" class="thtrm-footer thtrm-footer--slim">
+  <div class="thtrm-footer-text">
+    <img class="thtrm-footer-logo" alt="thoughtram brain" src="/images/thoughtram-brain-white.png">
+    <p>This website was created in collaboration with <a href="http://twitter.com/timche_" title="Tim Cheung on Twitter"><strong>Tim Cheung</strong></a> and <a href="http://twitter.com/tim_hartmann_" title="Tim Hartmann on Twitter"><strong>Tim Hartmann</strong></a>.</p>
+    <p ><a href="http://thoughtram.io/code-of-conduct.html" title="Code of Conduct">Code of Conduct</a> &bullet; <a href="http://thoughtram.io/imprint.html" title="Legal Notice">Legal notice</a></p>
+    <p class="thtrm-footer-bottom">&copy; 2014-2017 thoughtram GmbH</p>
+  </div>
+</footer>
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-51360648-2', 'auto');
+ga('send', 'pageview');
+
+var form = document.getElementById('search-form');
+var eventCta = document.getElementById('event-cta');
+
+if (eventCta) {
+
+  eventCta.addEventListener('click', function (event) {
+    event.preventDefault();
+
+    setTimeout(clickLink, 1000);
+
+    function clickLink() {
+      window.location.replace(eventCta.getAttribute('href'));
+    }
+
+    ga('send', 'event', {
+      eventCategory: 'Event Link',
+      eventAction: 'click',
+      eventLabel: eventCta.getAttribute('title'),
+      hitCallback: clickLink
+    });
+  });
+}
+
+if (form) {
+
+  var searchTerm = document.getElementById('search-term');
+
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    var formSubmitted = false;
+
+    setTimeout(submitForm, 1000);
+
+    function submitForm() {
+      if (!formSubmitted) {
+        formSubmitted = true;
+        form.submit();
+      }
+    }
+
+    ga('send', 'event', {
+      eventCategory: 'Search Form',
+      eventAction: 'submit',
+      eventLabel: searchTerm.value,
+      hitCallback: submitForm
+    });
+  });
+}
+</script>
+
+
+
+    <script src="/scripts/stickyfill.js"></script>
+    <script src="/scripts/linkjuice/dist/linkjuice.js"></script>
+    <script>
+    (function (doc, win) {
+
+      linkjuice.init('.thtrm-article', {
+        selector: ['h2', 'h3'],
+        icon: ''
+      });
+
+      if (win.matchMedia && win.matchMedia('(min-width: 1200px)').matches) {
+        var stickyElements = doc.querySelectorAll('.is-sticky');
+
+        for (var i = stickyElements.length - 1; i >= 0; i--) {
+          var el = stickyElements[i];
+
+          if (el.classList.contains('thtrm-toc')) {
+            el.classList.add('thtrm-toc--sticky');
+            el.classList.add('thtrm-toc--faded');
+          } 
+          if (el.classList.contains('thtrm-ad')) {
+            el.classList.add('thtrm-ad--sticky');
+            el.classList.add('thtrm-ad--description');
+          }
+
+          Stickyfill.add(el);
+        }
+      }
+    }(document, window));
+    </script>
+  </body>
+</html>

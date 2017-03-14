@@ -1,0 +1,1062 @@
+
+
+
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Deliver terse, DRY, self-documenting unit tests with Angular using custom Jasmine Matchers and  Helper functions.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="thoughtram">
+    <title>Testing Angular Directives with Custom Matchers by thoughtram</title>
+    <meta name="google-site-verification" content="o9eGPEgIETEqYGombq7NiQuBIB_qa6gz1yAL7PxKyK0">
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#4D8799">
+    <link rel="icon" sizes="192x192" href="/images/touch/chrome-touch-icon-192x192.png">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="thoughtram">
+    <link rel="apple-touch-icon" href="/images/touch/apple-touch-icon.png">
+
+    <!-- Tile icon for Win8 (144x144 + tile color) -->
+    <meta name="msapplication-TileImage" content="/images/touch/ms-touch-icon-144x144-precomposed.png">
+    <meta name="msapplication-TileColor" content="#4D8799">
+
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Testing Angular Directives with Custom Matchers">
+    <meta property="og:description" content="Deliver terse, DRY, self-documenting unit tests with Angular using custom Jasmine Matchers and  Helper functions.">
+    <meta property="og:url" content="http://blog.thoughtram.io/angular/2016/12/27/angular-2-advance-testing-with-custom-matchers.html">
+    <meta property="og:site_name" content="Articles by thoughtram">
+    <meta property="og:image" content="http://blog.thoughtram.io/images/banner/testing-directives-with-custom-matchers2.jpg">
+    <meta property="og:publisher" content="http://www.facebook.com/thoughtram">
+
+    <meta property="twitter:card" content="summary">
+    <meta property="twitter:title" content="Testing Angular Directives with Custom Matchers">
+    <meta property="twitter:site" content="thoughtram Blog">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css" type="text/css">
+  </head>
+  <body class="sub-site">
+    <!-- Add your site or app content here -->
+
+    <!--[if lt IE 10]>
+        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <header class="thtrm-header" role="banner">
+      <div class="thtrm-header-bar">
+        <div class="thtrm-constraint">
+          <a href="http://thoughtram.io" class="thtrm-header-logo-link" title="thoughtram.io Start Page"><h1 class="thtrm-header-logo">thoughtram</h1></a>
+          <div class="thtrm-header-menu-wrapper">
+            <span role="button" tabindex="0" class="thtrm-header-menu-label">Menu</span>
+            <ul class="thtrm-header-menu">
+              <li><a title="Training" class="thtrm-header-menu-item" href="http://thoughtram.io/training.html">Training</a></li>
+              <li><a title="Code Review" class="thtrm-header-menu-item" href="http://thoughtram.io/code-review.html">Code Review</a></li>
+              <li><a title="Casts" class="thtrm-header-menu-item " href="http://casts.thoughtram.io">Casts</a></li>
+              <li><a title="Blog" class="thtrm-header-menu-item" href="/">Blog</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main role="main" class="thtrm-main">
+    <div class="thtrm-banner" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%), url('/images/banner/testing-directives-with-custom-matchers2.jpg');">
+        <hgroup class="thtrm-banner-container">
+          <div class="thtrm-constraint thtrm-constraint--slim">
+            <h2 class="thtrm-banner-text">Testing Angular Directives with Custom Matchers</h2>
+            <span>by <a href="http://twitter.com/" title="Thomas Burleson on Twitter">Thomas Burleson</a> on Dec 27, 2016, last updated on Dec 27, 2016<br>22 minute read</span>
+
+          </div>
+        </hgroup>
+      </div>
+      <div class="thtrm-constraint thtrm-constraint--slim">
+
+        <div class="thtrm-article">
+          <section class="thtrm-ad thtrm-section thtrm-section--is-promo is-sticky">
+  <img width="100" src="/images/angular2-shield-inverse.svg">
+  <h3 class="thtrm-section-headline">Need private training?</h3>
+  <p class="thtrm-section-text">Get customized training for your corporation</p>
+  <a href="mailto:hello@thoughtram.io" title="Request Training Quote" id="event-cta" class="thtrm-layout-divider-cta">Request quote <strong>&rarr;</strong></a>
+</section>
+
+
+          
+          <p style="background-color: lightgoldenrodyellow; border: solid 2px #f9dead; padding: 1em; text-align: center; border-radius: 0.3em;">Contents are based on Angular version <strong>>= 2.x</strong> unless explicitely stated differently.</p>
+          
+
+          <h2 id="preface">Preface</h2>
+
+<p>A few weeks ago, Pascal Precht wrote a blog article on 
+<a href="http://blog.thoughtram.io/angular/2016/11/28/testing-services-with-http-in-angular-2.html">Testing Services with HTTP with Angular</a>.
+In this article, we want to discuss more advanced topics on DRY Angular testing techniques 
+using <strong>Custom Matchers</strong> and <strong>Special Helpers</strong>.</p>
+
+<div class="thtrm-toc is-sticky">
+  <h3 class="no_toc" id="table-of-contents">TABLE OF CONTENTS</h3>
+<ul id="markdown-toc">
+  <li><a href="#preface" id="markdown-toc-preface">Preface</a></li>
+  <li><a href="#background" id="markdown-toc-background">Background</a></li>
+  <li><a href="#traditional-testing" id="markdown-toc-traditional-testing">Traditional Testing</a></li>
+  <li><a href="#introducing-angular-testbed" id="markdown-toc-introducing-angular-testbed">Introducing Angular TestBed</a></li>
+  <li><a href="#testing-directives" id="markdown-toc-testing-directives">1) Testing Directives</a>    <ul>
+      <li><a href="#configuring-the-testbed" id="markdown-toc-configuring-the-testbed">Configuring the TestBed</a></li>
+      <li><a href="#non-dry-testing" id="markdown-toc-non-dry-testing">Non-DRY Testing</a></li>
+    </ul>
+  </li>
+  <li><a href="#testing-with-helpers" id="markdown-toc-testing-with-helpers">2) Testing with Helpers</a>    <ul>
+      <li><a href="#testing-nested-dom" id="markdown-toc-testing-nested-dom">Testing Nested DOM</a></li>
+      <li><a href="#more-special-helpers" id="markdown-toc-more-special-helpers">More Special Helpers</a></li>
+    </ul>
+  </li>
+  <li><a href="#custom-matchers" id="markdown-toc-custom-matchers">3) Custom Matchers</a>    <ul>
+      <li><a href="#building-a-typescript-matcher" id="markdown-toc-building-a-typescript-matcher">Building a TypeScript Matcher</a></li>
+      <li><a href="#using-a-custom-matcher" id="markdown-toc-using-a-custom-matcher">Using a Custom Matcher</a></li>
+    </ul>
+  </li>
+  <li><a href="#protractor--e2e" id="markdown-toc-protractor--e2e">Protractor + e2e</a></li>
+  <li><a href="#summary" id="markdown-toc-summary">Summary</a></li>
+  <li><a href="#resources" id="markdown-toc-resources">Resources</a></li>
+</ul>
+
+</div>
+
+<p>These are techniques to make your unit-tests incredibly easy to read and to maintain. And to achieve 
+our learning goals, there are three (3) important testing topics that we want to cover:</p>
+
+<ul>
+  <li>(1) <a href="#testing-directives">Testing custom Angular <strong>Directives</strong></a></li>
+  <li>(2) <a href="#testing-with-helpers">Building reusable, DRY TestBed <strong>Helper</strong> methods</a></li>
+  <li>(3) <a href="#custom-matchers">Using Typescript Jasmine <strong>Custom Matchers</strong></a></li>
+</ul>
+
+<blockquote>
+  <p>These techniques are practically undocumented… yet they dramatically improve the quality of 
+our tests.</p>
+</blockquote>
+
+<p>To whet your appetite, here are some sample DRY tests that we will be showing you how to write:</p>
+
+<p><img src="/images/dry_tests/example1.jpg" alt="Unit Test with Matchers and Helpers" /></p>
+
+<p><img src="/images/dry_tests/example2.jpg" alt="Testing Nested DOM Styles" /></p>
+
+<h2 id="background">Background</h2>
+
+<p>There a several excellent resources already available that developers can read to 
+learn about Angular testing:</p>
+
+<ul>
+  <li><a href="https://medium.com/google-developer-experts/angular-2-testing-guide-a485b6cb1ef0#.2ytwy9k9w">Angular 2 - Testing Guide</a> (by <a href="https://twitter.com/gerardsans">Gerard Sans</a>)</li>
+  <li><a href="https://medium.com/google-developer-experts/angular-2-unit-testing-with-jasmine-defe20421584#.cmk3cg9bc">Angular 2 - Unit Testing Recipes</a> (by <a href="https://twitter.com/gerardsans">Gerard Sans</a>)</li>
+  <li><a href="https://www.sitepoint.com/angular-2-tutorial/?utm_campaign=NG-Newsletter&amp;utm_medium=email&amp;utm_source=NG-Newsletter_180">Testing with the Angular CLI</a> 
+(by <a href="https://twitter.com/toddmotto">Todd Motto</a>, <a href="https://twitter.com/jvandemo">Jurgen Van de Moere</a>)</li>
+  <li><a href="http://chariotsolutions.com/blog/post/testing-angular-2-components-unit-tests-testcomponentbuilder/">Testing Angular 2 Components</a> (by <a href="https://twitter.com/krimple">Ken Rimple</a>)</li>
+</ul>
+
+<p>The biggest take-aways from these articles is the singular concept that instead of manually 
+instantiating and testing classes, Angular developers <u>should consider using</u> 
+the <code>TestBed.configureTestingModule()</code> to prepare an entire test Angular DI <strong>environment</strong> for each
+test module (*.spec.ts).</p>
+
+<blockquote>
+  <p>We would not use <code>TestBed.configureTestingModule()</code> when we are testing a service that 
+doesn’t have any dependencies. It’d be easier and less verbose to just instantiate using <code>new</code>. The 
+<strong>TestBed</strong> is for useful for dependencies and injections.</p>
+</blockquote>
+
+<h2 id="traditional-testing">Traditional Testing</h2>
+
+<p>Consider the traditional approach of manually instantiating and testing a Service or component:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">ServiceA</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'./services/ServiceA'</span><span class="p">;</span>
+
+<span class="nx">describe</span><span class="p">(</span><span class="s1">'ServiceA'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'should emit greeting event'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">inst</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ServiceA</span><span class="p">();</span>
+    <span class="nx">inst</span><span class="p">.</span><span class="nx">greeting</span><span class="p">.</span><span class="nx">subscribe</span><span class="p">(</span><span class="nx">g</span> <span class="o">=&gt;</span> <span class="p">{</span>
+       <span class="nx">expect</span><span class="p">(</span><span class="nx">g</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">({</span><span class="na">greeting</span><span class="p">:</span><span class="s1">'hello'</span><span class="p">});</span>
+    <span class="p">});</span>
+    <span class="nx">inst</span><span class="p">.</span><span class="nx">sayHello</span><span class="p">();</span>
+  <span class="p">});</span>
+<span class="p">});</span></code></pre></div>
+
+<p>It’s fine to do it this way, because <strong>ServiceA</strong> obviously does not need anything 
+else to be instantiated; it is a self-contained service without external dependencies.</p>
+
+<blockquote>
+  <p>So assuming that this service won’t get any dependencies in the future, this test is the one we want to write.</p>
+</blockquote>
+
+<h2 id="introducing-angular-testbed">Introducing Angular TestBed</h2>
+
+<p>The Angular <strong>TestBed</strong> allows developers to configure <strong>ngModules</strong> that provide instances/values and use 
+Dependency Injection. This is the same approach developers use in their regular Angular applications.</p>
+
+<p>With the <strong>TestBed</strong> and its support for for component-lifecycle features, Angular components can be 
+easily instantiated and tested. Here is an example - shown below - that we will continue to 
+use in this article:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">MyComponent</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'./viewer/MyComponent'</span><span class="p">;</span>
+
+<span class="cm">/**
+ * Configure testbed to register components and prepare services
+ */</span>
+<span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">TestBed</span><span class="p">.</span><span class="nx">configureTestingModule</span><span class="p">({</span>
+    <span class="na">imports</span><span class="p">:</span> <span class="p">[</span> <span class="nx">FlexLayoutModule</span><span class="p">.</span><span class="nx">forRoot</span><span class="p">()</span> <span class="p">],</span>
+    <span class="na">declarations</span><span class="p">:</span> <span class="p">[</span><span class="nx">MyComponent</span><span class="p">],</span>
+    
+    <span class="c1">// 'MatchMedia' construction requires BreakPointRegistry</span>
+    <span class="c1">// 'MyComponent' construction requires MatchMedia parameter</span>
+    
+    <span class="na">providers</span><span class="p">:</span> <span class="p">[</span>
+      <span class="nx">BreakPointRegistry</span><span class="p">,</span>
+      <span class="nx">BreakPointsProvider</span><span class="p">,</span>
+      <span class="p">{</span>
+        <span class="na">provide</span><span class="p">:</span> <span class="nx">MatchMedia</span><span class="p">,</span>
+        <span class="na">useClass</span><span class="p">:</span> <span class="nx">MockMatchMedia</span>
+      <span class="p">}</span>
+    <span class="p">]</span>
+  <span class="p">})</span>
+<span class="p">});</span>
+
+<span class="cm">/**
+ * Helper function to easily build a component Fixture using the specified template
+ */</span>
+<span class="kd">function</span> <span class="nx">createTestComponent</span><span class="p">(</span><span class="nx">template</span><span class="p">:</span> <span class="nx">string</span><span class="p">):</span> <span class="nx">ComponentFixture</span><span class="o">&lt;</span><span class="nx">Type</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;&gt;</span>
+<span class="p">{</span>
+  <span class="k">return</span> <span class="nx">TestBed</span>
+    <span class="p">.</span><span class="nx">overrideComponent</span><span class="p">(</span><span class="nx">MyComponent</span><span class="p">,</span> <span class="p">{</span><span class="na">set</span><span class="p">:</span> <span class="p">{</span><span class="na">template</span><span class="p">:</span> <span class="nx">template</span><span class="p">}}</span> <span class="p">)</span>
+    <span class="p">.</span><span class="nx">createComponent</span><span class="p">(</span><span class="nx">MyComponent</span><span class="p">);</span>
+<span class="p">}</span></code></pre></div>
+
+<p>Before each test, we want configure a new, fresh testing module with <u>only</u> the providers, 
+components, and directives we <u>need for the current test module</u>.</p>
+
+<blockquote>
+  <p>And notice that we just created a reusable <strong>Helper</strong> function: <code>createTestComponent()</code>. 
+This cool utility function will construct an instance of MyComponent [using the configured TestBed] 
+using any custom HTML template you specify.</p>
+</blockquote>
+
+<p>At first, this complexity may seem like overkill. But let’s consider two critical requirements 
+shown in the sample above:</p>
+
+<ul>
+  <li><strong>MatchMedia</strong> instantiation requires an injected <strong>BreakPointRegistry</strong> instance</li>
+  <li><strong>MyComponent</strong> instantiation requires an injected <strong>MatchMedia</strong> instance</li>
+</ul>
+
+<p>Even with these requirements, testing developers should NOT have to worry about all those internals just 
+to test <strong>MyComponent</strong>. Using ngModule, DI, and Angular… we now don’t have to worry about those 
+details.</p>
+
+<p>This is just like those real-world scenarios where our components, directives, and services will 
+have complex dependencies upon providers and non-trivial construction processes.</p>
+
+<p>And this is where <strong>TestBed</strong> demonstrates its real value!</p>
+
+<blockquote>
+  <p>We are not using external templates nor any other resources or services that are asynchronous. 
+So we do not discuss the <code>async()</code> nor the the <code>TestBed::compileComponents()</code> functions.</p>
+</blockquote>
+
+<h2 id="testing-directives">1) Testing Directives</h2>
+
+<p>With relative ease, developers can find literature on testing Angular Services and Components. 
+Yet the <u>How-to's for testing Directives</u> is oddly not well documented.</p>
+
+<p>Unlike Components with their associated templates, Directives do not have templates. This means 
+that we <strong>cannot</strong> simply import a Directive and manually instantiate it.</p>
+
+<p>The solution is rather easy! We only need to:</p>
+
+<ul>
+  <li>configure a TestBed that imports and declares the directive(s),</li>
+  <li>prepare a shell test Component, and</li>
+  <li>use a custom template which uses the Directive selector(s) as attribute(s).</li>
+</ul>
+
+<p>Since Directives usually affect the <strong>host element</strong>, our tests will check if those changes to the host 
+element are present and valid.</p>
+
+<p>So let’s use the Angular <a href="http://github.com/angular/flex-layout">Flex-Layout</a> library as the basis 
+for the following discussions on Directives, Matchers, and TestBed Helpers.</p>
+
+<blockquote>
+  <p>Real-world solutions often provide great examples for reusable techniques.</p>
+</blockquote>
+
+<p>We will be using both the <strong>fxLayout</strong> directive and excerpts from the unit test for that directive 
+to explore testing ideas, techniques, and solutions that we can also use in our own tests.</p>
+
+<p>First, let’s import the FlexLayout library into our own tests and prepare to test the <em>fxLayout</em> 
+directive.</p>
+
+<blockquote>
+  <p>You can see the actual testing code in <a href="https://github.com/angular/flex-layout/blob/master/src/lib/flexbox/api/layout.spec.ts">layout.spec.ts</a>. 
+<br />But <strong>don’t</strong> jump there yet! Wait until you have finished reading this article.</p>
+</blockquote>
+
+<h3 id="configuring-the-testbed">Configuring the TestBed</h3>
+
+<p>Very similar to the TestBed sample shown above, we will configure a testing module but we will 
+not <em>import</em> an external test component. My test component <code>TestLayoutComponent</code> is itself defined 
+within our test (*.spec.ts) module.</p>
+
+<blockquote>
+  <p>Using an internal test component enables each test module <br />e.g. <br /><code>&lt;directive&gt;.spec.ts</code><br /> to define 
+and use its own custom test component with custom properties.</p>
+</blockquote>
+
+<p>Here is the initial configuration:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span><span class="nx">Component</span><span class="p">,</span> <span class="nx">OnInit</span><span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/core'</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span><span class="nx">ComponentFixture</span><span class="p">,</span> <span class="nx">TestBed</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/core/testing'</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span>
+  <span class="nx">FlexLayoutModule</span><span class="p">,</span>
+  <span class="nx">MockMatchMedia</span><span class="p">,</span>
+  <span class="nx">MatchMedia</span><span class="p">,</span>
+  <span class="nx">BreakPointsProvider</span><span class="p">,</span>
+  <span class="nx">BreakPointRegistry</span>
+<span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/flex-layout'</span><span class="p">;</span>
+
+<span class="nx">describe</span><span class="p">(</span><span class="s1">'layout directive'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+
+  <span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+
+    <span class="c1">// Configure testbed to prepare services</span>
+    <span class="nx">TestBed</span><span class="p">.</span><span class="nx">configureTestingModule</span><span class="p">({</span>
+      <span class="na">imports</span><span class="p">:</span> <span class="p">[</span><span class="nx">FlexLayoutModule</span><span class="p">.</span><span class="nx">forRoot</span><span class="p">()],</span>
+      <span class="na">declarations</span><span class="p">:</span> <span class="p">[</span><span class="nx">TestLayoutComponent</span><span class="p">],</span>
+      <span class="na">providers</span><span class="p">:</span> <span class="p">[</span>
+        <span class="nx">BreakPointRegistry</span><span class="p">,</span> <span class="nx">BreakPointsProvider</span><span class="p">,</span>
+        <span class="p">{</span><span class="na">provide</span><span class="p">:</span> <span class="nx">MatchMedia</span><span class="p">,</span> <span class="na">useClass</span><span class="p">:</span> <span class="nx">MockMatchMedia</span><span class="p">}</span>
+      <span class="p">]</span>
+    <span class="p">})</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'should add correct styles for default `fxLayout` usage'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+			<span class="c1">// TEST LOGIC HERE</span>
+  <span class="p">});</span>
+
+<span class="p">});</span>
+
+<span class="cm">/*
+ * Shell component with property 'direction' that will be used
+ * with our tests
+ */</span>
+<span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
+  <span class="na">selector</span><span class="p">:</span> <span class="s1">'test-layout'</span><span class="p">,</span>
+  <span class="na">template</span><span class="p">:</span> <span class="s2">`&lt;span&gt;PlaceHolder HTML to be Replaced&lt;/span&gt;`</span>
+<span class="p">})</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">TestLayoutComponent</span> <span class="kr">implements</span> <span class="nx">OnInit</span> <span class="p">{</span>
+  <span class="nx">direction</span> <span class="o">=</span> <span class="s2">"column"</span><span class="p">;</span>
+  <span class="nx">constructor</span><span class="p">()</span> <span class="p">{</span>   <span class="p">}</span>
+  <span class="nx">ngOnInit</span><span class="p">()</span> <span class="p">{</span>   <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="cm">/*
+ * Custom Helper function to quickly create a `fixture` instance based on
+ * the 'TestLayoutComponent' class
+ */</span>
+<span class="kd">function</span> <span class="nx">createTestComponent</span><span class="p">(</span><span class="na">template</span><span class="p">:</span> <span class="nx">string</span><span class="p">):</span> <span class="nx">ComponentFixture</span><span class="o">&lt;</span><span class="nx">TestLayoutComponent</span><span class="o">&gt;</span>
+<span class="p">{</span>
+  <span class="k">return</span> <span class="nx">TestBed</span>
+    <span class="p">.</span><span class="nx">overrideComponent</span><span class="p">(</span><span class="nx">TestLayoutComponent</span><span class="p">,</span> <span class="p">{</span><span class="na">set</span><span class="p">:</span> <span class="p">{</span><span class="na">template</span><span class="p">:</span> <span class="nx">template</span><span class="p">}}</span> <span class="p">)</span>
+    <span class="p">.</span><span class="nx">createComponent</span><span class="p">(</span><span class="nx">TestLayoutComponent</span><span class="p">);</span>
+<span class="p">}</span></code></pre></div>
+
+<p>We now have everything we need to write a Directive test quickly.</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">it</span><span class="p">(</span><span class="s1">'should compile with custom directives'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">fixture</span> <span class="o">=</span> <span class="nx">createTestComponent</span><span class="p">(</span><span class="s1">'&lt;div fxLayout&gt;&lt;/div&gt;'</span><span class="p">);</span>
+  <span class="nx">expect</span><span class="p">(</span> <span class="nx">fixture</span> <span class="p">).</span><span class="nx">toBeDefined</span><span class="p">();</span>
+<span class="p">});</span></code></pre></div>
+
+<p>Wow! That is pretty easy.</p>
+
+<blockquote>
+  <p>The component has been constructed and prepared with the same 
+processes and DI that your real world application will use.</p>
+</blockquote>
+
+<p>Let’s first write our test using the traditional long-form… one without custom matchers and the 
+more advanced helper methods.</p>
+
+<p>Since the <strong>fxLayout</strong> directive will add custom flexbox CSS to the host element, our test logic 
+here will confirm that the initial CSS is correctly assigned.</p>
+
+<h3 id="non-dry-testing">Non-DRY Testing</h3>
+
+<p>The traditional approach would probably implement something like this:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">it</span><span class="p">(</span><span class="s1">'should add correct styles for `fxLayout` with template bindings'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">template</span> <span class="o">=</span> <span class="s1">'&lt;div [fxLayout]="direction"&gt;&lt;/div&gt;'</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">fixture</span> <span class="o">=</span> <span class="nx">createTestComponent</span><span class="p">(</span><span class="nx">template</span><span class="p">);</span>
+  <span class="kd">let</span> <span class="nx">el</span> <span class="o">=</span> <span class="nx">fixture</span><span class="p">.</span><span class="nx">debugElement</span><span class="p">.</span><span class="nx">children</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">nativeElement</span><span class="p">;</span>
+  
+    <span class="nx">fixture</span><span class="p">.</span><span class="nx">detectChanges</span><span class="p">();</span>
+    
+  <span class="nx">expect</span><span class="p">(</span> <span class="nx">el</span><span class="p">.</span><span class="nx">style</span><span class="p">[</span><span class="s1">'display'</span><span class="p">]</span> <span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s1">'flex'</span><span class="p">);</span>
+  <span class="nx">expect</span><span class="p">(</span> <span class="nx">el</span><span class="p">.</span><span class="nx">style</span><span class="p">[</span><span class="s1">'box-sizing'</span><span class="p">]</span> <span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s1">'border-box'</span><span class="p">);</span>
+  <span class="nx">expect</span><span class="p">(</span> <span class="nx">el</span><span class="p">.</span><span class="nx">style</span><span class="p">[</span><span class="s1">'flex-direction'</span><span class="p">]</span> <span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s1">'column'</span><span class="p">);</span>
+ 
+    <span class="nx">fixture</span><span class="p">.</span><span class="nx">componentInstance</span><span class="p">.</span><span class="nx">direction</span> <span class="o">=</span> <span class="s1">'row'</span><span class="p">;</span>
+    <span class="nx">fixture</span><span class="p">.</span><span class="nx">detectChanges</span><span class="p">();</span>
+    
+  <span class="nx">expect</span><span class="p">(</span> <span class="nx">el</span><span class="p">.</span><span class="nx">style</span><span class="p">[</span><span class="s1">'flex-direction'</span><span class="p">]</span> <span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s1">'row'</span><span class="p">);</span> 
+<span class="p">});</span></code></pre></div>
+
+<p>In the code above, we</p>
+
+<ul>
+  <li>defined a custom template with bindings to the component property <code>direction</code>,</li>
+  <li>use deeply nested references to get access to the native element,</li>
+  <li>test each style individually.</li>
+</ul>
+
+<p>All this in one (1) single test. And truly it is not easily read.</p>
+
+<p>Now imagine that our test module has more than 20 individual <code>it(...)</code> tests!</p>
+
+<blockquote>
+  <p>That would be a lot of duplicate code. <br /> And there is certainly nothing DRY (“do not repeat yourself”) about 
+such code!</p>
+</blockquote>
+
+<h2 id="testing-with-helpers">2) Testing with Helpers</h2>
+
+<p>Above we explored the standard approach to implementing unit tests… an approach which resulted 
+in verbose, non-reusable code.</p>
+
+<p>Let’s contrast that with the DRY version that we want:</p>
+
+<p><img src="/images/dry_tests/example3.jpg" alt="Testing Directives - DRY Code" /></p>
+
+<p>Now this test is much more readable, maintainable, and DRY. We hide all the 
+complexities of:</p>
+
+<ul>
+  <li>forcing change detection,</li>
+  <li>accessing the native element, and</li>
+  <li>confirming  1…n DOM CSS styles</li>
+</ul>
+
+<p>Those complexities are now encapsulated in a Helper function and a Custom Matcher (respectively).</p>
+
+<p>The custom Helper function <strong>expectNativeEl( )</strong> is similar to the standard <strong>expect( )</strong> function.
+In fact, it is wrapper function that internalizes the <code>expect( )</code> call.</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="cm">/**
+ * Note: this helper only accesses the 1st-level child within a component
+ *       A different helper method is need to access deep-level DOM nodes
+ */</span>
+<span class="kr">export</span> <span class="kd">function</span> <span class="nx">expectNativeEl</span><span class="p">(</span><span class="nx">fixture</span><span class="p">:</span> <span class="nx">ComponentFixture</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span><span class="p">):</span> <span class="nx">any</span> <span class="p">{</span>
+  <span class="nx">fixture</span><span class="p">.</span><span class="nx">detectChanges</span><span class="p">();</span>
+
+  <span class="c1">// Return response of `expect(...)`</span>
+  <span class="k">return</span> <span class="nx">expect</span><span class="p">(</span><span class="nx">fixture</span><span class="p">.</span><span class="nx">debugElement</span><span class="p">.</span><span class="nx">children</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">nativeElement</span><span class="p">);</span>
+<span class="p">}</span></code></pre></div>
+
+<blockquote>
+  <p>It is important to note that these helper methods always return the value of an <code>expect(...)</code> call!</p>
+</blockquote>
+
+<p>And the resulting code change uses a similar notation to our standard training. So</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">expect</span><span class="p">(...).</span><span class="nx">toBe</span></code></pre></div>
+
+<p>becomes</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">expectNativeEl</span><span class="p">(...).</span><span class="nx">toBe</span></code></pre></div>
+
+<h3 id="testing-nested-dom">Testing Nested DOM</h3>
+
+<p>For more complex DOM access, we can use the DebugElement’s query feature to select nested DOM nodes.</p>
+
+<p>Angular’s <strong>DebugElement</strong> has several query features:</p>
+
+<ul>
+  <li><code>query(predicate: Predicate&lt;DebugElement&gt;): DebugElement;</code></li>
+  <li><code>queryAll(predicate: Predicate&lt;DebugElement&gt;): DebugElement[];</code></li>
+  <li><code>queryAllNodes(predicate: Predicate&lt;DebugNode&gt;): DebugNode[];</code></li>
+</ul>
+
+<blockquote>
+  <p>Please note that all debugging apis are currently experimental.</p>
+</blockquote>
+
+<p>Consider the following helper function <strong>expectDomForQuery( )</strong>:</p>
+
+<p><img src="/images/dry_tests/example2.jpg" alt="pic6" /></p>
+
+<p>In this example, we actually want to test the <u>nested DOM node</u> that hosts the attribute <strong>fxFlex</strong>. 
+Using another helper method <strong>expectDomForQuery( )</strong> makes that easy.</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="cm">/**
+ * Create component instance using custom template, the query for the native DOM node
+ * based on the query selector
+ */</span>
+<span class="kd">function</span> <span class="nx">expectDomForQuery</span><span class="p">(</span><span class="nx">template</span><span class="p">:</span><span class="nx">string</span><span class="p">,</span> <span class="nx">selector</span><span class="p">:</span><span class="nx">string</span><span class="p">)</span> <span class="p">:</span> <span class="nx">any</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">fixture</span> <span class="o">=</span> <span class="nx">createTestComponent</span><span class="p">(</span><span class="nx">template</span><span class="p">);</span>
+      <span class="nx">fixture</span><span class="p">.</span><span class="nx">detectChanges</span><span class="p">();</span>
+
+  <span class="c1">// Return response of `expect(...)`</span>
+  <span class="k">return</span> <span class="nx">expect</span><span class="p">(</span> <span class="nx">queryFor</span><span class="p">(</span><span class="nx">fixture</span><span class="p">,</span><span class="nx">selector</span><span class="p">).</span><span class="nx">nativeElement</span> <span class="p">);</span>
+<span class="p">};</span>
+
+<span class="cm">/**
+ * Don't forget to import the `By` utilities
+ */</span>
+<span class="kr">import</span> <span class="p">{</span><span class="nx">By</span><span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/platform-browser'</span><span class="p">;</span>
+
+<span class="cm">/**
+ * Reusable Query helper function
+ */</span>
+<span class="kd">function</span>  <span class="nx">queryFor</span><span class="p">(</span><span class="nx">fixture</span><span class="p">:</span><span class="nx">ComponentFixture</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span><span class="p">,</span> <span class="nx">selector</span><span class="p">:</span><span class="nx">string</span><span class="p">):</span><span class="nx">any</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">fixture</span><span class="p">.</span><span class="nx">debugElement</span><span class="p">.</span><span class="nx">query</span><span class="p">(</span><span class="nx">By</span><span class="p">.</span><span class="nx">css</span><span class="p">(</span><span class="nx">selector</span><span class="p">))</span>
+<span class="p">}</span></code></pre></div>
+
+<p>And the resulting code change is again a similar notation to our standard training:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">expect</span><span class="p">(...).</span><span class="nx">toBe</span></code></pre></div>
+
+<p>becomes</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">expectDomForQuery</span><span class="p">(...).</span><span class="nx">toBe</span></code></pre></div>
+
+<h3 id="more-special-helpers">More Special Helpers</h3>
+
+<p>Earlier, we showed a code snapshot that had a <em>special helper</em> <code>activateMediaQuery( )</code>:</p>
+
+<p><img src="/images/dry_tests/example1.jpg" alt="Unit Test with Matchers and Helpers" /></p>
+
+<p>The Flex-Layout library has a responsive engine that supports change detection when a mediaQuery 
+activates (<em>aka</em> when the viewport size changes). The API uses selectors with dot-notation to 
+indicate which values should be used for which mediaQuery:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;div</span> <span class="na">fxLayout=</span><span class="s">"row"</span> <span class="na">fxLayout</span><span class="err">.</span><span class="na">md=</span><span class="s">"column"</span><span class="nt">&gt;&lt;/div&gt;</span></code></pre></div>
+
+<p>Testing these features presents several additional requirements:</p>
+
+<ul>
+  <li>mock the window API <code>window.matchMedia(...)</code></li>
+  <li>simulate a mediaQuery activation</li>
+  <li>trigger fixture.detectChange() after a simulated activation</li>
+  <li>hide all these details from individual tests (DRY)</li>
+</ul>
+
+<p>Thankfully the Flex-Layout library actually publishes a MockMatchMedia class. And we use this class
+in our TestBed configuration below:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kd">let</span> <span class="nx">fixture</span><span class="p">:</span> <span class="nx">ComponentFixture</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="cm">/**
+ * Special Helper
+ */</span>
+<span class="kr">const</span> <span class="nx">activateMediaQuery</span> <span class="o">=</span> <span class="p">(</span><span class="nx">alias</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">injector</span> <span class="o">=</span> <span class="nx">fixture</span><span class="p">.</span><span class="nx">debugElement</span><span class="p">.</span><span class="nx">injector</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="na">matchMedia</span> <span class="p">:</span> <span class="nx">MockMatchMedia</span> <span class="o">=</span> <span class="nx">injector</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">MatchMedia</span><span class="p">);</span>
+  
+  <span class="c1">// simulate mediaQuery change and trigger fxLayout changes</span>
+  <span class="nx">matchMedia</span><span class="p">.</span><span class="nx">activate</span><span class="p">(</span><span class="nx">alias</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="c1">// Configure testbed to prepare services</span>
+  <span class="nx">TestBed</span><span class="p">.</span><span class="nx">configureTestingModule</span><span class="p">({</span>
+    <span class="na">imports</span><span class="p">:</span> <span class="p">[</span><span class="nx">FlexLayoutModule</span><span class="p">.</span><span class="nx">forRoot</span><span class="p">()],</span>
+    <span class="na">declarations</span><span class="p">:</span> <span class="p">[</span><span class="nx">TestLayoutComponent</span><span class="p">],</span>
+    <span class="na">providers</span><span class="p">:</span> <span class="p">[</span>
+      <span class="nx">BreakPointRegistry</span><span class="p">,</span> <span class="nx">BreakPointsProvider</span><span class="p">,</span>
+      <span class="p">{</span><span class="na">provide</span><span class="p">:</span> <span class="nx">MatchMedia</span><span class="p">,</span> <span class="na">useClass</span><span class="p">:</span> <span class="nx">MockMatchMedia</span><span class="p">}</span>   <span class="c1">//Special mock config</span>
+    <span class="p">]</span>
+  <span class="p">})</span>
+<span class="p">});</span></code></pre></div>
+
+<p>Let’s explore three (3) very interesting things are happening in this code:</p>
+
+<ul>
+  <li>configure Dependency Injection providers to override a class with a mock,</li>
+  <li>dynamic injection using <code>injector.get(MatchMedia)</code>, and</li>
+  <li>use special helper <strong>activateMediaQuery( )</strong> function that hides all these details</li>
+</ul>
+
+<p><strong>(1) Overriding DI Providers</strong></p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="p">{</span> <span class="nl">provide</span><span class="p">:</span> <span class="nx">MatchMedia</span><span class="p">,</span> <span class="nx">useClass</span><span class="p">:</span> <span class="nx">MockMatchMedia</span> <span class="p">}</span></code></pre></div>
+
+<p>tells the TestBed DI system to provide an instance of the <code>MockMatchMedia</code> <strong>whenever</strong> any code 
+asks for an instance of the <code>MatchMedia</code> token to be injected via DI.</p>
+
+<blockquote>
+  <p>You can read more about the Angular DI systems here:<br /> <a href="http://blog.thoughtram.io/angular/2015/05/18/dependency-injection-in-angular-2.html">Dependency Injection in Angular</a></p>
+</blockquote>
+
+<p><strong>(2) Dynamic Injection</strong></p>
+
+<p>Our special helper <code>activateMediaQuery()</code> needs a dynamic injected instance of the MatchMedia token. 
+Using the <code>fixture</code> instance, we can access the injector service for our components. With the injector,
+we can dynamically get a <strong>MockMatchMedia</strong> instance using the provider token <strong>MatchMedia</strong>.</p>
+
+<blockquote>
+  <p>In this case, <strong>MatchMedia</strong> is both a class and a provider token used for D-injection.</p>
+</blockquote>
+
+<p>Notice that all this complexity [and construction details] on preparing a MockMatchMedia instance is 
+encapsulated in our TestBed… and the use of the injector is hidden within our special helper.</p>
+
+<p>Now our individual tests simply use the easy special helper function <strong>activateMediaQuery( )</strong>:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">activateMediayQuery</span><span class="p">(</span><span class="s1">'md'</span><span class="p">);</span></code></pre></div>
+
+<p>That is very, very cool!</p>
+
+<h2 id="custom-matchers">3) Custom Matchers</h2>
+
+<p>We have only one more tool [in our testing toolkit] to discuss: <strong>Custom Jasmine Matchers</strong>.</p>
+
+<p>For those developers not familiar with the concepts of Jasmine <em>matchers</em>, we recommend the online 
+Jasmine documentation:</p>
+
+<p><a href="https://jasmine.github.io/2.0/custom_matcher.html" title="Jasmine Matchers Documentation">
+<img src="https://cloud.githubusercontent.com/assets/210413/21524374/334a2f68-ccdb-11e6-816c-5059fc91d806.png" alt="pic9" />
+</a></p>
+
+<p>Remember that matchers are used <strong>after</strong> the <code>expect()</code> call and should encapsulate complex logic 
+and reduce code-clutter in our test code.</p>
+
+<blockquote>
+  <p>This allows our test(s) to remain terse, concise, readable, maintainable, and DRY.</p>
+</blockquote>
+
+<p>And we should always give our custom matcher functions clear, readable names. E.g. <strong>toHaveCssStyles()</strong>.</p>
+
+<h3 id="building-a-typescript-matcher">Building a TypeScript Matcher</h3>
+
+<p>Similar to <code>expect(...).toBeTruthy()</code>, we want a custom matcher <code>toHaveCSSStyle( )</code>:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">expectNativeEl</span><span class="p">(</span><span class="nx">fixture</span><span class="p">).</span><span class="nx">toHaveCssStyle</span><span class="p">({</span>
+  <span class="s1">'display'</span><span class="p">:</span> <span class="s1">'flex'</span><span class="p">,</span>
+  <span class="s1">'flex-direction'</span><span class="p">:</span> <span class="s1">'row'</span><span class="p">,</span>
+  <span class="s1">'box-sizing'</span><span class="p">:</span> <span class="s1">'border-box'</span>
+<span class="p">});</span></code></pre></div>
+
+<p>Creating a matcher in JavaScript is documented on the Jasmine site. Our challenge is the harder 
+goal of creating a <em>custom matcher</em> implemented in TypeScript using well-defined types.</p>
+
+<ul>
+  <li>we need to enhance the <code>expect()</code> API, and</li>
+  <li>we need to implement custom matchers.</li>
+</ul>
+
+<p>The global Jasmine <code>expect()</code> method normally returns <code>&lt;any&gt;</code> value. To use custom matchers 
+(with types), we want the <strong>expect( )</strong> function to support returning either a standard matcher or 
+a custom matcher.</p>
+
+<p>Here is a teaser that shows how that is done:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">export</span> <span class="kr">const</span> <span class="nx">expect</span><span class="p">:</span> <span class="p">(</span><span class="nx">actual</span><span class="p">:</span> <span class="nx">any</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">NgMatchers</span> <span class="o">=</span> <span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span> <span class="nx">_global</span><span class="p">.</span><span class="nx">expect</span><span class="p">;</span>
+
+<span class="kr">export</span> <span class="kr">interface</span> <span class="nx">NgMatchers</span> <span class="kr">extends</span> <span class="nx">jasmine</span><span class="p">.</span><span class="nx">Matchers</span> <span class="p">{</span> <span class="cm">/* ... */</span> <span class="p">};</span></code></pre></div>
+
+<p>We assigned the global <em>expect</em> function reference to a new export that states that <code>expect()</code> calls 
+now return references to a <strong>NgMatchers</strong> interface.</p>
+
+<p>Here are the full implementation details of our <code>custom-matchers.ts</code> module:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">declare</span> <span class="kd">var</span> <span class="nx">global</span><span class="p">:</span> <span class="nx">any</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">_global</span> <span class="o">=</span> <span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span><span class="p">(</span><span class="k">typeof</span> <span class="nb">window</span> <span class="o">===</span> <span class="s1">'undefined'</span> <span class="p">?</span> <span class="nx">global</span> <span class="p">:</span> <span class="nb">window</span><span class="p">);</span>
+
+<span class="cm">/**
+ * Extend the API to support chaining with custom matchers
+ */</span>
+<span class="kr">export</span> <span class="kr">const</span> <span class="nx">expect</span><span class="p">:</span> <span class="p">(</span><span class="nx">actual</span><span class="p">:</span> <span class="nx">any</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">NgMatchers</span> <span class="o">=</span> <span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span> <span class="nx">_global</span><span class="p">.</span><span class="nx">expect</span><span class="p">;</span>
+
+<span class="cm">/**
+ * Jasmine matchers that support checking custom CSS conditions.
+ * !! important to add your custom matcher to the interface
+ */</span>
+<span class="kr">export</span> <span class="kr">interface</span> <span class="nx">NgMatchers</span> <span class="kr">extends</span> <span class="nx">jasmine</span><span class="p">.</span><span class="nx">Matchers</span> <span class="p">{</span>
+  <span class="nx">toHaveCssStyle</span><span class="p">(</span><span class="nx">expected</span><span class="p">:</span> <span class="p">{[</span><span class="nx">k</span><span class="p">:</span> <span class="nx">string</span><span class="p">]:</span> <span class="nx">string</span><span class="p">}</span><span class="o">|</span><span class="nx">string</span><span class="p">):</span> <span class="kr">boolean</span><span class="p">;</span>
+  <span class="nl">not</span><span class="p">:</span> <span class="nx">NgMatchers</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cm">/**
+ * Implementation of 1...n custom matchers
+ */</span>
+<span class="kr">export</span> <span class="kr">const</span> <span class="nx">customMatchers</span><span class="p">:</span> <span class="nx">jasmine</span><span class="p">.</span><span class="nx">CustomMatcherFactories</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="c1">// Here is our custom matcher; cloned from @angular/core</span>
+  <span class="na">toHaveCssStyle</span><span class="p">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="na">compare</span><span class="p">:</span> <span class="kd">function</span> <span class="p">(</span><span class="na">actual</span><span class="p">:</span> <span class="nx">any</span><span class="p">,</span> <span class="na">styles</span><span class="p">:</span> <span class="p">{[</span><span class="na">k</span><span class="p">:</span> <span class="nx">string</span><span class="p">]:</span> <span class="nx">string</span><span class="p">}</span><span class="o">|</span><span class="nx">string</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">let</span> <span class="na">allPassed</span><span class="p">:</span> <span class="kr">boolean</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">styles</span> <span class="o">===</span> <span class="s1">'string'</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">allPassed</span> <span class="o">=</span> <span class="nx">getDOM</span><span class="p">().</span><span class="nx">hasStyle</span><span class="p">(</span><span class="nx">actual</span><span class="p">,</span> <span class="nx">styles</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+          <span class="nx">allPassed</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">styles</span><span class="p">).</span><span class="nx">length</span> <span class="o">!==</span> <span class="mi">0</span><span class="p">;</span>
+          <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">styles</span><span class="p">).</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">prop</span> <span class="o">=&gt;</span> <span class="p">{</span>
+            <span class="nx">allPassed</span> <span class="o">=</span> <span class="nx">allPassed</span> <span class="o">&amp;&amp;</span> <span class="nx">getDOM</span><span class="p">().</span><span class="nx">hasStyle</span><span class="p">(</span><span class="nx">actual</span><span class="p">,</span> <span class="nx">prop</span><span class="p">,</span> <span class="nx">styles</span><span class="p">[</span><span class="nx">prop</span><span class="p">]);</span>
+          <span class="p">});</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+          <span class="na">pass</span><span class="p">:</span> <span class="nx">allPassed</span><span class="p">,</span>
+          <span class="nx">get</span> <span class="nx">message</span><span class="p">()</span> <span class="p">{</span>
+            <span class="kr">const</span> <span class="nx">expectedValueStr</span> <span class="o">=</span> <span class="k">typeof</span> <span class="nx">styles</span> <span class="o">===</span> <span class="s1">'string'</span> <span class="p">?</span> <span class="nx">styles</span> <span class="p">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">styles</span><span class="p">);</span>
+            <span class="k">return</span> <span class="s2">`Expected </span><span class="p">${</span><span class="nx">actual</span><span class="p">.</span><span class="nx">outerHTML</span><span class="p">}</span><span class="s2"> </span><span class="p">${</span><span class="o">!</span><span class="nx">allPassed</span> <span class="p">?</span> <span class="s1">' '</span> <span class="p">:</span> <span class="s1">'not '</span><span class="p">}</span><span class="s2">to contain the
+                      CSS </span><span class="p">${</span><span class="k">typeof</span> <span class="nx">styles</span> <span class="o">===</span> <span class="s1">'string'</span> <span class="p">?</span> <span class="s1">'property'</span> <span class="p">:</span> <span class="s1">'styles'</span><span class="p">}</span><span class="s2"> "</span><span class="p">${</span><span class="nx">expectedValueStr</span><span class="p">}</span><span class="s2">"`</span><span class="p">;</span>
+          <span class="p">}</span>
+        <span class="p">};</span>
+      <span class="p">}</span>
+    <span class="p">};</span>
+  <span class="p">}</span>
+
+<span class="p">};</span></code></pre></div>
+
+<p>With the above definitions, we can now use <code>expect(...).toHaveCssStyles(...)</code> without any 
+TypeScript complaints.</p>
+
+<p>Wait!</p>
+
+<p>We need one to discuss one more addition to our custom-matcher code. Did you notice the call to 
+<strong>getDOM()</strong>.hasStyle() ? But where does <code>getDOM</code> come from?</p>
+
+<p>After some inspection of the <strong>@angular/core</strong> code, we were able to 
+get a reference to the special Angular DOM Adapter:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span><span class="nx">__platform_browser_private__</span><span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/platform-browser'</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">getDOM</span> <span class="o">=</span> <span class="nx">__platform_browser_private__</span><span class="p">.</span><span class="nx">getDOM</span><span class="p">;</span></code></pre></div>
+
+<blockquote>
+  <p>Please note that the <strong>getDOM()</strong> is a private Angular API and may change in the future.</p>
+</blockquote>
+
+<h3 id="using-a-custom-matcher">Using a Custom Matcher</h3>
+
+<p>Now we are <em>golden</em> with features. Let’s import and use our custom Jasmine matcher.</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span><span class="nx">customMatchers</span><span class="p">}</span> <span class="nx">from</span> <span class="s1">'../utils/testing/custom-matchers'</span><span class="p">;</span>
+
+<span class="nx">describe</span><span class="p">(</span><span class="s1">'layout directive'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+
+  <span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">jasmine</span><span class="p">.</span><span class="nx">addMatchers</span><span class="p">(</span><span class="nx">customMatchers</span><span class="p">);</span>
+
+    <span class="c1">// TestBed stuff here...</span>
+  <span class="p">});</span>
+
+<span class="p">});</span></code></pre></div>
+
+<p>Notice that we must register the custom matchers in a <code>beforeEach()</code> call to configure the 
+matchers for each subsequent test. And now everything is ready for the individual tests:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">expect</span><span class="p">(...).</span><span class="nx">toHaveCssStyle</span><span class="p">({</span>
+  <span class="s1">'display'</span><span class="p">:</span> <span class="s1">'flex'</span><span class="p">,</span>
+  <span class="s1">'flex-direction'</span><span class="p">:</span> <span class="s1">'row'</span><span class="p">,</span>
+  <span class="s1">'box-sizing'</span><span class="p">:</span> <span class="s1">'border-box'</span>
+<span class="p">});</span></code></pre></div>
+
+<h2 id="protractor--e2e">Protractor + e2e</h2>
+
+<p>It should be noted that the above sample tests confirm whether CSS styles have been applied 
+correctly to the DOM element. Unit tests perform tests logic and state… but those same 
+tests cannot easily test how those values affect renderings in the UI.</p>
+
+<p>Jasmine unit tests <strong>do not</strong> test whether the CSS styles or states render the elements in the 
+browser as expected. Nor do they test renderings across different browsers. Those types of visual 
+tests are best performed in e2e testing with Protractor and visual differencing tools.</p>
+
+<h2 id="summary">Summary</h2>
+
+<p>Perhaps you will say: “Wow, this is cool… but totally overkill!”  If you are tempted to say that, 
+then look at all the DRY tests here: 
+<a href="https://github.com/angular/flex-layout/blob/master/src/lib/flexbox/api/layout.spec.ts#L45">layout.spec.ts</a>. 
+You will quickly see the value of using helpers and custom matchers.</p>
+
+<p>You now have the techniques and tools to create your own custom matchers and deliver quality, terse 
+unit tests.</p>
+
+<p>Enjoy!</p>
+
+<h2 id="resources">Resources</h2>
+
+<ul>
+  <li><a href="https://github.com/angular/flex-layout/blob/master/src/lib/utils/testing/custom-matchers.ts">Custom Matchers</a>: a full set of custom Jasmine Matchers</li>
+  <li><a href="https://github.com/angular/flex-layout/blob/master/src/lib/utils/testing/helpers.ts">Special Helpers</a>: a reusable, importable set of Helpers</li>
+  <li><a href="https://github.com/angular/flex-layout/blob/master/src/lib/flexbox/api/layout.spec.ts#L45">Usage Samples</a>: a full DRY set of usages.</li>
+</ul>
+
+<blockquote>
+  <p>The Flex-Layout Helper functions are actually partial applications (function currying). Here is 
+<a href="https://github.com/angular/flex-layout/blob/master/src/lib/flexbox/api/layout.spec.ts#L16-L17">How to use</a> them.</p>
+</blockquote>
+
+
+
+          
+
+
+
+
+        </div>
+
+        <div class="thtrm-subscriber">
+  <h3>Get updates on new articles and trainings.</h3>
+  <p>Join over 1400 other developers who get our content first.</p>
+  <form action="//thoughtram.us8.list-manage.com/subscribe/post?u=dfbb1507fbced5a20d9dc5698&amp;id=731f22cdca" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" novalidate>
+    <label for="mce-EMAIL"></label>
+    <input type="email" value="" name="EMAIL" placeholder="Your email address..." required>
+    <div style="position: absolute; left: -5000px;"><input type="text" name="b_dfbb1507fbced5a20d9dc5698_731f22cdca" tabindex="-1" value=""></div>
+    <input type="submit" value="Subscribe" name="subscribe" class="thtrm-cta thtrm-cta--small">
+  </form>
+</div>
+
+
+
+        <div class="thtrm-social-links">
+            <!-- Sharingbutton Facebook -->
+            <a class="resp-sharing-button__link" href="https://facebook.com/sharer/sharer.php?u=http%3A%2F%2Fblog.thoughtram.io/angular/2016/12/27/angular-2-advance-testing-with-custom-matchers.html" target="_blank" aria-label="Share on Facebook">
+              <div class="resp-sharing-button resp-sharing-button--facebook resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M18.768,7.465H14.5V5.56c0-0.896,0.594-1.105,1.012-1.105s2.988,0,2.988,0V0.513L14.171,0.5C10.244,0.5,9.5,3.438,9.5,5.32 v2.145h-3v4h3c0,5.212,0,12,0,12h5c0,0,0-6.85,0-12h3.851L18.768,7.465z"/>
+                    </g>
+                </svg>
+                </div>Share on Facebook</div>
+            </a>
+
+            <!-- Sharingbutton Twitter -->
+            <a class="resp-sharing-button__link" href="https://twitter.com/intent/tweet/?text=Testing%20Angular%20Directives%20with%20Custom%20Matchers&amp;url=http://blog.thoughtram.io/angular/2016/12/27/angular-2-advance-testing-with-custom-matchers.html" target="_blank" aria-label="Share on Twitter">
+              <div class="resp-sharing-button resp-sharing-button--twitter resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M23.444,4.834c-0.814,0.363-1.5,0.375-2.228,0.016c0.938-0.562,0.981-0.957,1.32-2.019c-0.878,0.521-1.851,0.9-2.886,1.104 C18.823,3.053,17.642,2.5,16.335,2.5c-2.51,0-4.544,2.036-4.544,4.544c0,0.356,0.04,0.703,0.117,1.036 C8.132,7.891,4.783,6.082,2.542,3.332C2.151,4.003,1.927,4.784,1.927,5.617c0,1.577,0.803,2.967,2.021,3.782 C3.203,9.375,2.503,9.171,1.891,8.831C1.89,8.85,1.89,8.868,1.89,8.888c0,2.202,1.566,4.038,3.646,4.456 c-0.666,0.181-1.368,0.209-2.053,0.079c0.579,1.804,2.257,3.118,4.245,3.155C5.783,18.102,3.372,18.737,1,18.459 C3.012,19.748,5.399,20.5,7.966,20.5c8.358,0,12.928-6.924,12.928-12.929c0-0.198-0.003-0.393-0.012-0.588 C21.769,6.343,22.835,5.746,23.444,4.834z"/>
+                    </g>
+                </svg>
+                </div>Share on Twitter</div>
+            </a>
+
+            <!-- Sharingbutton Google+ -->
+            <a class="resp-sharing-button__link" href="https://plus.google.com/share?url=http%3A%2F%2Fblog.thoughtram.io/angular/2016/12/27/angular-2-advance-testing-with-custom-matchers.html" target="_blank" aria-label="Share on Google+">
+              <div class="resp-sharing-button resp-sharing-button--google resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M11.366,12.928c-0.729-0.516-1.393-1.273-1.404-1.505c0-0.425,0.038-0.627,0.988-1.368 c1.229-0.962,1.906-2.228,1.906-3.564c0-1.212-0.37-2.289-1.001-3.044h0.488c0.102,0,0.2-0.033,0.282-0.091l1.364-0.989 c0.169-0.121,0.24-0.338,0.176-0.536C14.102,1.635,13.918,1.5,13.709,1.5H7.608c-0.667,0-1.345,0.118-2.011,0.347 c-2.225,0.766-3.778,2.66-3.778,4.605c0,2.755,2.134,4.845,4.987,4.91c-0.056,0.22-0.084,0.434-0.084,0.645 c0,0.425,0.108,0.827,0.33,1.216c-0.026,0-0.051,0-0.079,0c-2.72,0-5.175,1.334-6.107,3.32C0.623,17.06,0.5,17.582,0.5,18.098 c0,0.501,0.129,0.984,0.382,1.438c0.585,1.046,1.843,1.861,3.544,2.289c0.877,0.223,1.82,0.335,2.8,0.335 c0.88,0,1.718-0.114,2.494-0.338c2.419-0.702,3.981-2.482,3.981-4.538C13.701,15.312,13.068,14.132,11.366,12.928z M3.66,17.443 c0-1.435,1.823-2.693,3.899-2.693h0.057c0.451,0.005,0.892,0.072,1.309,0.2c0.142,0.098,0.28,0.192,0.412,0.282 c0.962,0.656,1.597,1.088,1.774,1.783c0.041,0.175,0.063,0.35,0.063,0.519c0,1.787-1.333,2.693-3.961,2.693 C5.221,20.225,3.66,19.002,3.66,17.443z M5.551,3.89c0.324-0.371,0.75-0.566,1.227-0.566l0.055,0 c1.349,0.041,2.639,1.543,2.876,3.349c0.133,1.013-0.092,1.964-0.601,2.544C8.782,9.589,8.363,9.783,7.866,9.783H7.865H7.844 c-1.321-0.04-2.639-1.6-2.875-3.405C4.836,5.37,5.049,4.462,5.551,3.89z"/>
+                        <polygon points="23.5,9.5 20.5,9.5 20.5,6.5 18.5,6.5 18.5,9.5 15.5,9.5 15.5,11.5 18.5,11.5 18.5,14.5 20.5,14.5 20.5,11.5  23.5,11.5   "/>
+                    </g>
+                </svg>
+                </div>Share on Google+</div>
+            </a>
+        </div>
+
+        <h3 class="thtrm-section-headline thtrm-section-headline--with-margin">Author</h3>
+        <div class="thtrm-article-author">
+          <span class="thtrm-article-author-avatar"><img src="/images/thomas_high_res.png" alt="Picture of Thomas Burleson"></span>
+          <div class="thtrm-article-author-matter">
+            <h4 class="thtrm-article-author-name">Thomas Burleson</h4>
+            <p class="thtrm-article-author-text">Thomas was a late bloomer; programming at 24. He is a autodidact technologist with a passion for Angular, UX, and great software. Thomas is the Team Lead for Angular Material. He loves teaching, mentoring, and working with Angular developers. He also has the irritating habits of daily power-naps and starts a sentence and not finishing…. as his mind races ahead!</p>
+            <p>
+              <a class="thtrm-article-author-cta thtrm-article-author-cta-twitter" href="http://twitter.com/thomasburleson" title="Thomas Burleson on Twitter">Twitter</a>
+              <a class="thtrm-article-author-cta" href="http://github.com/thomasburleson" title="Thomas Burleson on GitHub">GitHub</a>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="thtrm-constraint">
+
+        
+        <h4 class="thtrm-section-headline thtrm-section-headline--with-big-margin thtrm-section-headline--centered">Related Posts</h4>
+        <ul class="thtrm-three-column-list thtrm-three-column-list--with-padding">
+        
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2016/11/28/testing-services-with-http-in-angular-2.html" title="Testing Services with Http in Angular">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/testing-services-with-http-in-angular-2.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Testing Services with Http in Angular</h3>
+                <p>Want to learn how to test services in Angular that have an Http dependency? Read more here!</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2017/02/27/three-things-you-didnt-know-about-the-async-pipe.html" title="Three things you didn't know about the AsyncPipe">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/three-things-about-the-async-pipe.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Three things you didn't know about the AsyncPipe</h3>
+                <p>This article explains three lesser known features of the AsyncPipe that help us to write better async code.</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2017/02/21/using-zones-in-angular-for-better-performance.html" title="Using Zones in Angular for better performance">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/using-zones-in-angular-for-better-performance.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Using Zones in Angular for better performance</h3>
+                <p>In this article we'll take a look at how to use Zone APIs to improve our app's performance!</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2017/02/02/making-your-angular-app-fast.html" title="Making your Angular apps fast">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/angular-performance-tips.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Making your Angular apps fast</h3>
+                <p>In this article we discuss tips and tricks to make Angular blazingly fast!</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2016/10/13/two-way-data-binding-in-angular-2.html" title="Two-way Data Binding in Angular">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/two-way-data-binding-in-angular-2.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Two-way Data Binding in Angular</h3>
+                <p>Two-way data binding was one of the main selling points of Angular. Since version 2.x, we can build directives that...</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2016/10/10/resolving-route-data-in-angular-2.html" title="Resolving route data in Angular">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/resolving-route-data-in-angular-2.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Resolving route data in Angular</h3>
+                <p>We often want to make sure that certain data is available before a component is instantiated via routing. In this...</p>
+              </div>
+            </a>
+          </li>
+        
+        
+        </ul>
+        
+
+      
+
+      </div>
+    </main>
+    <footer role="contentinfo" class="thtrm-footer thtrm-footer--slim">
+  <div class="thtrm-footer-text">
+    <img class="thtrm-footer-logo" alt="thoughtram brain" src="/images/thoughtram-brain-white.png">
+    <p>This website was created in collaboration with <a href="http://twitter.com/timche_" title="Tim Cheung on Twitter"><strong>Tim Cheung</strong></a> and <a href="http://twitter.com/tim_hartmann_" title="Tim Hartmann on Twitter"><strong>Tim Hartmann</strong></a>.</p>
+    <p ><a href="http://thoughtram.io/code-of-conduct.html" title="Code of Conduct">Code of Conduct</a> &bullet; <a href="http://thoughtram.io/imprint.html" title="Legal Notice">Legal notice</a></p>
+    <p class="thtrm-footer-bottom">&copy; 2014-2017 thoughtram GmbH</p>
+  </div>
+</footer>
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-51360648-2', 'auto');
+ga('send', 'pageview');
+
+var form = document.getElementById('search-form');
+var eventCta = document.getElementById('event-cta');
+
+if (eventCta) {
+
+  eventCta.addEventListener('click', function (event) {
+    event.preventDefault();
+
+    setTimeout(clickLink, 1000);
+
+    function clickLink() {
+      window.location.replace(eventCta.getAttribute('href'));
+    }
+
+    ga('send', 'event', {
+      eventCategory: 'Event Link',
+      eventAction: 'click',
+      eventLabel: eventCta.getAttribute('title'),
+      hitCallback: clickLink
+    });
+  });
+}
+
+if (form) {
+
+  var searchTerm = document.getElementById('search-term');
+
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    var formSubmitted = false;
+
+    setTimeout(submitForm, 1000);
+
+    function submitForm() {
+      if (!formSubmitted) {
+        formSubmitted = true;
+        form.submit();
+      }
+    }
+
+    ga('send', 'event', {
+      eventCategory: 'Search Form',
+      eventAction: 'submit',
+      eventLabel: searchTerm.value,
+      hitCallback: submitForm
+    });
+  });
+}
+</script>
+
+
+
+    <script src="/scripts/stickyfill.js"></script>
+    <script src="/scripts/linkjuice/dist/linkjuice.js"></script>
+    <script>
+    (function (doc, win) {
+
+      linkjuice.init('.thtrm-article', {
+        selector: ['h2', 'h3'],
+        icon: ''
+      });
+
+      if (win.matchMedia && win.matchMedia('(min-width: 1200px)').matches) {
+        var stickyElements = doc.querySelectorAll('.is-sticky');
+
+        for (var i = stickyElements.length - 1; i >= 0; i--) {
+          var el = stickyElements[i];
+
+          if (el.classList.contains('thtrm-toc')) {
+            el.classList.add('thtrm-toc--sticky');
+            el.classList.add('thtrm-toc--faded');
+          } 
+          if (el.classList.contains('thtrm-ad')) {
+            el.classList.add('thtrm-ad--sticky');
+            el.classList.add('thtrm-ad--description');
+          }
+
+          Stickyfill.add(el);
+        }
+      }
+    }(document, window));
+    </script>
+  </body>
+</html>

@@ -1,0 +1,654 @@
+
+
+
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="In this article we discuss the template-driven forms in Angular and all the directives that come into play.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="thoughtram">
+    <title>Template-driven Forms in Angular by thoughtram</title>
+    <meta name="google-site-verification" content="o9eGPEgIETEqYGombq7NiQuBIB_qa6gz1yAL7PxKyK0">
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#4D8799">
+    <link rel="icon" sizes="192x192" href="/images/touch/chrome-touch-icon-192x192.png">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="thoughtram">
+    <link rel="apple-touch-icon" href="/images/touch/apple-touch-icon.png">
+
+    <!-- Tile icon for Win8 (144x144 + tile color) -->
+    <meta name="msapplication-TileImage" content="/images/touch/ms-touch-icon-144x144-precomposed.png">
+    <meta name="msapplication-TileColor" content="#4D8799">
+
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Template-driven Forms in Angular">
+    <meta property="og:description" content="In this article we discuss the template-driven forms in Angular and all the directives that come into play.">
+    <meta property="og:url" content="http://blog.thoughtram.io/angular/2016/03/21/template-driven-forms-in-angular-2.html">
+    <meta property="og:site_name" content="Articles by thoughtram">
+    <meta property="og:image" content="http://blog.thoughtram.io/images/template-driven-forms.jpeg">
+    <meta property="og:publisher" content="http://www.facebook.com/thoughtram">
+
+    <meta property="twitter:card" content="summary">
+    <meta property="twitter:title" content="Template-driven Forms in Angular">
+    <meta property="twitter:site" content="thoughtram Blog">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css" type="text/css">
+  </head>
+  <body class="sub-site">
+    <!-- Add your site or app content here -->
+
+    <!--[if lt IE 10]>
+        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <header class="thtrm-header" role="banner">
+      <div class="thtrm-header-bar">
+        <div class="thtrm-constraint">
+          <a href="http://thoughtram.io" class="thtrm-header-logo-link" title="thoughtram.io Start Page"><h1 class="thtrm-header-logo">thoughtram</h1></a>
+          <div class="thtrm-header-menu-wrapper">
+            <span role="button" tabindex="0" class="thtrm-header-menu-label">Menu</span>
+            <ul class="thtrm-header-menu">
+              <li><a title="Training" class="thtrm-header-menu-item" href="http://thoughtram.io/training.html">Training</a></li>
+              <li><a title="Code Review" class="thtrm-header-menu-item" href="http://thoughtram.io/code-review.html">Code Review</a></li>
+              <li><a title="Casts" class="thtrm-header-menu-item " href="http://casts.thoughtram.io">Casts</a></li>
+              <li><a title="Blog" class="thtrm-header-menu-item" href="/">Blog</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main role="main" class="thtrm-main">
+    <div class="thtrm-banner" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%), url('/images/template-driven-forms.jpeg');">
+        <hgroup class="thtrm-banner-container">
+          <div class="thtrm-constraint thtrm-constraint--slim">
+            <h2 class="thtrm-banner-text">Template-driven Forms in Angular</h2>
+            <span>by <a href="http://twitter.com/" title="Pascal Precht on Twitter">Pascal Precht</a> on Mar 21, 2016, last updated on Dec 18, 2016<br>12 minute read</span>
+
+          </div>
+        </hgroup>
+      </div>
+      <div class="thtrm-constraint thtrm-constraint--slim">
+
+        <div class="thtrm-article">
+          <section class="thtrm-ad thtrm-section thtrm-section--is-promo is-sticky">
+  <img width="100" src="/images/angular2-shield-inverse.svg">
+  <h3 class="thtrm-section-headline">Need private training?</h3>
+  <p class="thtrm-section-text">Get customized training for your corporation</p>
+  <a href="mailto:hello@thoughtram.io" title="Request Training Quote" id="event-cta" class="thtrm-layout-divider-cta">Request quote <strong>&rarr;</strong></a>
+</section>
+
+
+          
+          <p style="background-color: lightgoldenrodyellow; border: solid 2px #f9dead; padding: 1em; text-align: center; border-radius: 0.3em;">Contents are based on Angular version <strong>>= 2.x</strong> unless explicitely stated differently.</p>
+          
+
+          <p>Angular comes with three different ways of building forms in our applications. There’s the template-driven approach which allows us to build forms with very little to none application code required, then there’s the model-driven <strong>or reactive</strong> approach using low level APIs, which makes our forms testable without a DOM being required, and last but not least, we can build our forms model-driven but with a higher level API called the <code>FormBuilder</code>.</p>
+
+<p>Hearing all these different solutions, it’s kind of natural that there are also probably many different tools to reach the goal. This can be sometimes confusing and with this article we want to clarify a subset of form directives by focussing on template-driven forms in Angular.</p>
+
+<p style="text-align: center; margin-bottom: -1em;"><strong>Want to see things in action first?</strong></p>
+
+<p class="thtrm-ctas">
+
+  
+    <a href="#demos" class="thtrm-cta thtrm-cta--small"><i class="material-icons">code</i> View Demos</a>
+  
+
+  
+
+</p>
+
+<div class="thtrm-toc is-sticky">
+  <h3 class="no_toc" id="table-of-contents">TABLE OF CONTENTS</h3>
+<ul id="markdown-toc">
+  <li><a href="#activating-new-form-apis" id="markdown-toc-activating-new-form-apis">Activating new Form APIs</a></li>
+  <li><a href="#ngform-directive" id="markdown-toc-ngform-directive"><code>ngForm</code> Directive</a>    <ul>
+      <li><a href="#submitting-a-form-and-accessing-its-value" id="markdown-toc-submitting-a-form-and-accessing-its-value">Submitting a form and Accessing its value</a></li>
+    </ul>
+  </li>
+  <li><a href="#ngmodel-directive" id="markdown-toc-ngmodel-directive"><code>ngModel</code> Directive</a></li>
+  <li><a href="#ngmodelgroup-directive" id="markdown-toc-ngmodelgroup-directive"><code>ngModelGroup</code> Directive</a></li>
+  <li><a href="#what-about-ngmodel-with-expressions" id="markdown-toc-what-about-ngmodel-with-expressions">What about ngModel with expressions?</a></li>
+  <li><a href="#more-to-cover" id="markdown-toc-more-to-cover">More to cover</a></li>
+</ul>
+
+</div>
+
+<h2 id="activating-new-form-apis">Activating new Form APIs</h2>
+
+<p>The form APIs have changed in RC2 and in order to not break all existing apps that have been built with RC1 and use forms, these <strong>new APIs are added on top</strong> of the existing ones. That means, we need to tell Angular explicitly which APIs we want to use (of course, this will go away in the final release).</p>
+
+<p>In order to activate the new APIs we need to import Angular’s <code>FormsModule</code> into our application module.</p>
+
+<p>Here’s what that could look like:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">NgModule</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/core'</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">BrowserModule</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/platform-browser'</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">FormsModule</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/forms'</span><span class="p">;</span>
+
+<span class="err">@</span><span class="nx">NgModule</span><span class="p">({</span>
+  <span class="na">imports</span><span class="p">:</span> <span class="p">[</span><span class="nx">BrowserModule</span><span class="p">,</span> <span class="nx">FormsModule</span><span class="p">],</span>
+  <span class="na">declarations</span><span class="p">:</span> <span class="p">[</span><span class="nx">AppComponent</span><span class="p">],</span>
+  <span class="na">bootstrap</span><span class="p">:</span> <span class="p">[</span><span class="nx">AppComponent</span><span class="p">]</span>
+<span class="p">})</span>
+<span class="kr">export</span> <span class="nx">AppModule</span> <span class="p">{}</span></code></pre></div>
+
+<p>We then bootstrap our application module like this:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">platformBrowserDynamic</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/platform-browser-dynamic'</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">AppModule</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'./app.module'</span><span class="p">;</span>
+
+<span class="nx">platformBrowserDynamic</span><span class="p">().</span><span class="nx">bootstrapModule</span><span class="p">(</span><span class="nx">AppModule</span><span class="p">);</span></code></pre></div>
+
+<h2 id="ngform-directive"><code>ngForm</code> Directive</h2>
+
+<p>Let’s start off with a simple login form that asks for some user data:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;form&gt;</span>
+  <span class="nt">&lt;label&gt;</span>Firstname:<span class="nt">&lt;/label&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span><span class="nt">&gt;</span>
+
+  <span class="nt">&lt;label&gt;</span>Lastname:<span class="nt">&lt;/label&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span><span class="nt">&gt;</span>
+
+  <span class="nt">&lt;label&gt;</span>Street:<span class="nt">&lt;/label&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span><span class="nt">&gt;</span>
+
+  <span class="nt">&lt;label&gt;</span>Zip:<span class="nt">&lt;/label&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span><span class="nt">&gt;</span>
+
+  <span class="nt">&lt;label&gt;</span>City:<span class="nt">&lt;/label&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span><span class="nt">&gt;</span>
+
+  <span class="nt">&lt;button</span> <span class="na">type=</span><span class="s">"submit"</span><span class="nt">&gt;</span>Submit<span class="nt">&lt;/button&gt;</span>
+<span class="nt">&lt;/form&gt;</span></code></pre></div>
+
+<p>We’ve probably all built one of those forms several times. A simple HTML form with input controls for a name and an address of a user. Nothing special going on here.</p>
+
+<p>What we can’t see here is that Angular comes with a directive <code>ngForm</code> that matches the <code>&lt;form&gt;</code> selector, so in fact, our form element already has an instance of <code>ngForm</code> applied. <code>ngForm</code> is there for a reason. It provides us information about the current state of the form including:</p>
+
+<ul>
+  <li>A JSON representation of the form value</li>
+  <li>Validity state of the entire form</li>
+</ul>
+
+<p><strong>Accessing the <code>ngForm</code> instance</strong></p>
+
+<p>Angular comes with a very convenient way of exposing directive instances in a component’s template using the <code>exportAs</code> property of the directive metadata. For example, if we’d build a directive <code>draggable</code>, we could expose an instance to the template via the name <code>draggable</code> like so:</p>
+
+<div class="highlight"><pre><code class="language-ts" data-lang="ts"><span class="err">@</span><span class="nx">Directive</span><span class="p">({</span>
+  <span class="na">selector</span><span class="p">:</span> <span class="s1">'[draggable]'</span><span class="p">,</span>
+  <span class="na">exportAs</span><span class="p">:</span> <span class="s1">'draggable'</span>
+<span class="p">})</span>
+<span class="kr">class</span> <span class="nx">Draggable</span> <span class="p">{</span>
+  <span class="p">...</span>
+<span class="p">}</span></code></pre></div>
+
+<p>And then, in the template where it’s used, we can simply ask for it using Angular’s local variable mechanism:</p>
+
+<div class="highlight"><pre><code class="language-ts" data-lang="ts"><span class="o">&lt;</span><span class="nx">div</span> <span class="nx">draggable</span> <span class="err">#</span><span class="nx">myDraggable</span><span class="o">=</span><span class="s2">"draggable"</span><span class="o">&gt;</span><span class="nx">I</span><span class="err">'</span><span class="nx">m</span> <span class="nx">draggable</span><span class="o">!&lt;</span><span class="sr">/div&gt;</span></code></pre></div>
+
+<p>From this point on <code>myDraggable</code> is a reference to an instance of <code>Draggable</code> and we can use it throughout our entire template as part of other expressions.</p>
+
+<p>You might wonder why that’s interesting. Well, it turns out that <code>ngForm</code> directive is exposed as <code>ngForm</code>, which means we can get an instance of our form without writing any application code like this:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;form</span> <span class="err">#</span><span class="na">form=</span><span class="s">"ngForm"</span><span class="nt">&gt;</span>
+  ...
+<span class="nt">&lt;/form&gt;</span></code></pre></div>
+
+<h3 id="submitting-a-form-and-accessing-its-value">Submitting a form and Accessing its value</h3>
+
+<p>We can now use <code>form</code> to access the form’s value and it’s validity state. Let’s log the value of the form when it’s submitted. All we have to do is to add a handler to the form’s <code>submit</code> event and pass it the form’s value. In fact, there’s a property on the <code>ngForm</code> instance called <code>value</code>, so this is what it’d look like:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;form</span> <span class="err">#</span><span class="na">form=</span><span class="s">"ngForm"</span> <span class="err">(</span><span class="na">submit</span><span class="err">)="</span><span class="na">logForm</span><span class="err">(</span><span class="na">form</span><span class="err">.</span><span class="na">value</span><span class="err">)"</span><span class="nt">&gt;</span>
+  ...
+<span class="nt">&lt;/form&gt;</span></code></pre></div>
+
+<p>Even though this would work, it turns out that there’s another output event <code>ngForm</code> fires when it’s submitted. It’s called <code>ngSubmit</code>, and it seems to be doing exactly the same as <code>submit</code> at a first glance. However, <code>ngSubmit</code> ensures that the form doesn’t submit when the handler code throws (which is the default behaviour of <code>submit</code>) and causes an actual http post request. Let’s use <code>ngSubmit</code> instead as this is the best practice:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;form</span> <span class="err">#</span><span class="na">form=</span><span class="s">"ngForm"</span> <span class="err">(</span><span class="na">ngSubmit</span><span class="err">)="</span><span class="na">logForm</span><span class="err">(</span><span class="na">form</span><span class="err">.</span><span class="na">value</span><span class="err">)"</span><span class="nt">&gt;</span>
+  ...
+<span class="nt">&lt;/form&gt;</span></code></pre></div>
+
+<p>In addition, we might have a component that looks something like this:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
+  <span class="na">selector</span><span class="p">:</span> <span class="s1">'app'</span><span class="p">,</span>
+  <span class="na">template</span><span class="p">:</span> <span class="p">...</span>
+<span class="p">})</span>
+<span class="kr">class</span> <span class="nx">App</span> <span class="p">{</span>
+
+  <span class="nx">logForm</span><span class="p">(</span><span class="nx">value</span><span class="p">:</span> <span class="nx">any</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">value</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p>Running this code makes us realize, that the form’s value is an empty object. This seems natural, because there’s nothing in our component’s template yet, that tells the form that the input controls are part of this form. We need a way to register them. This is where <code>ngModel</code> comes into play.</p>
+
+<h2 id="ngmodel-directive"><code>ngModel</code> Directive</h2>
+
+<p>In order to register form controls on an <code>ngForm</code> instance, we use the <code>ngModel</code> directive. In combination with a <code>name</code> attribute, <code>ngModel</code> creates a form control abstraction for us behind the scenes. Every form control that is registered with <code>ngModel</code> will automatically show up in <code>form.value</code> and can then easily be used for further post processing.</p>
+
+<p>Let’s give our form object some structure and register our form controls:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;form</span> <span class="err">#</span><span class="na">form=</span><span class="s">"ngForm"</span> <span class="err">(</span><span class="na">ngSubmit</span><span class="err">)="</span><span class="na">logForm</span><span class="err">(</span><span class="na">form</span><span class="err">.</span><span class="na">value</span><span class="err">)"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;label&gt;</span>Firstname:<span class="nt">&lt;/label&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"firstname"</span> <span class="na">ngModel</span><span class="nt">&gt;</span>
+
+  <span class="nt">&lt;label&gt;</span>Lastname:<span class="nt">&lt;/label&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"lastname"</span> <span class="na">ngModel</span><span class="nt">&gt;</span>
+
+  <span class="nt">&lt;label&gt;</span>Street:<span class="nt">&lt;/label&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"street"</span> <span class="na">ngModel</span><span class="nt">&gt;</span>
+
+  <span class="nt">&lt;label&gt;</span>Zip:<span class="nt">&lt;/label&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"zip"</span> <span class="na">ngModel</span><span class="nt">&gt;</span>
+
+  <span class="nt">&lt;label&gt;</span>City:<span class="nt">&lt;/label&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"city"</span> <span class="na">ngModel</span><span class="nt">&gt;</span>
+
+  <span class="nt">&lt;button</span> <span class="na">type=</span><span class="s">"submit"</span><span class="nt">&gt;</span>Submit<span class="nt">&lt;/button&gt;</span>
+<span class="nt">&lt;/form&gt;</span></code></pre></div>
+
+<p>Great! If we now enter some values and submit the form, we’ll see that our application will log something like this:</p>
+
+<div class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span><span class="w">
+  </span><span class="err">firstname:</span><span class="w"> </span><span class="err">'Pascal',</span><span class="w">
+  </span><span class="err">lastname:</span><span class="w"> </span><span class="err">'Precht',</span><span class="w">
+  </span><span class="err">street:</span><span class="w"> </span><span class="err">'thoughtram</span><span class="w"> </span><span class="err">Road',</span><span class="w">
+  </span><span class="err">zip:</span><span class="w"> </span><span class="err">'00011',</span><span class="w">
+  </span><span class="err">city:</span><span class="w"> </span><span class="err">'San</span><span class="w"> </span><span class="err">Francisco'</span><span class="w">
+</span><span class="p">}</span></code></pre></div>
+
+<p>Isn’t that cool? We can basically take this JSON object as it is and send it straight to a remote server for whatever we want to do with it. Oh wait, what if we actually want to have some more structure and make our form object look like this?</p>
+
+<div class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span><span class="w">
+  </span><span class="err">name:</span><span class="w"> </span><span class="err">{</span><span class="w">
+    </span><span class="err">firstname:</span><span class="w"> </span><span class="err">'Pascal',</span><span class="w">
+    </span><span class="err">lastname:</span><span class="w"> </span><span class="err">'Precht',</span><span class="w">
+  </span><span class="p">}</span><span class="err">,</span><span class="w">
+  </span><span class="err">address:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="err">street:</span><span class="w"> </span><span class="err">'thoughtram</span><span class="w"> </span><span class="err">Road',</span><span class="w">
+    </span><span class="err">zip:</span><span class="w"> </span><span class="err">'00011',</span><span class="w">
+    </span><span class="err">city:</span><span class="w"> </span><span class="err">'San</span><span class="w"> </span><span class="err">Francisco'</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="err">}</span></code></pre></div>
+
+<p>Do we now have to wire everything together by hand when the form is submitted? Nope! Angular has us covered - introducing <code>ngModelGroup</code>.</p>
+
+<h2 id="ngmodelgroup-directive"><code>ngModelGroup</code> Directive</h2>
+
+<p><code>ngModelGroup</code> enables us to semantically group our form controls. In other words, there can’t be a control group without controls. In addition to that, it also tracks validity state of the inner form controls. This comes in very handy if we want to check the validity state of just a sub set of the form.</p>
+
+<p>And if you now think: “Wait, isn’t a form then also just a control group”, then you’re right my friend. A form is also just a control group.</p>
+
+<p>Let’s semantically group our form control values with <code>ngModelGroup</code>:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;fieldset</span> <span class="na">ngModelGroup=</span><span class="s">"name"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;label&gt;</span>Firstname:<span class="nt">&lt;/label&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"firstname"</span> <span class="na">ngModel</span><span class="nt">&gt;</span>
+
+  <span class="nt">&lt;label&gt;</span>Lastname:<span class="nt">&lt;/label&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"lastname"</span> <span class="na">ngModel</span><span class="nt">&gt;</span>
+<span class="nt">&lt;/fieldset&gt;</span>
+
+<span class="nt">&lt;fieldset</span> <span class="na">ngModelGroup=</span><span class="s">"address"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;label&gt;</span>Street:<span class="nt">&lt;/label&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"street"</span> <span class="na">ngModel</span><span class="nt">&gt;</span>
+
+  <span class="nt">&lt;label&gt;</span>Zip:<span class="nt">&lt;/label&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"zip"</span> <span class="na">ngModel</span><span class="nt">&gt;</span>
+
+  <span class="nt">&lt;label&gt;</span>City:<span class="nt">&lt;/label&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"city"</span> <span class="na">ngModel</span><span class="nt">&gt;</span>
+<span class="nt">&lt;/fieldset&gt;</span></code></pre></div>
+
+<p>As you can see, all we did was wrapping form controls in <code>&lt;fieldset&gt;</code> elements and applied <code>ngModelGroup</code> directives to them. There’s no specific reason we used <code>&lt;fieldset&gt;</code> elements. We could’ve used <code>&lt;div&gt;</code>s too. The point is, that there has to be an element, where we add <code>ngModelGroup</code> so it will be registered at our <code>ngForm</code> instance.</p>
+
+<p>We can see that it worked out by submitting the form and looking at the output:</p>
+
+<div class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span><span class="w">
+  </span><span class="err">name:</span><span class="w"> </span><span class="err">{</span><span class="w">
+    </span><span class="err">firstname:</span><span class="w"> </span><span class="err">'Pascal',</span><span class="w">
+    </span><span class="err">lastname:</span><span class="w"> </span><span class="err">'Precht',</span><span class="w">
+  </span><span class="p">}</span><span class="err">,</span><span class="w">
+  </span><span class="err">address:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="err">street:</span><span class="w"> </span><span class="err">'thoughtram</span><span class="w"> </span><span class="err">Road',</span><span class="w">
+    </span><span class="err">zip:</span><span class="w"> </span><span class="err">'00011',</span><span class="w">
+    </span><span class="err">city:</span><span class="w"> </span><span class="err">'San</span><span class="w"> </span><span class="err">Francisco'</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="err">}</span></code></pre></div>
+
+<p>Awesome! We now get the wanted object structure out of our form without writing any application code.</p>
+
+<h2 id="what-about-ngmodel-with-expressions">What about ngModel with expressions?</h2>
+
+<p>So <code>ngModel</code> is the thing in Angular that implements two-way data binding. It’s not the only thing that does that, but it’s in most cases the directive we want to use for simple scenarios. So far we’ve used <code>ngModel</code> as attribute directive without any value, but we might want to use it with an expression to bind an existing domain model to our form. This, of course works out of the box!</p>
+
+<p>There are two ways to handle this, depending on what we want to do. One thing we can do is to apply property binding using the brackets syntax, so we can bind an existing value to a form control using one-way binding:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;fieldset</span> <span class="na">ngModelGroup=</span><span class="s">"name"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;label&gt;</span>Firstname:<span class="nt">&lt;/label&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"firstname"</span> <span class="err">[</span><span class="na">ngModel</span><span class="err">]="</span><span class="na">firstname</span><span class="err">"</span><span class="nt">&gt;</span>
+
+  <span class="nt">&lt;label&gt;</span>Lastname:<span class="nt">&lt;/label&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"lastname"</span> <span class="err">[</span><span class="na">ngModel</span><span class="err">]="</span><span class="na">lastname</span><span class="err">"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;/fieldset&gt;</span></code></pre></div>
+
+<p>Whereas the corresponding model could look something like this:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
+  <span class="na">selector</span><span class="p">:</span> <span class="s1">'app'</span><span class="p">,</span>
+  <span class="na">template</span><span class="p">:</span> <span class="p">...</span>
+<span class="p">})</span>
+<span class="kr">class</span> <span class="nx">App</span> <span class="p">{</span>
+
+  <span class="nx">firstname</span> <span class="o">=</span> <span class="s1">'Pascal'</span><span class="p">;</span>
+  <span class="nx">lastname</span> <span class="o">=</span> <span class="s1">'Precht'</span><span class="p">;</span>
+
+  <span class="nx">logForm</span><span class="p">(</span><span class="nx">value</span><span class="p">:</span> <span class="nx">any</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">value</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p>In addition, we can of course use <code>ngModel</code> and two-way data binding, in case we want to reflect the model values somewhere else in our template:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;fieldset</span> <span class="na">ngModelGroup=</span><span class="s">"name"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;label&gt;</span>Firstname:<span class="nt">&lt;/label&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"firstname"</span> <span class="err">[(</span><span class="na">ngModel</span><span class="err">)]="</span><span class="na">firstname</span><span class="err">"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;p&gt;</span>You entered {{firstname}}<span class="nt">&lt;/p&gt;</span>
+
+  <span class="nt">&lt;label&gt;</span>Lastname:<span class="nt">&lt;/label&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"lastname"</span> <span class="err">[(</span><span class="na">ngModel</span><span class="err">)]="</span><span class="na">lastname</span><span class="err">"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;p&gt;</span>You entered {{lastname}}<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;/fieldset&gt;</span></code></pre></div>
+
+<p>This just simply works as expected.</p>
+
+<h2 id="more-to-cover">More to cover</h2>
+
+<p>Of course, this is really just the tip of the ice berg when it comes to building forms. We haven’t talked about validation yet and how to display error messages when the validity state of a form control or a control group changes. We will talk about these and other things in future articles. However, if you’re interested in how to build a custom validator in Angular, checkout <a href="/angular/2016/03/14/custom-validators-in-angular-2.html">this article</a>.</p>
+
+<p>Watch out for more articles on forms in Angular!</p>
+
+
+          
+
+
+  <h2 id="demos">Demos</h2>
+  
+  <ul>
+    
+    <li><a href="http://embed.plnkr.co/Xmgx1x/" title="Simple template-driven form" target="_blank">Simple template-driven form</a></li>
+    
+    <li><a href="http://embed.plnkr.co/LLf7Il/" title="ngModelGroup Directive" target="_blank">ngModelGroup Directive</a></li>
+    
+    <li><a href="http://embed.plnkr.co/XgRYoe/" title="ngModel with expressions" target="_blank">ngModel with expressions</a></li>
+    
+  </ul>
+  
+
+
+
+        </div>
+
+        <div class="thtrm-subscriber">
+  <h3>Get updates on new articles and trainings.</h3>
+  <p>Join over 1400 other developers who get our content first.</p>
+  <form action="//thoughtram.us8.list-manage.com/subscribe/post?u=dfbb1507fbced5a20d9dc5698&amp;id=731f22cdca" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" novalidate>
+    <label for="mce-EMAIL"></label>
+    <input type="email" value="" name="EMAIL" placeholder="Your email address..." required>
+    <div style="position: absolute; left: -5000px;"><input type="text" name="b_dfbb1507fbced5a20d9dc5698_731f22cdca" tabindex="-1" value=""></div>
+    <input type="submit" value="Subscribe" name="subscribe" class="thtrm-cta thtrm-cta--small">
+  </form>
+</div>
+
+
+
+        <div class="thtrm-social-links">
+            <!-- Sharingbutton Facebook -->
+            <a class="resp-sharing-button__link" href="https://facebook.com/sharer/sharer.php?u=http%3A%2F%2Fblog.thoughtram.io/angular/2016/03/21/template-driven-forms-in-angular-2.html" target="_blank" aria-label="Share on Facebook">
+              <div class="resp-sharing-button resp-sharing-button--facebook resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M18.768,7.465H14.5V5.56c0-0.896,0.594-1.105,1.012-1.105s2.988,0,2.988,0V0.513L14.171,0.5C10.244,0.5,9.5,3.438,9.5,5.32 v2.145h-3v4h3c0,5.212,0,12,0,12h5c0,0,0-6.85,0-12h3.851L18.768,7.465z"/>
+                    </g>
+                </svg>
+                </div>Share on Facebook</div>
+            </a>
+
+            <!-- Sharingbutton Twitter -->
+            <a class="resp-sharing-button__link" href="https://twitter.com/intent/tweet/?text=Template-driven%20Forms%20in%20Angular&amp;url=http://blog.thoughtram.io/angular/2016/03/21/template-driven-forms-in-angular-2.html" target="_blank" aria-label="Share on Twitter">
+              <div class="resp-sharing-button resp-sharing-button--twitter resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M23.444,4.834c-0.814,0.363-1.5,0.375-2.228,0.016c0.938-0.562,0.981-0.957,1.32-2.019c-0.878,0.521-1.851,0.9-2.886,1.104 C18.823,3.053,17.642,2.5,16.335,2.5c-2.51,0-4.544,2.036-4.544,4.544c0,0.356,0.04,0.703,0.117,1.036 C8.132,7.891,4.783,6.082,2.542,3.332C2.151,4.003,1.927,4.784,1.927,5.617c0,1.577,0.803,2.967,2.021,3.782 C3.203,9.375,2.503,9.171,1.891,8.831C1.89,8.85,1.89,8.868,1.89,8.888c0,2.202,1.566,4.038,3.646,4.456 c-0.666,0.181-1.368,0.209-2.053,0.079c0.579,1.804,2.257,3.118,4.245,3.155C5.783,18.102,3.372,18.737,1,18.459 C3.012,19.748,5.399,20.5,7.966,20.5c8.358,0,12.928-6.924,12.928-12.929c0-0.198-0.003-0.393-0.012-0.588 C21.769,6.343,22.835,5.746,23.444,4.834z"/>
+                    </g>
+                </svg>
+                </div>Share on Twitter</div>
+            </a>
+
+            <!-- Sharingbutton Google+ -->
+            <a class="resp-sharing-button__link" href="https://plus.google.com/share?url=http%3A%2F%2Fblog.thoughtram.io/angular/2016/03/21/template-driven-forms-in-angular-2.html" target="_blank" aria-label="Share on Google+">
+              <div class="resp-sharing-button resp-sharing-button--google resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M11.366,12.928c-0.729-0.516-1.393-1.273-1.404-1.505c0-0.425,0.038-0.627,0.988-1.368 c1.229-0.962,1.906-2.228,1.906-3.564c0-1.212-0.37-2.289-1.001-3.044h0.488c0.102,0,0.2-0.033,0.282-0.091l1.364-0.989 c0.169-0.121,0.24-0.338,0.176-0.536C14.102,1.635,13.918,1.5,13.709,1.5H7.608c-0.667,0-1.345,0.118-2.011,0.347 c-2.225,0.766-3.778,2.66-3.778,4.605c0,2.755,2.134,4.845,4.987,4.91c-0.056,0.22-0.084,0.434-0.084,0.645 c0,0.425,0.108,0.827,0.33,1.216c-0.026,0-0.051,0-0.079,0c-2.72,0-5.175,1.334-6.107,3.32C0.623,17.06,0.5,17.582,0.5,18.098 c0,0.501,0.129,0.984,0.382,1.438c0.585,1.046,1.843,1.861,3.544,2.289c0.877,0.223,1.82,0.335,2.8,0.335 c0.88,0,1.718-0.114,2.494-0.338c2.419-0.702,3.981-2.482,3.981-4.538C13.701,15.312,13.068,14.132,11.366,12.928z M3.66,17.443 c0-1.435,1.823-2.693,3.899-2.693h0.057c0.451,0.005,0.892,0.072,1.309,0.2c0.142,0.098,0.28,0.192,0.412,0.282 c0.962,0.656,1.597,1.088,1.774,1.783c0.041,0.175,0.063,0.35,0.063,0.519c0,1.787-1.333,2.693-3.961,2.693 C5.221,20.225,3.66,19.002,3.66,17.443z M5.551,3.89c0.324-0.371,0.75-0.566,1.227-0.566l0.055,0 c1.349,0.041,2.639,1.543,2.876,3.349c0.133,1.013-0.092,1.964-0.601,2.544C8.782,9.589,8.363,9.783,7.866,9.783H7.865H7.844 c-1.321-0.04-2.639-1.6-2.875-3.405C4.836,5.37,5.049,4.462,5.551,3.89z"/>
+                        <polygon points="23.5,9.5 20.5,9.5 20.5,6.5 18.5,6.5 18.5,9.5 15.5,9.5 15.5,11.5 18.5,11.5 18.5,14.5 20.5,14.5 20.5,11.5  23.5,11.5   "/>
+                    </g>
+                </svg>
+                </div>Share on Google+</div>
+            </a>
+        </div>
+
+        <h3 class="thtrm-section-headline thtrm-section-headline--with-margin">Author</h3>
+        <div class="thtrm-article-author">
+          <span class="thtrm-article-author-avatar"><img src="/images/author-pascal.jpg" alt="Picture of Pascal Precht"></span>
+          <div class="thtrm-article-author-matter">
+            <h4 class="thtrm-article-author-name">Pascal Precht</h4>
+            <p class="thtrm-article-author-text">Pascal is a front-end engineer and a Angular Developer Expert nominated by Google. He created the angular-translate module, is an Angular 2 contributor and also part of the Angular 2 Docs Authoring team.</p>
+            <p>
+              <a class="thtrm-article-author-cta thtrm-article-author-cta-twitter" href="http://twitter.com/PascalPrecht" title="Pascal Precht on Twitter">Twitter</a>
+              <a class="thtrm-article-author-cta" href="http://github.com/PascalPrecht" title="Pascal Precht on GitHub">GitHub</a>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="thtrm-constraint">
+
+        
+        <h4 class="thtrm-section-headline thtrm-section-headline--with-big-margin thtrm-section-headline--centered">Related Posts</h4>
+        <ul class="thtrm-three-column-list thtrm-three-column-list--with-padding">
+        
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angularjs/2015/01/11/exploring-angular-1.3-validators-pipeline.html" title="Validators Pipeline in Angular 1.3">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/fallback.jpeg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Validators Pipeline in Angular 1.3</h3>
+                <p>In this article we discuss a newly introduced feature called custom validators, so we don't have to hijack parsers and...</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2016/10/13/two-way-data-binding-in-angular-2.html" title="Two-way Data Binding in Angular">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/two-way-data-binding-in-angular-2.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Two-way Data Binding in Angular</h3>
+                <p>Two-way data binding was one of the main selling points of Angular. Since version 2.x, we can build directives that...</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2016/07/27/custom-form-controls-in-angular-2.html" title="Custom Form Controls in Angular">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/custom-form-controls-in-angular-2.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Custom Form Controls in Angular</h3>
+                <p>Angular makes it very easy to create custom form controls. Read on to learn how to do it!</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2016/06/22/model-driven-forms-in-angular-2.html" title="Reactive Forms in Angular">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/model-driven-forms-in-angular-2.jpeg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Reactive Forms in Angular</h3>
+                <p>Angular allows us to build forms in a model-driven fashion. In this article we're going to discuss what that looks...</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2016/03/14/custom-validators-in-angular-2.html" title="Custom Validators in Angular">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/custom-validators-bg.jpeg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Custom Validators in Angular</h3>
+                <p>Often, we need to add custom validation capabilities to our application's form. In this article we're going to explore how...</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2017/02/27/three-things-you-didnt-know-about-the-async-pipe.html" title="Three things you didn't know about the AsyncPipe">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/three-things-about-the-async-pipe.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Three things you didn't know about the AsyncPipe</h3>
+                <p>This article explains three lesser known features of the AsyncPipe that help us to write better async code.</p>
+              </div>
+            </a>
+          </li>
+        
+        
+        </ul>
+        
+
+      
+
+      </div>
+    </main>
+    <footer role="contentinfo" class="thtrm-footer thtrm-footer--slim">
+  <div class="thtrm-footer-text">
+    <img class="thtrm-footer-logo" alt="thoughtram brain" src="/images/thoughtram-brain-white.png">
+    <p>This website was created in collaboration with <a href="http://twitter.com/timche_" title="Tim Cheung on Twitter"><strong>Tim Cheung</strong></a> and <a href="http://twitter.com/tim_hartmann_" title="Tim Hartmann on Twitter"><strong>Tim Hartmann</strong></a>.</p>
+    <p ><a href="http://thoughtram.io/code-of-conduct.html" title="Code of Conduct">Code of Conduct</a> &bullet; <a href="http://thoughtram.io/imprint.html" title="Legal Notice">Legal notice</a></p>
+    <p class="thtrm-footer-bottom">&copy; 2014-2017 thoughtram GmbH</p>
+  </div>
+</footer>
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-51360648-2', 'auto');
+ga('send', 'pageview');
+
+var form = document.getElementById('search-form');
+var eventCta = document.getElementById('event-cta');
+
+if (eventCta) {
+
+  eventCta.addEventListener('click', function (event) {
+    event.preventDefault();
+
+    setTimeout(clickLink, 1000);
+
+    function clickLink() {
+      window.location.replace(eventCta.getAttribute('href'));
+    }
+
+    ga('send', 'event', {
+      eventCategory: 'Event Link',
+      eventAction: 'click',
+      eventLabel: eventCta.getAttribute('title'),
+      hitCallback: clickLink
+    });
+  });
+}
+
+if (form) {
+
+  var searchTerm = document.getElementById('search-term');
+
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    var formSubmitted = false;
+
+    setTimeout(submitForm, 1000);
+
+    function submitForm() {
+      if (!formSubmitted) {
+        formSubmitted = true;
+        form.submit();
+      }
+    }
+
+    ga('send', 'event', {
+      eventCategory: 'Search Form',
+      eventAction: 'submit',
+      eventLabel: searchTerm.value,
+      hitCallback: submitForm
+    });
+  });
+}
+</script>
+
+
+
+    <script src="/scripts/stickyfill.js"></script>
+    <script src="/scripts/linkjuice/dist/linkjuice.js"></script>
+    <script>
+    (function (doc, win) {
+
+      linkjuice.init('.thtrm-article', {
+        selector: ['h2', 'h3'],
+        icon: ''
+      });
+
+      if (win.matchMedia && win.matchMedia('(min-width: 1200px)').matches) {
+        var stickyElements = doc.querySelectorAll('.is-sticky');
+
+        for (var i = stickyElements.length - 1; i >= 0; i--) {
+          var el = stickyElements[i];
+
+          if (el.classList.contains('thtrm-toc')) {
+            el.classList.add('thtrm-toc--sticky');
+            el.classList.add('thtrm-toc--faded');
+          } 
+          if (el.classList.contains('thtrm-ad')) {
+            el.classList.add('thtrm-ad--sticky');
+            el.classList.add('thtrm-ad--description');
+          }
+
+          Stickyfill.add(el);
+        }
+      }
+    }(document, window));
+    </script>
+  </body>
+</html>

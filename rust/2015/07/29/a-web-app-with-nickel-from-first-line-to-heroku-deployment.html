@@ -1,0 +1,750 @@
+
+
+
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Learn how to build and deploy a simple web application with Nickel, the web application server for the Rust language.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="thoughtram">
+    <title>A web app with Nickel: From first line to Heroku deployment by thoughtram</title>
+    <meta name="google-site-verification" content="o9eGPEgIETEqYGombq7NiQuBIB_qa6gz1yAL7PxKyK0">
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#4D8799">
+    <link rel="icon" sizes="192x192" href="/images/touch/chrome-touch-icon-192x192.png">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="thoughtram">
+    <link rel="apple-touch-icon" href="/images/touch/apple-touch-icon.png">
+
+    <!-- Tile icon for Win8 (144x144 + tile color) -->
+    <meta name="msapplication-TileImage" content="/images/touch/ms-touch-icon-144x144-precomposed.png">
+    <meta name="msapplication-TileColor" content="#4D8799">
+
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="A web app with Nickel: From first line to Heroku deployment">
+    <meta property="og:description" content="Learn how to build and deploy a simple web application with Nickel, the web application server for the Rust language.">
+    <meta property="og:url" content="http://blog.thoughtram.io/rust/2015/07/29/a-web-app-with-nickel-from-first-line-to-heroku-deployment.html">
+    <meta property="og:site_name" content="Articles by thoughtram">
+    <meta property="og:image" content="http://blog.thoughtram.io">
+    <meta property="og:publisher" content="http://www.facebook.com/thoughtram">
+
+    <meta property="twitter:card" content="summary">
+    <meta property="twitter:title" content="A web app with Nickel: From first line to Heroku deployment">
+    <meta property="twitter:site" content="thoughtram Blog">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css" type="text/css">
+  </head>
+  <body class="sub-site">
+    <!-- Add your site or app content here -->
+
+    <!--[if lt IE 10]>
+        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <header class="thtrm-header" role="banner">
+      <div class="thtrm-header-bar">
+        <div class="thtrm-constraint">
+          <a href="http://thoughtram.io" class="thtrm-header-logo-link" title="thoughtram.io Start Page"><h1 class="thtrm-header-logo">thoughtram</h1></a>
+          <div class="thtrm-header-menu-wrapper">
+            <span role="button" tabindex="0" class="thtrm-header-menu-label">Menu</span>
+            <ul class="thtrm-header-menu">
+              <li><a title="Training" class="thtrm-header-menu-item" href="http://thoughtram.io/training.html">Training</a></li>
+              <li><a title="Code Review" class="thtrm-header-menu-item" href="http://thoughtram.io/code-review.html">Code Review</a></li>
+              <li><a title="Casts" class="thtrm-header-menu-item " href="http://casts.thoughtram.io">Casts</a></li>
+              <li><a title="Blog" class="thtrm-header-menu-item" href="/">Blog</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main role="main" class="thtrm-main">
+    <div class="thtrm-banner" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%), url('/images/banner/fallback.jpeg');">
+        <hgroup class="thtrm-banner-container">
+          <div class="thtrm-constraint thtrm-constraint--slim">
+            <h2 class="thtrm-banner-text">A web app with Nickel: From first line to Heroku deployment</h2>
+            <span>by <a href="http://twitter.com/" title="Christoph Burgdorf on Twitter">Christoph Burgdorf</a> on Jul 29, 2015, last updated on Dec 16, 2016<br>22 minute read</span>
+
+          </div>
+        </hgroup>
+      </div>
+      <div class="thtrm-constraint thtrm-constraint--slim">
+
+        <div class="thtrm-article">
+          <section class="thtrm-ad thtrm-section thtrm-section--is-promo is-sticky">
+  <img width="100" src="/images/angular2-shield-inverse.svg">
+  <h3 class="thtrm-section-headline">Need private training?</h3>
+  <p class="thtrm-section-text">Get customized training for your corporation</p>
+  <a href="mailto:hello@thoughtram.io" title="Request Training Quote" id="event-cta" class="thtrm-layout-divider-cta">Request quote <strong>&rarr;</strong></a>
+</section>
+
+
+          
+
+          <p>Occasionally people ask about <a href="http://nickel.rs">Nickel</a> projects that they can dig into to get a feel of some real world Nickel code. In case you never heard of Nickel, it’s a web application server written in Rust. We thought it’d be nice to write a simple web application with Nickel, deploy it to Heroku and blog about it.</p>
+
+<div class="thtrm-toc is-sticky">
+  <h3 class="no_toc" id="table-of-contents">TABLE OF CONTENTS</h3>
+<ul id="markdown-toc">
+  <li><a href="#defining-the-scope-of-the-application" id="markdown-toc-defining-the-scope-of-the-application">Defining the scope of the application</a></li>
+  <li><a href="#bootstrapping-our-nickel-application" id="markdown-toc-bootstrapping-our-nickel-application">Bootstrapping our Nickel application</a></li>
+  <li><a href="#generating-a-changelog" id="markdown-toc-generating-a-changelog">Generating a changelog</a></li>
+  <li><a href="#working-with-json-data" id="markdown-toc-working-with-json-data">Working with JSON data</a></li>
+  <li><a href="#serving-a-frontend" id="markdown-toc-serving-a-frontend">Serving a frontend</a></li>
+  <li><a href="#deploying-our-application-to-heroku" id="markdown-toc-deploying-our-application-to-heroku">Deploying our application to Heroku</a></li>
+</ul>
+
+</div>
+
+<h2 id="defining-the-scope-of-the-application">Defining the scope of the application</h2>
+
+<p>What’s better than dog fooding your project? Dog fooding two of your projects at once! In case you missed it, with the help of awesome contributors, we created <a href="https://github.com/thoughtram/clog">Clog</a> which is a small tool to generate nice changelogs from semantic Git histories. Clog parses commit messages that follow the Angular commit message conventions which are quite popular among many projects such as <a href="http://github.com/angular/angular">Angular</a>, <a href="https://github.com/angular-translate/angular-translate">angular-translate</a>, <a href="https://github.com/hoodiehq/hoodie-server">Hoodie</a>, <a href="https://github.com/nickel-org/nickel.rs">Nickel</a>, <a href="https://github.com/kbknapp/clap-rs">Clap.rs</a> and many more. Clog started as a fork of the Node.js based <a href="https://github.com/ajoslin/conventional-changelog">conventional changelog</a> project but has since moved on to follow it’s own ideas.</p>
+
+<p>Let’s build a website that lets you generate a nicely formatted changelog for any public repository on GitHub - right from your browser. Let’s keep that as simple as possible and focus on the important parts.</p>
+
+<ul>
+  <li>Use Nickel to build a JSON API that can be consumed from a frontend</li>
+  <li>Make Nickel serve an Angular application as static html so that frontend and backend are nicely decoupled.</li>
+  <li>Deploy the app to Heroku</li>
+</ul>
+
+<h2 id="bootstrapping-our-nickel-application">Bootstrapping our Nickel application</h2>
+
+<p>This article assumes a basic understanding of Rust. If you’ve never built anything with Rust before, the <a href="https://doc.rust-lang.org/stable/book/getting-started.html">Getting Started</a> section of the official Rust book should answer all basic questions.</p>
+
+<p>The easiest way to bootstrap a Rust project is through Cargo: Rust’s official package manager.</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">cargo new clog-website --bin</code></pre></div>
+
+<p>This will create a new directory <code>clog-website</code> with a ready to go “Hello World” app. We can compile and run the application with the following command.</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">cargo run</code></pre></div>
+
+<p>In order to use Nickel we first need to add it as a dependency to our <code>Cargo.toml</code> file. At this point the <code>Cargo.toml</code> should look like this.</p>
+
+<div class="highlight"><pre><code class="language-toml" data-lang="toml"><span class="nn">[package]</span>
+<span class="py">name</span> <span class="p">=</span> <span class="s">"clog-website"</span>
+<span class="py">version</span> <span class="p">=</span> <span class="s">"0.1.0"</span>
+<span class="py">authors</span> <span class="p">=</span> <span class="p">[</span><span class="s">"Your Name &lt;your@name.com&gt;"</span><span class="p">]</span>
+
+<span class="nn">[dependencies]</span>
+<span class="py">nickel</span> <span class="p">=</span> <span class="s">"*"</span></code></pre></div>
+
+<p>Now that we added Nickel as a dependency, let’s try to make our server return a simple “Hello World” for any request. Replace the code in the <code>main.rs</code> file with the following.</p>
+
+<div class="highlight"><pre><code class="language-rust" data-lang="rust"><span class="err">#</span><span class="p">[</span><span class="n">macro_use</span><span class="p">]</span>
+<span class="k">extern</span> <span class="n">crate</span> <span class="n">nickel</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nn">nickel</span><span class="p">::</span><span class="n">Nickel</span><span class="p">;</span>
+
+<span class="k">fn</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="k">mut</span> <span class="n">server</span> <span class="o">=</span> <span class="nn">Nickel</span><span class="p">::</span><span class="nf">new</span><span class="p">();</span>
+    <span class="n">server</span><span class="nf">.get</span><span class="p">(</span><span class="s">"**"</span><span class="p">,</span> <span class="nd">middleware!</span><span class="p">(</span><span class="s">"Hello from Nickel"</span><span class="p">));</span>
+    <span class="n">server</span><span class="nf">.listen</span><span class="p">(</span><span class="s">"127.0.0.1:6767"</span><span class="p">);</span>
+<span class="p">}</span></code></pre></div>
+
+<p>However, when we try to execute our little app with the <code>cargo run</code> command we run into an error.</p>
+
+<div class="highlight"><pre><code class="language-rust" data-lang="rust"><span class="err">$</span> <span class="n">cargo</span> <span class="n">run</span>
+   <span class="n">Compiling</span> <span class="n">clog</span><span class="o">-</span><span class="n">website</span> <span class="n">v0</span><span class="err">.</span><span class="mf">1.0</span> <span class="p">(</span><span class="n">file</span><span class="p">:</span><span class="c">///Users/cburgdorf/Documents/hacking/clog-website)</span>
+<span class="n">src</span><span class="err">/</span><span class="n">main</span><span class="py">.rs</span><span class="p">:</span><span class="mi">9</span><span class="p">:</span><span class="mi">12</span><span class="p">:</span> <span class="mi">9</span><span class="p">:</span><span class="mi">55</span> <span class="n">error</span><span class="p">:</span> <span class="n">no</span> <span class="n">method</span> <span class="n">named</span> <span class="err">`</span><span class="n">get</span><span class="err">`</span> <span class="n">found</span> <span class="k">for</span> <span class="k">type</span> <span class="err">`</span><span class="nn">nickel</span><span class="p">::</span><span class="nn">nickel</span><span class="p">::</span><span class="n">Nickel</span><span class="err">`</span> <span class="n">in</span> <span class="n">the</span> <span class="n">current</span> <span class="n">scope</span>
+<span class="n">src</span><span class="err">/</span><span class="n">main</span><span class="py">.rs</span><span class="p">:</span><span class="mi">9</span>     <span class="n">server</span><span class="nf">.get</span><span class="p">(</span><span class="s">"**"</span><span class="p">,</span> <span class="nd">middleware!</span><span class="p">(</span><span class="s">"Hello from Nickel"</span><span class="p">));</span>
+                         <span class="o">^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+<span class="n">src</span><span class="err">/</span><span class="n">main</span><span class="py">.rs</span><span class="p">:</span><span class="mi">9</span><span class="p">:</span><span class="mi">12</span><span class="p">:</span> <span class="mi">9</span><span class="p">:</span><span class="mi">55</span> <span class="n">help</span><span class="p">:</span> <span class="n">items</span> <span class="n">from</span> <span class="n">traits</span> <span class="n">can</span> <span class="n">only</span> <span class="n">be</span> <span class="n">used</span> <span class="k">if</span> <span class="n">the</span> <span class="k">trait</span> <span class="n">is</span> <span class="n">in</span> <span class="n">scope</span><span class="p">;</span> <span class="n">the</span> <span class="n">following</span> <span class="k">trait</span> <span class="n">is</span> <span class="n">implemented</span> <span class="n">but</span> <span class="n">not</span> <span class="n">in</span> <span class="n">scope</span><span class="p">,</span> <span class="n">perhaps</span> <span class="n">add</span> <span class="n">a</span> <span class="err">`</span><span class="k">use</span><span class="err">`</span> <span class="k">for</span> <span class="n">it</span><span class="p">:</span>
+<span class="n">src</span><span class="err">/</span><span class="n">main</span><span class="py">.rs</span><span class="p">:</span><span class="mi">9</span><span class="p">:</span><span class="mi">12</span><span class="p">:</span> <span class="mi">9</span><span class="p">:</span><span class="mi">55</span> <span class="n">help</span><span class="p">:</span> <span class="n">candidate</span> <span class="err">#</span><span class="mi">1</span><span class="p">:</span> <span class="k">use</span> <span class="err">`</span><span class="nn">nickel</span><span class="p">::</span><span class="nn">router</span><span class="p">::</span><span class="nn">http_router</span><span class="p">::</span><span class="n">HttpRouter</span><span class="err">`</span></code></pre></div>
+
+<p>The reason for that is quite simple. Even though the HTTP Verb handler registration methods such as <code>get</code>, <code>put</code>, <code>post</code> and <code>delete</code> appear to exist directly on the <a href="http://docs.nickel.rs/nickel/struct.Nickel.html"><code>Nickel</code> object</a> that is returned by <code>Nickel::new()</code>, they are in fact methods from the <a href="http://docs.nickel.rs/nickel/router/http_router/trait.HttpRouter.html#method.get"><code>HttpRouter</code> trait</a> which just happens to be <a href="https://github.com/nickel-org/nickel.rs/blob/6fbfbfde2985c5724942835fec95953a3a996b65/src/nickel.rs#L17-L23">implemented</a> for the Nickel facade object.</p>
+
+<p>Traits are an extremely powerful concept of the Rust language but it’s out of the scope of this article to explain them in detail. If you haven’t fully groked them yet, I recommend to head over to the <a href="https://doc.rust-lang.org/stable/book/traits.html">trait chapter</a> of the official Rust book.</p>
+
+<p>Luckily Rust’s compiler is smart enough to give us the right hint here. We need to bring the <code>HttpRouter</code> trait into scope. Since Nickel exposes that trait on it’s top level module we can simply change our import to this.</p>
+
+<div class="highlight"><pre><code class="language-rust" data-lang="rust"><span class="k">use</span> <span class="nn">nickel</span><span class="p">::{</span> <span class="n">Nickel</span><span class="p">,</span> <span class="n">HttpRouter</span> <span class="p">};</span></code></pre></div>
+
+<p>Once we have brought the trait into scope, the methods become available on the Nickel facade object. You may think of them as extension methods.</p>
+
+<p>Great, after we fixed that issue we can run our server with <code>cargo run</code> and point our browser to <code>http://127.0.0.1:6767</code> to finally see the text <code>Hello from Nickel</code>. That wasn’t too hairy, was it?</p>
+
+<h2 id="generating-a-changelog">Generating a changelog</h2>
+
+<p>In order to generate our first changelog we need to do three things.</p>
+
+<ul>
+  <li>Clone the repository that we want to generate the changelog from</li>
+  <li>Generate the changelog with Clog</li>
+  <li>Delete the repository to clean up the file system of the server</li>
+</ul>
+
+<p>In order to achieve the downloading part, create a file called <code>git.rs</code> with the following contents.</p>
+
+<div class="highlight"><pre><code class="language-rust" data-lang="rust"><span class="k">use</span> <span class="nn">std</span><span class="p">::</span><span class="nn">process</span><span class="p">::</span><span class="n">Command</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">std</span><span class="p">::</span><span class="nn">io</span><span class="p">::{</span><span class="n">Error</span><span class="p">,</span> <span class="n">ErrorKind</span><span class="p">};</span>
+
+
+<span class="k">pub</span> <span class="k">fn</span> <span class="nf">clone</span> <span class="p">(</span><span class="n">repo_url</span><span class="p">:</span> <span class="o">&amp;</span><span class="nb">str</span><span class="p">,</span> <span class="n">into_directory</span><span class="p">:</span> <span class="o">&amp;</span><span class="nb">str</span><span class="p">)</span> <span class="k">-&gt;</span> <span class="n">Result</span><span class="o">&lt;</span><span class="nb">String</span><span class="p">,</span> <span class="n">Error</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="n">output</span> <span class="o">=</span> <span class="nd">try!</span><span class="p">(</span><span class="nn">Command</span><span class="p">::</span><span class="nf">new</span><span class="p">(</span><span class="s">"git"</span><span class="p">)</span>
+                    <span class="nf">.arg</span><span class="p">(</span><span class="s">"clone"</span><span class="p">)</span>
+                    <span class="nf">.arg</span><span class="p">(</span><span class="n">repo_url</span><span class="p">)</span>
+                    <span class="nf">.arg</span><span class="p">(</span><span class="n">into_directory</span><span class="p">)</span>
+                    <span class="nf">.output</span><span class="p">());</span>
+
+    <span class="k">match</span> <span class="n">output</span><span class="py">.status</span><span class="nf">.success</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">true</span> <span class="k">=&gt;</span> <span class="nf">Ok</span><span class="p">(</span><span class="nn">String</span><span class="p">::</span><span class="nf">from_utf8_lossy</span><span class="p">(</span><span class="o">&amp;</span><span class="n">output</span><span class="py">.stdout</span><span class="p">)</span><span class="nf">.into_owned</span><span class="p">()),</span>
+        <span class="k">false</span> <span class="k">=&gt;</span> <span class="nf">Err</span><span class="p">(</span><span class="nn">Error</span><span class="p">::</span><span class="nf">new</span><span class="p">(</span><span class="nn">ErrorKind</span><span class="p">::</span><span class="n">Other</span><span class="p">,</span> <span class="nd">format!</span><span class="p">(</span><span class="s">"{}"</span><span class="p">,</span> <span class="nn">String</span><span class="p">::</span><span class="nf">from_utf8_lossy</span><span class="p">(</span><span class="o">&amp;</span><span class="n">output</span><span class="py">.stderr</span><span class="p">))))</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p>We won’t go through the code line by line. It should be pretty clear to understand just by looking at the method signature. It takes an URI to a Git repository and clones it into whatever path was specified with the second parameter. It returns an <code>Result&lt;String, Error&gt;</code> that either carries a <code>String</code> with the message that was send to <code>stdout</code> or an <code>Error</code> that carries a <code>String</code> with the message that was send to <code>stderr</code>.</p>
+
+<p>Before we are going to use that, let’s move on and write the code that will interact with Clog. We create a file called <code>clog_interact.rs</code> with the following contents.</p>
+
+<div class="highlight"><pre><code class="language-rust" data-lang="rust"><span class="k">use</span> <span class="nn">std</span><span class="p">::</span><span class="nn">fs</span><span class="p">::{</span><span class="k">self</span><span class="p">,</span> <span class="n">File</span><span class="p">};</span>
+<span class="k">use</span> <span class="nn">std</span><span class="p">::</span><span class="nn">path</span><span class="p">::</span><span class="n">Path</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">std</span><span class="p">::</span><span class="nn">io</span><span class="p">::{</span><span class="n">Read</span><span class="p">};</span>
+<span class="k">use</span> <span class="nn">clog</span><span class="p">::</span><span class="n">Clog</span><span class="p">;</span>
+
+<span class="k">pub</span> <span class="k">fn</span> <span class="nf">generate_changelog</span> <span class="p">(</span><span class="n">repository</span><span class="p">:</span> <span class="o">&amp;</span><span class="nb">str</span><span class="p">,</span> <span class="n">repo_url</span><span class="p">:</span> <span class="o">&amp;</span><span class="nb">str</span><span class="p">)</span> <span class="k">-&gt;</span> <span class="nb">String</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="k">mut</span> <span class="n">clog</span> <span class="o">=</span> <span class="nn">Clog</span><span class="p">::</span><span class="nf">with_dir</span><span class="p">(</span><span class="n">repository</span><span class="p">)</span><span class="nf">.unwrap_or_else</span><span class="p">(|</span><span class="n">e</span><span class="p">|</span> <span class="p">{</span>
+        <span class="nn">fs</span><span class="p">::</span><span class="nf">remove_dir_all</span><span class="p">(</span><span class="n">repository</span><span class="p">)</span><span class="nf">.ok</span><span class="p">();</span>
+        <span class="nd">panic!</span><span class="p">(</span><span class="s">"Failed to clone repository: {}"</span><span class="p">,</span> <span class="n">e</span><span class="p">);</span>
+    <span class="p">});</span>
+    <span class="k">let</span> <span class="n">changelog_file_name</span> <span class="o">=</span> <span class="nd">format!</span><span class="p">(</span><span class="s">"changelog_{}.md"</span><span class="p">,</span> <span class="n">repository</span><span class="p">);</span>
+    <span class="n">clog</span><span class="nf">.repository</span><span class="p">(</span><span class="n">repo_url</span><span class="p">);</span>
+    <span class="n">clog</span><span class="nf">.write_changelog_to</span><span class="p">(</span><span class="nn">Path</span><span class="p">::</span><span class="nf">new</span><span class="p">(</span><span class="n">repository</span><span class="p">)</span><span class="nf">.join</span><span class="p">(</span><span class="o">&amp;</span><span class="n">changelog_file_name</span><span class="p">));</span>
+
+    <span class="k">let</span> <span class="k">mut</span> <span class="n">contents</span> <span class="o">=</span> <span class="nn">String</span><span class="p">::</span><span class="nf">new</span><span class="p">();</span>
+
+    <span class="nn">File</span><span class="p">::</span><span class="nf">open</span><span class="p">(</span><span class="o">&amp;</span><span class="nn">Path</span><span class="p">::</span><span class="nf">new</span><span class="p">(</span><span class="n">repository</span><span class="p">)</span><span class="nf">.join</span><span class="p">(</span><span class="o">&amp;</span><span class="n">changelog_file_name</span><span class="p">))</span>
+        <span class="nf">.map</span><span class="p">(|</span><span class="k">mut</span> <span class="n">f</span><span class="p">|</span> <span class="n">f</span><span class="nf">.read_to_string</span><span class="p">(</span><span class="o">&amp;</span><span class="k">mut</span> <span class="n">contents</span><span class="p">)</span><span class="nf">.ok</span><span class="p">())</span><span class="nf">.ok</span><span class="p">();</span>
+
+    <span class="nn">fs</span><span class="p">::</span><span class="nf">remove_dir_all</span><span class="p">(</span><span class="n">repository</span><span class="p">)</span><span class="nf">.ok</span><span class="p">();</span>
+
+    <span class="n">contents</span>
+<span class="p">}</span></code></pre></div>
+
+<p>This method takes a <code>&amp;str</code> parameter carrying the path to a local git repository and the GitHub url of that repository. Clog needs to know the GitHub url in order to generate links to issues. The method returns a <code>String</code> carrying the generated markdown changelog. The method also takes care of deleting the repository as soon as the changelog was generated.</p>
+
+<p>We now have the basic building blocks to generate our first changelog. Let’s move on and do exactly that! We change the <code>main.rs</code> file to look like this.</p>
+
+<div class="highlight"><pre><code class="language-rust" data-lang="rust"><span class="err">#</span><span class="p">[</span><span class="n">macro_use</span><span class="p">]</span>
+<span class="k">extern</span> <span class="n">crate</span> <span class="n">nickel</span><span class="p">;</span>
+<span class="k">extern</span> <span class="n">crate</span> <span class="n">clog</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nn">nickel</span><span class="p">::{</span> <span class="n">Nickel</span><span class="p">,</span> <span class="n">HttpRouter</span> <span class="p">};</span>
+
+<span class="k">mod</span> <span class="n">git</span><span class="p">;</span>
+<span class="k">mod</span> <span class="n">clog_interop</span><span class="p">;</span>
+
+<span class="k">fn</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="k">mut</span> <span class="n">server</span> <span class="o">=</span> <span class="nn">Nickel</span><span class="p">::</span><span class="nf">new</span><span class="p">();</span>
+
+    <span class="k">let</span> <span class="n">repo_name</span> <span class="o">=</span> <span class="s">"some-unique-id"</span><span class="p">;</span>
+    <span class="k">let</span> <span class="n">repo_uri</span> <span class="o">=</span> <span class="s">"https://github.com/angular/angular"</span><span class="p">;</span>
+
+    <span class="nn">git</span><span class="p">::</span><span class="nf">clone</span><span class="p">(</span><span class="n">repo_uri</span><span class="p">,</span> <span class="n">repo_name</span><span class="p">)</span><span class="nf">.ok</span><span class="p">();</span>
+
+    <span class="k">let</span> <span class="n">changelog</span> <span class="o">=</span> <span class="nn">clog_interop</span><span class="p">::</span><span class="nf">generate_changelog</span><span class="p">(</span><span class="n">repo_name</span><span class="p">,</span> <span class="n">repo_uri</span><span class="p">);</span>
+
+    <span class="n">server</span><span class="nf">.get</span><span class="p">(</span><span class="s">"**"</span><span class="p">,</span> <span class="nd">middleware!</span><span class="p">(</span><span class="o">&amp;</span><span class="n">changelog</span> <span class="k">as</span> <span class="o">&amp;</span><span class="nb">str</span><span class="p">));</span>
+    <span class="n">server</span><span class="nf">.listen</span><span class="p">(</span><span class="s">"127.0.0.1:6767"</span><span class="p">);</span>
+<span class="p">}</span></code></pre></div>
+
+<p>Let’s shed some light on the code. In order to use Clog we first need to add it to our <code>Cargo.toml</code> file as we did before with Nickel. Then add an <code>extern crate clog;</code> statement. We also need to add <code>mod git;</code> and <code>mod clog_interop;</code> in order to have the compiler include those modules. Otherwise it would be just two Rust files that happen to be placed in our project directory.</p>
+
+<p>The rest should be pretty straight forward. We hardcoded the <code>repo_uri</code> to fetch the <a href="github.com/angular/angular">Angular</a> repository and clone it into a local folder called <code>some-unique-id</code>. We probably have some work here down the road to get that production ready.</p>
+
+<p>The most interesting part is the <code>&amp;changelog as &amp;str</code> for the <code>middleware!</code> macro to return on every request.</p>
+
+<p>This is a common source of confusion for newcomers but Ryman from the Nickel team did a great job to explain it <a href="https://github.com/nickel-org/nickel.rs/issues/241#issuecomment-122476624">here</a>.</p>
+
+<p>The gist is that the handler gets called again and again for every request hence you can’t <em>move</em> the <code>String</code> since it could only be moved once.</p>
+
+<p>If we start our server again with <code>cargo run</code> and open up the website in the browser we should see something like this.</p>
+
+<p><img src="/assets/raw_clog_output.png" alt="Raw Clog Output" /></p>
+
+<p>Hooray! That’s a markdown formatted changelog of the Angular project.</p>
+
+<h2 id="working-with-json-data">Working with JSON data</h2>
+
+<p>We now have our server to clone a repository, generate a markdown changelog and return it to the browser as is. That’s all nice so far. In order to create something slightly nicer and more flexible we need to build a proper JSON API that can be consumed from a frontend.</p>
+
+<p>Let’s sketch out what the JSON request and response objects may look like.</p>
+
+<p><strong>Request Object</strong></p>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="p">{</span>
+    <span class="s2">"respository"</span><span class="p">:</span> <span class="s2">"https://github.com/angular/angular"</span>
+<span class="p">}</span></code></pre></div>
+
+<p>We don’t need anything apart from the <code>repository</code> itself so far. However, we may add things like <code>version_name</code> or <code>subtitle</code> later on to expose other Clog features to the frontend.</p>
+
+<p><strong>Response Object</strong></p>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="p">{</span>
+    <span class="s2">"changelog"</span><span class="p">:</span> <span class="s2">"the formatted markdown string"</span><span class="p">,</span>
+    <span class="s2">"error"</span><span class="p">:</span> <span class="s2">"foo"</span>
+<span class="p">}</span></code></pre></div>
+
+<p>Let’s keep the response simple as well. There is nothing much we need apart from the changelog itself and an optional error message in case something didn’t play out well.</p>
+
+<p>In order to accept and return such JSON objects we first need to create new structs. Let’s call them <code>ClogConfig</code> and <code>ClogResult</code> and create the files <code>clog_config.rs</code> and <code>clog_result.rs</code> respectively.</p>
+
+<p><strong>clog_config.rs</strong></p>
+
+<div class="highlight"><pre><code class="language-rust" data-lang="rust"><span class="err">#</span><span class="p">[</span><span class="nf">derive</span><span class="p">(</span><span class="n">RustcDecodable</span><span class="p">,</span> <span class="n">RustcEncodable</span><span class="p">)]</span>
+<span class="k">pub</span> <span class="k">struct</span> <span class="n">ClogConfig</span> <span class="p">{</span>
+    <span class="k">pub</span> <span class="n">repository</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span>
+<span class="p">}</span></code></pre></div>
+
+<p><strong>clog_result.rs</strong></p>
+
+<div class="highlight"><pre><code class="language-rust" data-lang="rust"><span class="err">#</span><span class="p">[</span><span class="nf">derive</span><span class="p">(</span><span class="n">RustcDecodable</span><span class="p">,</span> <span class="n">RustcEncodable</span><span class="p">)]</span>
+<span class="k">pub</span> <span class="k">struct</span> <span class="n">ClogResult</span> <span class="p">{</span>
+    <span class="k">pub</span> <span class="n">changelog</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span>
+    <span class="k">pub</span> <span class="n">error</span><span class="p">:</span> <span class="nb">String</span>
+<span class="p">}</span></code></pre></div>
+
+<p>In order to avoid manual JSON parsing and formatting code we can have Rust automatically implement the <code>RustcDecodable</code> and <code>RustcEncodable</code> traits for us.</p>
+
+<p>With those two structs in place let’s write a <code>POST</code> handler function that can accept and return those JSON structures.</p>
+
+<div class="highlight"><pre><code class="language-rust" data-lang="rust"><span class="n">server</span><span class="nf">.post</span><span class="p">(</span><span class="s">"/generate"</span><span class="p">,</span> <span class="nd">middleware!</span> <span class="p">{</span> <span class="p">|</span><span class="n">request</span><span class="p">,</span> <span class="n">response</span><span class="p">|</span>
+
+    <span class="k">let</span> <span class="n">clog_config</span> <span class="o">=</span> <span class="n">request</span><span class="py">.json_as</span><span class="p">::</span><span class="o">&lt;</span><span class="n">ClogConfig</span><span class="o">&gt;</span><span class="p">()</span><span class="nf">.unwrap</span><span class="p">();</span>
+
+    <span class="k">let</span> <span class="n">result</span> <span class="o">=</span> <span class="k">if</span> <span class="k">let</span> <span class="nf">Err</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="nn">git</span><span class="p">::</span><span class="nf">clone</span><span class="p">(</span><span class="o">&amp;</span><span class="n">clog_config</span><span class="py">.repository</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">repo_name</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">ClogResult</span> <span class="p">{</span>
+            <span class="n">changelog</span><span class="p">:</span> <span class="s">""</span><span class="nf">.to_owned</span><span class="p">(),</span>
+            <span class="n">error</span><span class="p">:</span> <span class="n">err</span><span class="nf">.description</span><span class="p">()</span><span class="nf">.to_owned</span><span class="p">(),</span>
+        <span class="p">}</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="n">changelog</span> <span class="o">=</span> <span class="nn">clog_interop</span><span class="p">::</span><span class="nf">generate_changelog</span><span class="p">(</span><span class="o">&amp;</span><span class="n">repo_name</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">clog_config</span><span class="py">.repository</span><span class="p">);</span>
+
+        <span class="n">ClogResult</span> <span class="p">{</span>
+            <span class="n">changelog</span><span class="p">:</span> <span class="n">changelog</span><span class="p">,</span>
+            <span class="n">error</span><span class="p">:</span> <span class="s">""</span><span class="nf">.to_owned</span><span class="p">()</span>
+        <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="nn">json</span><span class="p">::</span><span class="nf">encode</span><span class="p">(</span><span class="o">&amp;</span><span class="n">result</span><span class="p">)</span><span class="nf">.unwrap</span><span class="p">()</span>
+<span class="p">});</span></code></pre></div>
+
+<p>Let’s take a closer look at the code. First, we use <code>server.post</code> to register a handler that answers <code>POST</code> requests to the <code>/generate</code> endpoint. The <code>middleware</code> macro that we previoulsy used with a simple string is now being used in it’s block syntax form and also gives us access to the <code>request</code> and <code>response</code> objects that we’ll need to cover all aspects of the handler.</p>
+
+<p>Nickel supports parsing JSON bodies out of the box with it’s <code>json_as</code> method. The catch is that - just as before with the <code>HttpRouter</code> - we need to bring a special trait into scope to use that functionality. But let’s not get distracted by that for now, we’ll take a look at all the needed imports in a moment.</p>
+
+<p>After we’ve parsed the JSON into our <code>clog_config</code> variable which now holds an instance of a <code>ClogConfig</code>, we can move on and try to clone the given repository. Now that we don’t hardcode the repository anymore we need to plan for typos or other reasons why cloning of a repository may fail. If cloning fails, we simply set <code>changelog</code> to an empty string and <code>error</code> to whatever error message was returned.</p>
+
+<p>Otherwise we generate the changelog as before and set <code>changelog</code> and <code>error</code> accordingly. Notice that in Rust even if/else constructs work expression-based so that we can write the code in a way that is more concise and puts the <code>let result =</code> right before the <code>if</code>.</p>
+
+<p>Last but not least we need to use <code>json::encode</code> to transform our <code>ClogResult</code> into it’s JSON representation before we return it to the caller.</p>
+
+<p>That was a bunch of new code and it actually leaves out an important part: we had to adjust our imports and even the <code>Cargo.toml</code> to adjust for new dependencies.</p>
+
+<div class="highlight"><pre><code class="language-rust" data-lang="rust"><span class="err">#</span><span class="p">[</span><span class="n">macro_use</span><span class="p">]</span>
+<span class="k">extern</span> <span class="n">crate</span> <span class="n">nickel</span><span class="p">;</span>
+<span class="k">extern</span> <span class="n">crate</span> <span class="n">clog</span><span class="p">;</span>
+<span class="k">extern</span> <span class="n">crate</span> <span class="n">rustc_serialize</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nn">nickel</span><span class="p">::{</span> <span class="n">Nickel</span><span class="p">,</span> <span class="n">JsonBody</span><span class="p">,</span> <span class="n">HttpRouter</span> <span class="p">};</span>
+<span class="k">use</span> <span class="nn">clog_config</span><span class="p">::</span><span class="n">ClogConfig</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">clog_result</span><span class="p">::</span><span class="n">ClogResult</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">rustc_serialize</span><span class="p">::</span><span class="n">json</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">std</span><span class="p">::</span><span class="nn">error</span><span class="p">::</span><span class="n">Error</span><span class="p">;</span>
+
+<span class="k">mod</span> <span class="n">git</span><span class="p">;</span>
+<span class="k">mod</span> <span class="n">clog_interop</span><span class="p">;</span>
+<span class="k">mod</span> <span class="n">clog_config</span><span class="p">;</span>
+<span class="k">mod</span> <span class="n">clog_result</span><span class="p">;</span></code></pre></div>
+
+<p>The biggest suprise here may be that JSON support is currently not baked into the standard library but instead needs to be pulled in via the <code>rustc-serialize</code> crate. Another catch here is that in the <code>Cargo.toml</code> one has to add the crate as <code>rustc-serialize = "*"</code> (hyphenated) whereas in Rust code underscores are being used.</p>
+
+<p>Great! We are almost there. We can already use <code>curl</code> to try out our API.</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">curl <span class="s1">'http://127.0.0.1:6767/generate'</span> -H <span class="s1">'Cache-Control: no-cache'</span> -H <span class="s1">'Content-Type: application/json;charset=UTF-8'</span> --data-binary <span class="s1">$'{</span><span class="se">\n</span><span class="s1">  "repository": "https://github.com/thoughtram/clog"</span><span class="se">\n</span><span class="s1">}'</span> --compressed</code></pre></div>
+
+<p>There’s still one big flaw though. We are still cloning into a directory called <code>some-unique-id</code>. For every request. This will break apart as soon as we have two simultanous requests to our API. Let’s change the code to actually use real unique names for the directories that we clone into. And again, there’s a crate for that. It’s name is <code>uuid</code>.</p>
+
+<p>With that crate in place, the fix is as easy as setting <code>repo_name</code> from <em>inside</em> of our handler to a unique string.</p>
+
+<div class="highlight"><pre><code class="language-rust" data-lang="rust"><span class="k">let</span> <span class="n">repo_name</span> <span class="o">=</span> <span class="nn">Uuid</span><span class="p">::</span><span class="nf">new_v4</span><span class="p">()</span><span class="nf">.to_string</span><span class="p">();</span></code></pre></div>
+
+<p>We’ll leave out the changes to the imports this time. If you have trouble figuring them out, feel free to jump to the final solution.</p>
+
+<p>With this change in place our API is pretty much ready to use. We can improve ergonomics a little further with a parser for the repository name so that one doesn’t have to type out the entire URL of the repo. This will be in the <a href="https://github.com/thoughtram/demo-clog-website/blob/78121ab93f541700d01406be40d092e8925d739d/src/main.rs">final solution</a> but I’m not going to cover it here, it’s a very simple step after all.</p>
+
+<h2 id="serving-a-frontend">Serving a frontend</h2>
+
+<p>Now that we have our API in place, we just need a simple frontend to serve as a basic use case. If we would aim for a proper scalable solution, we’d most likely not serve the frontend from the same server that serves the API. For the purpose of this blog post and to show off Nickels features, we will just keep the entire project together.</p>
+
+<p>We won’t cover the frontend part in the same depth as we did for the backend. You can simply jump to the <a href="https://github.com/thoughtram/demo-clog-website">repository</a> on GitHub that contains the entire code that was written for this post.</p>
+
+<p>Let’s just assume that we are building a simple web app with a text input for the user to enter the URL to a repository on GitHub and a button to request the changelog from the API that we built.</p>
+
+<p>In order to serve the frontend we will just create a directory called <code>assets</code> with subdirectories for <code>css</code>, <code>js</code> and <code>templates</code>. We will place an <code>index.html</code> in the templates folder and have that one include JavaScript and CSS files from the <code>js</code> and <code>css</code> directories respectively.</p>
+
+<p>In order to serve the frontend we have to tell Nickel to just statically server those files.</p>
+
+<div class="highlight"><pre><code class="language-rust" data-lang="rust"><span class="n">server</span><span class="nf">.utilize</span><span class="p">(</span><span class="nn">StaticFilesHandler</span><span class="p">::</span><span class="nf">new</span><span class="p">(</span><span class="s">"assets"</span><span class="p">));</span>
+<span class="n">server</span><span class="nf">.utilize</span><span class="p">(</span><span class="nn">StaticFilesHandler</span><span class="p">::</span><span class="nf">new</span><span class="p">(</span><span class="s">"assets/templates"</span><span class="p">));</span></code></pre></div>
+
+<p>We will create two individual mounts for <code>assets</code> and <code>assets/templates</code> so that we have the <code>index.html</code> exposed on the root level but the JavaScript and CSS exposed through it’s subfolders.</p>
+
+<p><img src="/assets/clog_final_site.png" alt="Rendered Clog Site" /></p>
+
+<p>Voilà! We have a real working website.</p>
+
+<h2 id="deploying-our-application-to-heroku">Deploying our application to Heroku</h2>
+
+<p>Now that we have our app running just fine on our development machine wouldn’t it be nice to actually ship it for the world to see? Let’s do exactly that and host it on Heroku. Hosting a Nickel app on Heroku is quite easy these days. If you’ve never worked with Heroku before, you first need to register at their website and download the <a href="https://toolbelt.heroku.com/">Heroku CLI tool</a> that we will use for the next steps.</p>
+
+<p>Once you have the Heroku CLI installed and logged in, you can simply create the app endpoint from your existing repository through the following command.</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">heroku create demo-clog-website --buildpack https://github.com/emk/heroku-buildpack-rust.gi</code></pre></div>
+
+<p>Notice that the first parameter of the <code>heroku create</code> command will be the name that Heroku will use as a subdomain to serve your site. So in this case it’s <code>http://demo-clog-website.herokuapp.com</code>.</p>
+
+<p>This will also add a new Git remote called <code>heroku</code> to your repository. Deploying the site is as simple as running <code>git push heroku master</code>.</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>git push heroku master
+Counting objects: 28, <span class="k">done</span>.
+Delta compression using up to 8 threads.
+Compressing objects: 100% <span class="o">(</span>24/24<span class="o">)</span>, <span class="k">done</span>.
+Writing objects: 100% <span class="o">(</span>28/28<span class="o">)</span>, 5.73 KiB | 0 bytes/s, <span class="k">done</span>.
+Total 28 <span class="o">(</span>delta 5<span class="o">)</span>, reused 0 <span class="o">(</span>delta 0<span class="o">)</span>
+remote: Compressing <span class="nb">source </span>files... <span class="k">done</span>.
+remote: Building <span class="nb">source</span>:
+remote: 
+remote: -----&gt; Fetching custom git buildpack... <span class="k">done
+</span>remote: 
+remote:  !     Push rejected, no Cedar-supported app detected
+remote: HINT: This occurs when Heroku cannot detect the buildpack
+remote:       to use <span class="k">for </span>this application automatically.
+remote: See https://devcenter.heroku.com/articles/buildpacks
+remote: 
+remote: Verifying deploy....
+remote: 
+remote: !   Push rejected to demo-clog-website.
+remote: 
+To https://git.heroku.com/demo-clog-website.git
+ ! <span class="o">[</span>remote rejected] master -&gt; master <span class="o">(</span>pre-receive hook declined<span class="o">)</span>
+error: failed to push some refs to <span class="s1">'https://git.heroku.com/demo-clog-website.git'</span></code></pre></div>
+
+<p>Awww snap! We seem to be missing something as Heroku rejected to build the app. Heroku is capable of hosting apps with all kind of different tech stacks. The way that works is through special buildpacks that configure the server. When we created our app we set the buildpack to an unofficial (yet, usuable!) buildpack for Rust. But we are still missing two important files to give Heroku the right hints how to treat our program.</p>
+
+<p><strong>RustConfig</strong></p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">VERSION</span><span class="o">=</span><span class="s2">"1.1.0"</span></code></pre></div>
+
+<p>The <code>RustConfig</code> file tells our buildpack which version of the Rust compiler we want to build our app against.</p>
+
+<p><strong>Procfile</strong></p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">web: ./target/release/clog-website</code></pre></div>
+
+<p>The <code>Procfile</code> tells Heroku which command to invoke to start the process. Since <code>Cargo</code> puts the executable at <code>target/release/our-app-name</code> we have to set this up accordingly.</p>
+
+<p>After we created and committed both files to our repository we deploy our site again with <code>git push heroku master</code>. The deployment should run just fine so let’s check the live site.</p>
+
+<p><img src="/assets/heroku_application_error.png" alt="Heroku Application Error" /></p>
+
+<p>The live site just yields a generic Heroku error page, so let’s dig into the output of the <code>heroku logs</code> command.</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">heroku[web.1]: Starting process with <span class="nb">command</span> <span class="sb">`</span>./target/release/clog-website<span class="sb">`</span>
+app[web.1]: Listening on http://127.0.0.1:6767
+app[web.1]: Ctrl-C to shutdown server
+heroku[web.1]: Error R10 <span class="o">(</span>Boot timeout<span class="o">)</span> -&gt; Web process failed to <span class="nb">bind </span>to <span class="nv">$PORT</span> within 60 seconds of launch
+heroku[web.1]: Stopping process with SIGKILL
+heroku[web.1]: State changed from starting to crashed
+heroku[web.1]: State changed from crashed to starting
+heroku[web.1]: Process exited with status 137</code></pre></div>
+
+<p>From the logs we can clearly see that the server started successfuly but was shut down after a 60 seconds timeout because it failed to bind to <code>$PORT</code>.</p>
+
+<p>Heroku expects us to bind to a random port number that they assign to the <code>PORT</code> environment variable. However our server code is currently hardcoded to use port <code>6767</code>.</p>
+
+<p>We can fix that quite easily by reading from the <code>PORT</code> enviroment variable and defaulting to <code>6767</code> if it doesn’t exist.</p>
+
+<div class="highlight"><pre><code class="language-rust" data-lang="rust"><span class="k">fn</span> <span class="nf">get_server_port</span><span class="p">()</span> <span class="k">-&gt;</span> <span class="nb">u16</span> <span class="p">{</span>
+    <span class="nn">env</span><span class="p">::</span><span class="nf">var</span><span class="p">(</span><span class="s">"PORT"</span><span class="p">)</span><span class="nf">.unwrap_or</span><span class="p">(</span><span class="s">"6767"</span><span class="nf">.to_string</span><span class="p">())</span><span class="nf">.parse</span><span class="p">()</span><span class="nf">.unwrap</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="n">server</span><span class="nf">.listen</span><span class="p">((</span><span class="s">"0.0.0.0"</span><span class="p">,</span> <span class="nf">get_server_port</span><span class="p">()));</span></code></pre></div>
+
+<p>After we fixed that issue our live site runs just fine!</p>
+
+<p><img src="/assets/final_hosted_clog_site.png" alt="Running Live Site" /></p>
+
+<p>You may just head over to <a href="http://demo-clog-website.herokuapp.com">demo-clog-website.herokuapp.com</a> and give it a try. It also contains the mentioned URL parser improvement so that one can enter repositories in the form of <code>user/repo</code>. You can find the entire code of this demo project <a href="https://github.com/thoughtram/demo-clog-website">here on Github</a>.</p>
+
+<p>Now, wouldn’t that be a nice start for your first Nickel project?</p>
+
+
+
+          
+
+
+
+
+        </div>
+
+        <div class="thtrm-subscriber">
+  <h3>Get updates on new articles and trainings.</h3>
+  <p>Join over 1400 other developers who get our content first.</p>
+  <form action="//thoughtram.us8.list-manage.com/subscribe/post?u=dfbb1507fbced5a20d9dc5698&amp;id=731f22cdca" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" novalidate>
+    <label for="mce-EMAIL"></label>
+    <input type="email" value="" name="EMAIL" placeholder="Your email address..." required>
+    <div style="position: absolute; left: -5000px;"><input type="text" name="b_dfbb1507fbced5a20d9dc5698_731f22cdca" tabindex="-1" value=""></div>
+    <input type="submit" value="Subscribe" name="subscribe" class="thtrm-cta thtrm-cta--small">
+  </form>
+</div>
+
+
+
+        <div class="thtrm-social-links">
+            <!-- Sharingbutton Facebook -->
+            <a class="resp-sharing-button__link" href="https://facebook.com/sharer/sharer.php?u=http%3A%2F%2Fblog.thoughtram.io/rust/2015/07/29/a-web-app-with-nickel-from-first-line-to-heroku-deployment.html" target="_blank" aria-label="Share on Facebook">
+              <div class="resp-sharing-button resp-sharing-button--facebook resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M18.768,7.465H14.5V5.56c0-0.896,0.594-1.105,1.012-1.105s2.988,0,2.988,0V0.513L14.171,0.5C10.244,0.5,9.5,3.438,9.5,5.32 v2.145h-3v4h3c0,5.212,0,12,0,12h5c0,0,0-6.85,0-12h3.851L18.768,7.465z"/>
+                    </g>
+                </svg>
+                </div>Share on Facebook</div>
+            </a>
+
+            <!-- Sharingbutton Twitter -->
+            <a class="resp-sharing-button__link" href="https://twitter.com/intent/tweet/?text=A%20web%20app%20with%20Nickel:%20From%20first%20line%20to%20Heroku%20deployment&amp;url=http://blog.thoughtram.io/rust/2015/07/29/a-web-app-with-nickel-from-first-line-to-heroku-deployment.html" target="_blank" aria-label="Share on Twitter">
+              <div class="resp-sharing-button resp-sharing-button--twitter resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M23.444,4.834c-0.814,0.363-1.5,0.375-2.228,0.016c0.938-0.562,0.981-0.957,1.32-2.019c-0.878,0.521-1.851,0.9-2.886,1.104 C18.823,3.053,17.642,2.5,16.335,2.5c-2.51,0-4.544,2.036-4.544,4.544c0,0.356,0.04,0.703,0.117,1.036 C8.132,7.891,4.783,6.082,2.542,3.332C2.151,4.003,1.927,4.784,1.927,5.617c0,1.577,0.803,2.967,2.021,3.782 C3.203,9.375,2.503,9.171,1.891,8.831C1.89,8.85,1.89,8.868,1.89,8.888c0,2.202,1.566,4.038,3.646,4.456 c-0.666,0.181-1.368,0.209-2.053,0.079c0.579,1.804,2.257,3.118,4.245,3.155C5.783,18.102,3.372,18.737,1,18.459 C3.012,19.748,5.399,20.5,7.966,20.5c8.358,0,12.928-6.924,12.928-12.929c0-0.198-0.003-0.393-0.012-0.588 C21.769,6.343,22.835,5.746,23.444,4.834z"/>
+                    </g>
+                </svg>
+                </div>Share on Twitter</div>
+            </a>
+
+            <!-- Sharingbutton Google+ -->
+            <a class="resp-sharing-button__link" href="https://plus.google.com/share?url=http%3A%2F%2Fblog.thoughtram.io/rust/2015/07/29/a-web-app-with-nickel-from-first-line-to-heroku-deployment.html" target="_blank" aria-label="Share on Google+">
+              <div class="resp-sharing-button resp-sharing-button--google resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M11.366,12.928c-0.729-0.516-1.393-1.273-1.404-1.505c0-0.425,0.038-0.627,0.988-1.368 c1.229-0.962,1.906-2.228,1.906-3.564c0-1.212-0.37-2.289-1.001-3.044h0.488c0.102,0,0.2-0.033,0.282-0.091l1.364-0.989 c0.169-0.121,0.24-0.338,0.176-0.536C14.102,1.635,13.918,1.5,13.709,1.5H7.608c-0.667,0-1.345,0.118-2.011,0.347 c-2.225,0.766-3.778,2.66-3.778,4.605c0,2.755,2.134,4.845,4.987,4.91c-0.056,0.22-0.084,0.434-0.084,0.645 c0,0.425,0.108,0.827,0.33,1.216c-0.026,0-0.051,0-0.079,0c-2.72,0-5.175,1.334-6.107,3.32C0.623,17.06,0.5,17.582,0.5,18.098 c0,0.501,0.129,0.984,0.382,1.438c0.585,1.046,1.843,1.861,3.544,2.289c0.877,0.223,1.82,0.335,2.8,0.335 c0.88,0,1.718-0.114,2.494-0.338c2.419-0.702,3.981-2.482,3.981-4.538C13.701,15.312,13.068,14.132,11.366,12.928z M3.66,17.443 c0-1.435,1.823-2.693,3.899-2.693h0.057c0.451,0.005,0.892,0.072,1.309,0.2c0.142,0.098,0.28,0.192,0.412,0.282 c0.962,0.656,1.597,1.088,1.774,1.783c0.041,0.175,0.063,0.35,0.063,0.519c0,1.787-1.333,2.693-3.961,2.693 C5.221,20.225,3.66,19.002,3.66,17.443z M5.551,3.89c0.324-0.371,0.75-0.566,1.227-0.566l0.055,0 c1.349,0.041,2.639,1.543,2.876,3.349c0.133,1.013-0.092,1.964-0.601,2.544C8.782,9.589,8.363,9.783,7.866,9.783H7.865H7.844 c-1.321-0.04-2.639-1.6-2.875-3.405C4.836,5.37,5.049,4.462,5.551,3.89z"/>
+                        <polygon points="23.5,9.5 20.5,9.5 20.5,6.5 18.5,6.5 18.5,9.5 15.5,9.5 15.5,11.5 18.5,11.5 18.5,14.5 20.5,14.5 20.5,11.5  23.5,11.5   "/>
+                    </g>
+                </svg>
+                </div>Share on Google+</div>
+            </a>
+        </div>
+
+        <h3 class="thtrm-section-headline thtrm-section-headline--with-margin">Author</h3>
+        <div class="thtrm-article-author">
+          <span class="thtrm-article-author-avatar"><img src="/images/author-christoph.jpg" alt="Picture of Christoph Burgdorf"></span>
+          <div class="thtrm-article-author-matter">
+            <h4 class="thtrm-article-author-name">Christoph Burgdorf</h4>
+            <p class="thtrm-article-author-text">Christoph began programming at the age of 10. He is the creator of the Nickel.rs web framework and a contributor of the AngularJS project. Christoph is also part of the Angular 2 Docs Authoring team.</p>
+            <p>
+              <a class="thtrm-article-author-cta thtrm-article-author-cta-twitter" href="http://twitter.com/cburgdorf" title="Christoph Burgdorf on Twitter">Twitter</a>
+              <a class="thtrm-article-author-cta" href="http://github.com/cburgdorf" title="Christoph Burgdorf on GitHub">GitHub</a>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="thtrm-constraint">
+
+        
+        <h4 class="thtrm-section-headline thtrm-section-headline--with-big-margin thtrm-section-headline--centered">Related Posts</h4>
+        <ul class="thtrm-three-column-list thtrm-three-column-list--with-padding">
+        
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/rust/2015/06/17/anouncing-hanovers-second-rust-meetup.html" title="Anouncing Hanover's second Rust meetup">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/fallback.jpeg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Anouncing Hanover's second Rust meetup</h3>
+                <p>It's been roughly a year ago that we organized the very first Rust meetup Hanover. We'll run a second one,...</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/rust/2015/05/11/rusts-ownership-model-for-javascript-developers.html" title="Rust's Ownership model for JavaScript developers">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/fallback.jpeg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Rust's Ownership model for JavaScript developers</h3>
+                <p>In this post we explore Rust's concept of ownership that enables the language to achieve 100 % memory safety without...</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/announcements/tools/2014/09/18/announcing-clog-a-conventional-changelog-generator-for-the-rest-of-us.html" title="clog - A conventional changelog generator for the rest of us">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/fallback.jpeg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>clog - A conventional changelog generator for the rest of us</h3>
+                <p>At thoughtram we teach people how to master Git. We also teach them how to maintain a semantic history. Introducing...</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/announcements/rust/meetups/2014/06/24/organizing-hannovers-first-rust-meetup.html" title="Organizing Hanovers first Rust meetup">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/fallback.jpeg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Organizing Hanovers first Rust meetup</h3>
+                <p>We are excited to announce that we'll run a Rust meetup in Hanover - read on for more info!</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2017/02/27/three-things-you-didnt-know-about-the-async-pipe.html" title="Three things you didn't know about the AsyncPipe">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/three-things-about-the-async-pipe.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Three things you didn't know about the AsyncPipe</h3>
+                <p>This article explains three lesser known features of the AsyncPipe that help us to write better async code.</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2017/02/21/using-zones-in-angular-for-better-performance.html" title="Using Zones in Angular for better performance">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/using-zones-in-angular-for-better-performance.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Using Zones in Angular for better performance</h3>
+                <p>In this article we'll take a look at how to use Zone APIs to improve our app's performance!</p>
+              </div>
+            </a>
+          </li>
+        
+        
+        </ul>
+        
+
+      
+
+      </div>
+    </main>
+    <footer role="contentinfo" class="thtrm-footer thtrm-footer--slim">
+  <div class="thtrm-footer-text">
+    <img class="thtrm-footer-logo" alt="thoughtram brain" src="/images/thoughtram-brain-white.png">
+    <p>This website was created in collaboration with <a href="http://twitter.com/timche_" title="Tim Cheung on Twitter"><strong>Tim Cheung</strong></a> and <a href="http://twitter.com/tim_hartmann_" title="Tim Hartmann on Twitter"><strong>Tim Hartmann</strong></a>.</p>
+    <p ><a href="http://thoughtram.io/code-of-conduct.html" title="Code of Conduct">Code of Conduct</a> &bullet; <a href="http://thoughtram.io/imprint.html" title="Legal Notice">Legal notice</a></p>
+    <p class="thtrm-footer-bottom">&copy; 2014-2017 thoughtram GmbH</p>
+  </div>
+</footer>
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-51360648-2', 'auto');
+ga('send', 'pageview');
+
+var form = document.getElementById('search-form');
+var eventCta = document.getElementById('event-cta');
+
+if (eventCta) {
+
+  eventCta.addEventListener('click', function (event) {
+    event.preventDefault();
+
+    setTimeout(clickLink, 1000);
+
+    function clickLink() {
+      window.location.replace(eventCta.getAttribute('href'));
+    }
+
+    ga('send', 'event', {
+      eventCategory: 'Event Link',
+      eventAction: 'click',
+      eventLabel: eventCta.getAttribute('title'),
+      hitCallback: clickLink
+    });
+  });
+}
+
+if (form) {
+
+  var searchTerm = document.getElementById('search-term');
+
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    var formSubmitted = false;
+
+    setTimeout(submitForm, 1000);
+
+    function submitForm() {
+      if (!formSubmitted) {
+        formSubmitted = true;
+        form.submit();
+      }
+    }
+
+    ga('send', 'event', {
+      eventCategory: 'Search Form',
+      eventAction: 'submit',
+      eventLabel: searchTerm.value,
+      hitCallback: submitForm
+    });
+  });
+}
+</script>
+
+
+
+    <script src="/scripts/stickyfill.js"></script>
+    <script src="/scripts/linkjuice/dist/linkjuice.js"></script>
+    <script>
+    (function (doc, win) {
+
+      linkjuice.init('.thtrm-article', {
+        selector: ['h2', 'h3'],
+        icon: ''
+      });
+
+      if (win.matchMedia && win.matchMedia('(min-width: 1200px)').matches) {
+        var stickyElements = doc.querySelectorAll('.is-sticky');
+
+        for (var i = stickyElements.length - 1; i >= 0; i--) {
+          var el = stickyElements[i];
+
+          if (el.classList.contains('thtrm-toc')) {
+            el.classList.add('thtrm-toc--sticky');
+            el.classList.add('thtrm-toc--faded');
+          } 
+          if (el.classList.contains('thtrm-ad')) {
+            el.classList.add('thtrm-ad--sticky');
+            el.classList.add('thtrm-ad--description');
+          }
+
+          Stickyfill.add(el);
+        }
+      }
+    }(document, window));
+    </script>
+  </body>
+</html>

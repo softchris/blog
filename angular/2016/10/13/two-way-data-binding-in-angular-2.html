@@ -1,0 +1,506 @@
+
+
+
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Two-way data binding was one of the main selling points of Angular. Since version 2.x, we can build directives that implement two-way data binding. This article explains how!">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="thoughtram">
+    <title>Two-way Data Binding in Angular by thoughtram</title>
+    <meta name="google-site-verification" content="o9eGPEgIETEqYGombq7NiQuBIB_qa6gz1yAL7PxKyK0">
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#4D8799">
+    <link rel="icon" sizes="192x192" href="/images/touch/chrome-touch-icon-192x192.png">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="thoughtram">
+    <link rel="apple-touch-icon" href="/images/touch/apple-touch-icon.png">
+
+    <!-- Tile icon for Win8 (144x144 + tile color) -->
+    <meta name="msapplication-TileImage" content="/images/touch/ms-touch-icon-144x144-precomposed.png">
+    <meta name="msapplication-TileColor" content="#4D8799">
+
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Two-way Data Binding in Angular">
+    <meta property="og:description" content="Two-way data binding was one of the main selling points of Angular. Since version 2.x, we can build directives that implement two-way data binding. This article explains how!">
+    <meta property="og:url" content="http://blog.thoughtram.io/angular/2016/10/13/two-way-data-binding-in-angular-2.html">
+    <meta property="og:site_name" content="Articles by thoughtram">
+    <meta property="og:image" content="http://blog.thoughtram.io/images/banner/two-way-data-binding-in-angular-2.jpg">
+    <meta property="og:publisher" content="http://www.facebook.com/thoughtram">
+
+    <meta property="twitter:card" content="summary">
+    <meta property="twitter:title" content="Two-way Data Binding in Angular">
+    <meta property="twitter:site" content="thoughtram Blog">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css" type="text/css">
+  </head>
+  <body class="sub-site">
+    <!-- Add your site or app content here -->
+
+    <!--[if lt IE 10]>
+        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <header class="thtrm-header" role="banner">
+      <div class="thtrm-header-bar">
+        <div class="thtrm-constraint">
+          <a href="http://thoughtram.io" class="thtrm-header-logo-link" title="thoughtram.io Start Page"><h1 class="thtrm-header-logo">thoughtram</h1></a>
+          <div class="thtrm-header-menu-wrapper">
+            <span role="button" tabindex="0" class="thtrm-header-menu-label">Menu</span>
+            <ul class="thtrm-header-menu">
+              <li><a title="Training" class="thtrm-header-menu-item" href="http://thoughtram.io/training.html">Training</a></li>
+              <li><a title="Code Review" class="thtrm-header-menu-item" href="http://thoughtram.io/code-review.html">Code Review</a></li>
+              <li><a title="Casts" class="thtrm-header-menu-item " href="http://casts.thoughtram.io">Casts</a></li>
+              <li><a title="Blog" class="thtrm-header-menu-item" href="/">Blog</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main role="main" class="thtrm-main">
+    <div class="thtrm-banner" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%), url('/images/banner/two-way-data-binding-in-angular-2.jpg');">
+        <hgroup class="thtrm-banner-container">
+          <div class="thtrm-constraint thtrm-constraint--slim">
+            <h2 class="thtrm-banner-text">Two-way Data Binding in Angular</h2>
+            <span>by <a href="http://twitter.com/" title="Pascal Precht on Twitter">Pascal Precht</a> on Oct 13, 2016, last updated on Dec 18, 2016<br>8 minute read</span>
+
+          </div>
+        </hgroup>
+      </div>
+      <div class="thtrm-constraint thtrm-constraint--slim">
+
+        <div class="thtrm-article">
+          <section class="thtrm-ad thtrm-section thtrm-section--is-promo is-sticky">
+  <img width="100" src="/images/angular2-shield-inverse.svg">
+  <h3 class="thtrm-section-headline">Need private training?</h3>
+  <p class="thtrm-section-text">Get customized training for your corporation</p>
+  <a href="mailto:hello@thoughtram.io" title="Request Training Quote" id="event-cta" class="thtrm-layout-divider-cta">Request quote <strong>&rarr;</strong></a>
+</section>
+
+
+          
+          <p style="background-color: lightgoldenrodyellow; border: solid 2px #f9dead; padding: 1em; text-align: center; border-radius: 0.3em;">Contents are based on Angular version <strong>>= 2.x</strong> unless explicitely stated differently.</p>
+          
+
+          <p>If there was one feature in Angular that made us go “Wow”, then it was probably its two-way data binding system. Changes in the application state have been automagically reflected into the view and vise-versa. In fact, we could build our own directives with two-way data bound scope properties, by setting a configuration value.</p>
+
+<p><strong>Angular &gt;= 2.x doesn’t come with such a (built-in) two-way data binding anymore.</strong> However, this doesn’t mean we can’t create directives that support two-way data binding. In this article we’re going to explore how two-way data binding in Angular &gt;= 2.x is implemented and how we can implement it in our own directives.</p>
+
+<div id="thtrm-toc is-sticky">
+  <h3 class="no_toc" id="table-of-contents">TABLE OF CONTENTS</h3>
+<ul id="markdown-toc">
+  <li><a href="#two-way-data-binding-in-a-nutshell" id="markdown-toc-two-way-data-binding-in-a-nutshell">Two-way data binding in a nutshell</a></li>
+  <li><a href="#understanding-ngmodel" id="markdown-toc-understanding-ngmodel">Understanding ngModel</a></li>
+  <li><a href="#creating-custom-two-way-data-bindings" id="markdown-toc-creating-custom-two-way-data-bindings">Creating custom two-way data bindings</a></li>
+  <li><a href="#conclusion" id="markdown-toc-conclusion">Conclusion</a></li>
+</ul>
+
+</div>
+
+<h2 id="two-way-data-binding-in-a-nutshell">Two-way data binding in a nutshell</h2>
+
+<p>There’s one directive in Angular &gt;= 2.x that implements two-way data binding: <strong>ngModel</strong>. On the surface, it looks and behaves as magical as we’re used to (from Angular 1). But how does it really work? It’s not that hard really. In fact, it turns out that two-way data binding really just boils down to event binding and property binding.</p>
+
+<p>In order to understand what that means, let’s take a look at this code snippet here:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;input</span> <span class="err">[(</span><span class="na">ngModel</span><span class="err">)]="</span><span class="na">username</span><span class="err">"</span><span class="nt">&gt;</span>
+
+<span class="nt">&lt;p&gt;</span>Hello {{username}}!<span class="nt">&lt;/p&gt;</span></code></pre></div>
+
+<p>Right, this is that one demo that blew our minds back in 2009, implemented in Angular 2.x. When typing into the input, the input’s value is written into the <code>username</code> model and then reflected back into the view, resulting in a nice greeting.</p>
+
+<p>How does this all work? Well, as mentioned earlier, since version 2.x, two-way data binding in Angular really just boils down to property binding and event binding. There is no such thing as two-way data binding. Without the <code>ngModel</code> directive, we could easily implement two-way data binding just like this:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;input</span> <span class="err">[</span><span class="na">value</span><span class="err">]="</span><span class="na">username</span><span class="err">"</span> <span class="err">(</span><span class="na">input</span><span class="err">)="</span><span class="na">username =</span><span class="err"> </span><span class="s">$event.target.value"</span><span class="nt">&gt;</span>
+
+<span class="nt">&lt;p&gt;</span>Hello {{username}}!<span class="nt">&lt;/p&gt;</span></code></pre></div>
+
+<p>Let’s take a closer look at what’s going on here:</p>
+
+<ul>
+  <li><strong>[value]=”username”</strong> - Binds the expression <code>username</code> to the input element’s <code>value</code> property</li>
+  <li><strong>(input)=”expression”</strong> - Is a declarative way of binding an expression to the input element’s <code>input</code> event (yes there’s such event)</li>
+  <li><strong>username = $event.target.value</strong> - The expression that gets executed when the <code>input</code> event is fired</li>
+  <li><strong>$event</strong> - Is an expression exposed in event bindings by Angular, which has the value of the event’s payload</li>
+</ul>
+
+<p>Considering these observations, it becomes very clear what’s happening. We’re binding the value of the <code>username</code> expression to the input’s <code>value</code> property (data goes into the component).</p>
+
+<p>We also bind an expression to the element’s <code>input</code> event. This expression assigns the value of <code>$event.target.value</code> to the <code>username</code> model. But what is <code>$event.target.value</code>? As mentioned, <code>$event</code> is the payload that’s emitted by the event. Now, what is the payload of the <code>input</code> event? It’s an <a href="https://developer.mozilla.org/en-US/docs/Web/Events/input">InputEventObject</a>, which comes with a <code>target</code> property, which is a reference to the DOM object that fired the event (our input element). So all we do is, we’re reading from the input’s <code>value</code> property when a user enters a value (data comes out of the component).</p>
+
+<p><strong>That’s it. That’s two-way data binding in a nutshell.</strong> Wasn’t that hard right?</p>
+
+<p>Okay cool, but when does <code>ngModel</code> come into play then? Since a scenario like the one shown above is very common, it just makes sense to have a directive that abstracts things away and safes us some keystrokes.</p>
+
+<h2 id="understanding-ngmodel">Understanding ngModel</h2>
+
+<p>If we take a look at the source code, we’ll notice that <code>ngModel</code> actually comes with a property and event binding as well. Here’s what our example looks like using <code>ngModel</code>, but without using the shorthand syntax:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;input</span> <span class="err">[</span><span class="na">ngModel</span><span class="err">]="</span><span class="na">username</span><span class="err">"</span> <span class="err">(</span><span class="na">ngModelChange</span><span class="err">)="</span><span class="na">username =</span><span class="err"> </span><span class="s">$event"</span><span class="nt">&gt;</span>
+
+<span class="nt">&lt;p&gt;</span>Hello {{username}}!<span class="nt">&lt;/p&gt;</span></code></pre></div>
+
+<p>Same rules apply. The property binding <code>[ngModel]</code> takes care of updating the underlying input DOM element. The event binding <code>(ngModelChange)</code> notifies the outside world when there was a change in the DOM. We also notice that the handler expression uses only <code>$event</code> and no longer <code>$event.target.value</code>. Why is that? As we’ve mentioned earlier, <code>$event</code> is the payload of the emitted event. In other words, <code>ngModelChange</code> takes care of extracting <code>target.value</code> from the inner <code>$event</code> payload, and simply emits that (to be technically correct, it’s actually the <code>DefaultValueAccessor</code> that takes of the extracting that value and also writing to the underlying DOM object).</p>
+
+<p>Last but not least, since writing <code>username</code> and <code>ngModel</code> twice is still too much, Angular allows the shorthand syntax using <code>[()]</code>, also called “Banana in a box”. So after all, it’s really an implementation detail of <code>ngModel</code> that enables two-way data binding.</p>
+
+<h2 id="creating-custom-two-way-data-bindings">Creating custom two-way data bindings</h2>
+
+<p>Using this knowledge, we can now build our own custom two-way data bindings. All we have to do is to follow the same rules that <code>ngModel</code> follows, which are:</p>
+
+<ul>
+  <li>Introduce a property binding (e.g. <code>[foo]</code>)</li>
+  <li>Introduce a event binding with the same name, plus a <code>Change</code> suffix (e.g. <code>(fooChange)</code>)</li>
+  <li>Make sure the event binding takes care of property extraction (if needed)</li>
+</ul>
+
+<p>As you can see, there’s a bit more work involved to make two-way data binding work compared to Angular 1. However, we should also always consider if a custom two-way data binding implementation is really needed, or if we can just take advantage of <code>ngModel</code>. This, for example is the case when building <a href="/angular/2016/07/27/custom-form-controls-in-angular-2.html">custom form controls</a>.</p>
+
+<p>Let’s say we create a custom counter component and ignore of a second that this would rather be a custom form control.</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
+  <span class="na">selector</span><span class="p">:</span> <span class="s1">'custom-counter'</span><span class="p">,</span>
+  <span class="na">template</span><span class="p">:</span> <span class="s2">`
+    &lt;button (click)="decrement()"&gt;-&lt;/button&gt;
+    &lt;span&gt;{{counter}}&lt;/span&gt;
+    &lt;button (click)="increment()"&gt;+&lt;/button&gt;
+  `</span>
+<span class="p">})</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">CustomCounterComponent</span> <span class="p">{</span>
+
+  <span class="nx">counterValue</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+  <span class="nx">get</span> <span class="nx">counter</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">counterValue</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="nx">set</span> <span class="nx">counter</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">counterValue</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="nx">decrement</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">counter</span><span class="o">--</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="nx">increment</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">counter</span><span class="o">++</span><span class="err">'</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p>It has an internal <code>counter</code> property that is used to display the current counter value. In order to make this property two-way data bound, the first thing we have to do is to make it an <code>Input</code> property. Let’s add the <code>@Input()</code> decorator:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">()</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">CustomCounterComponent</span> <span class="p">{</span>
+
+  <span class="nx">counterValue</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+  <span class="err">@</span><span class="nx">Input</span><span class="p">()</span>
+  <span class="nx">get</span> <span class="nx">counter</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">counterValue</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="p">...</span>
+<span class="p">}</span></code></pre></div>
+
+<p>This already enables us to bind expression to that property as a consumer of that component like this:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;custom-counter</span> <span class="err">[</span><span class="na">counter</span><span class="err">]="</span><span class="na">someValue</span><span class="err">"</span><span class="nt">&gt;&lt;/custom-counter&gt;</span></code></pre></div>
+
+<p>The next thing we need to do, is to introduce an <code>@Output()</code> event with the same name, plus the <code>Change</code> suffix. We want to emit that event, whenever the value of the <code>counter</code> property changes. Let’s add an <code>@Output()</code> property and emit the latest value in the setter interceptor:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">()</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">CustomCounterComponent</span> <span class="p">{</span>
+
+  <span class="p">...</span>
+  <span class="err">@</span><span class="nx">Output</span><span class="p">()</span> <span class="nx">counterChange</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">EventEmitter</span><span class="p">();</span>
+
+  <span class="nx">set</span> <span class="nx">counter</span><span class="p">(</span><span class="nx">val</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">counterValue</span> <span class="o">=</span> <span class="nx">val</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">counterChange</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">counterValue</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="p">...</span>
+<span class="p">}</span></code></pre></div>
+
+<p>That’s it! We can now bind an expression to that property using the two-way data binding syntax:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;custom-counter</span> <span class="err">[(</span><span class="na">counter</span><span class="err">)]="</span><span class="na">someValue</span><span class="err">"</span><span class="nt">&gt;&lt;/custom-counter&gt;</span>
+
+<span class="nt">&lt;p&gt;</span>counterValue = {{someValue}}<span class="nt">&lt;/p&gt;</span></code></pre></div>
+
+<p>Check out the demo and try it out!</p>
+
+<iframe src="https://embed.plnkr.co/RtrRej/?deferRun" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe>
+
+<p>Again, please keep in mind that a component like a custom counter, would better serve as a custom form control and takes advantage of <code>ngModel</code> to implement two-way data binding as explained in <a href="/angular/2016/07/27/custom-form-controls-in-angular-2.html">this article</a>.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>Angular doesn’t come with built-in two-way data binding anymore, but with APIs that allow to implement this type of binding using property and event bindings. <code>ngModel</code> comes as a built-in directive as part of the <code>FormsModule</code> to implement two-way data binding and should be preferred when building components that serve as custom form controls.</p>
+
+
+          
+
+
+
+
+        </div>
+
+        <div class="thtrm-subscriber">
+  <h3>Get updates on new articles and trainings.</h3>
+  <p>Join over 1400 other developers who get our content first.</p>
+  <form action="//thoughtram.us8.list-manage.com/subscribe/post?u=dfbb1507fbced5a20d9dc5698&amp;id=731f22cdca" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" novalidate>
+    <label for="mce-EMAIL"></label>
+    <input type="email" value="" name="EMAIL" placeholder="Your email address..." required>
+    <div style="position: absolute; left: -5000px;"><input type="text" name="b_dfbb1507fbced5a20d9dc5698_731f22cdca" tabindex="-1" value=""></div>
+    <input type="submit" value="Subscribe" name="subscribe" class="thtrm-cta thtrm-cta--small">
+  </form>
+</div>
+
+
+
+        <div class="thtrm-social-links">
+            <!-- Sharingbutton Facebook -->
+            <a class="resp-sharing-button__link" href="https://facebook.com/sharer/sharer.php?u=http%3A%2F%2Fblog.thoughtram.io/angular/2016/10/13/two-way-data-binding-in-angular-2.html" target="_blank" aria-label="Share on Facebook">
+              <div class="resp-sharing-button resp-sharing-button--facebook resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M18.768,7.465H14.5V5.56c0-0.896,0.594-1.105,1.012-1.105s2.988,0,2.988,0V0.513L14.171,0.5C10.244,0.5,9.5,3.438,9.5,5.32 v2.145h-3v4h3c0,5.212,0,12,0,12h5c0,0,0-6.85,0-12h3.851L18.768,7.465z"/>
+                    </g>
+                </svg>
+                </div>Share on Facebook</div>
+            </a>
+
+            <!-- Sharingbutton Twitter -->
+            <a class="resp-sharing-button__link" href="https://twitter.com/intent/tweet/?text=Two-way%20Data%20Binding%20in%20Angular&amp;url=http://blog.thoughtram.io/angular/2016/10/13/two-way-data-binding-in-angular-2.html" target="_blank" aria-label="Share on Twitter">
+              <div class="resp-sharing-button resp-sharing-button--twitter resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M23.444,4.834c-0.814,0.363-1.5,0.375-2.228,0.016c0.938-0.562,0.981-0.957,1.32-2.019c-0.878,0.521-1.851,0.9-2.886,1.104 C18.823,3.053,17.642,2.5,16.335,2.5c-2.51,0-4.544,2.036-4.544,4.544c0,0.356,0.04,0.703,0.117,1.036 C8.132,7.891,4.783,6.082,2.542,3.332C2.151,4.003,1.927,4.784,1.927,5.617c0,1.577,0.803,2.967,2.021,3.782 C3.203,9.375,2.503,9.171,1.891,8.831C1.89,8.85,1.89,8.868,1.89,8.888c0,2.202,1.566,4.038,3.646,4.456 c-0.666,0.181-1.368,0.209-2.053,0.079c0.579,1.804,2.257,3.118,4.245,3.155C5.783,18.102,3.372,18.737,1,18.459 C3.012,19.748,5.399,20.5,7.966,20.5c8.358,0,12.928-6.924,12.928-12.929c0-0.198-0.003-0.393-0.012-0.588 C21.769,6.343,22.835,5.746,23.444,4.834z"/>
+                    </g>
+                </svg>
+                </div>Share on Twitter</div>
+            </a>
+
+            <!-- Sharingbutton Google+ -->
+            <a class="resp-sharing-button__link" href="https://plus.google.com/share?url=http%3A%2F%2Fblog.thoughtram.io/angular/2016/10/13/two-way-data-binding-in-angular-2.html" target="_blank" aria-label="Share on Google+">
+              <div class="resp-sharing-button resp-sharing-button--google resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M11.366,12.928c-0.729-0.516-1.393-1.273-1.404-1.505c0-0.425,0.038-0.627,0.988-1.368 c1.229-0.962,1.906-2.228,1.906-3.564c0-1.212-0.37-2.289-1.001-3.044h0.488c0.102,0,0.2-0.033,0.282-0.091l1.364-0.989 c0.169-0.121,0.24-0.338,0.176-0.536C14.102,1.635,13.918,1.5,13.709,1.5H7.608c-0.667,0-1.345,0.118-2.011,0.347 c-2.225,0.766-3.778,2.66-3.778,4.605c0,2.755,2.134,4.845,4.987,4.91c-0.056,0.22-0.084,0.434-0.084,0.645 c0,0.425,0.108,0.827,0.33,1.216c-0.026,0-0.051,0-0.079,0c-2.72,0-5.175,1.334-6.107,3.32C0.623,17.06,0.5,17.582,0.5,18.098 c0,0.501,0.129,0.984,0.382,1.438c0.585,1.046,1.843,1.861,3.544,2.289c0.877,0.223,1.82,0.335,2.8,0.335 c0.88,0,1.718-0.114,2.494-0.338c2.419-0.702,3.981-2.482,3.981-4.538C13.701,15.312,13.068,14.132,11.366,12.928z M3.66,17.443 c0-1.435,1.823-2.693,3.899-2.693h0.057c0.451,0.005,0.892,0.072,1.309,0.2c0.142,0.098,0.28,0.192,0.412,0.282 c0.962,0.656,1.597,1.088,1.774,1.783c0.041,0.175,0.063,0.35,0.063,0.519c0,1.787-1.333,2.693-3.961,2.693 C5.221,20.225,3.66,19.002,3.66,17.443z M5.551,3.89c0.324-0.371,0.75-0.566,1.227-0.566l0.055,0 c1.349,0.041,2.639,1.543,2.876,3.349c0.133,1.013-0.092,1.964-0.601,2.544C8.782,9.589,8.363,9.783,7.866,9.783H7.865H7.844 c-1.321-0.04-2.639-1.6-2.875-3.405C4.836,5.37,5.049,4.462,5.551,3.89z"/>
+                        <polygon points="23.5,9.5 20.5,9.5 20.5,6.5 18.5,6.5 18.5,9.5 15.5,9.5 15.5,11.5 18.5,11.5 18.5,14.5 20.5,14.5 20.5,11.5  23.5,11.5   "/>
+                    </g>
+                </svg>
+                </div>Share on Google+</div>
+            </a>
+        </div>
+
+        <h3 class="thtrm-section-headline thtrm-section-headline--with-margin">Author</h3>
+        <div class="thtrm-article-author">
+          <span class="thtrm-article-author-avatar"><img src="/images/author-pascal.jpg" alt="Picture of Pascal Precht"></span>
+          <div class="thtrm-article-author-matter">
+            <h4 class="thtrm-article-author-name">Pascal Precht</h4>
+            <p class="thtrm-article-author-text">Pascal is a front-end engineer and a Angular Developer Expert nominated by Google. He created the angular-translate module, is an Angular 2 contributor and also part of the Angular 2 Docs Authoring team.</p>
+            <p>
+              <a class="thtrm-article-author-cta thtrm-article-author-cta-twitter" href="http://twitter.com/PascalPrecht" title="Pascal Precht on Twitter">Twitter</a>
+              <a class="thtrm-article-author-cta" href="http://github.com/PascalPrecht" title="Pascal Precht on GitHub">GitHub</a>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="thtrm-constraint">
+
+        
+        <h4 class="thtrm-section-headline thtrm-section-headline--with-big-margin thtrm-section-headline--centered">Related Posts</h4>
+        <ul class="thtrm-three-column-list thtrm-three-column-list--with-padding">
+        
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angularjs/2015/01/11/exploring-angular-1.3-validators-pipeline.html" title="Validators Pipeline in Angular 1.3">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/fallback.jpeg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Validators Pipeline in Angular 1.3</h3>
+                <p>In this article we discuss a newly introduced feature called custom validators, so we don't have to hijack parsers and...</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2016/07/27/custom-form-controls-in-angular-2.html" title="Custom Form Controls in Angular">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/custom-form-controls-in-angular-2.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Custom Form Controls in Angular</h3>
+                <p>Angular makes it very easy to create custom form controls. Read on to learn how to do it!</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2016/06/22/model-driven-forms-in-angular-2.html" title="Reactive Forms in Angular">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/model-driven-forms-in-angular-2.jpeg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Reactive Forms in Angular</h3>
+                <p>Angular allows us to build forms in a model-driven fashion. In this article we're going to discuss what that looks...</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2016/03/21/template-driven-forms-in-angular-2.html" title="Template-driven Forms in Angular">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/template-driven-forms.jpeg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Template-driven Forms in Angular</h3>
+                <p>In this article we discuss the template-driven forms in Angular and all the directives that come into play.</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2016/03/14/custom-validators-in-angular-2.html" title="Custom Validators in Angular">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/custom-validators-bg.jpeg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Custom Validators in Angular</h3>
+                <p>Often, we need to add custom validation capabilities to our application's form. In this article we're going to explore how...</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2017/02/27/three-things-you-didnt-know-about-the-async-pipe.html" title="Three things you didn't know about the AsyncPipe">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/three-things-about-the-async-pipe.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Three things you didn't know about the AsyncPipe</h3>
+                <p>This article explains three lesser known features of the AsyncPipe that help us to write better async code.</p>
+              </div>
+            </a>
+          </li>
+        
+        
+        </ul>
+        
+
+      
+
+      </div>
+    </main>
+    <footer role="contentinfo" class="thtrm-footer thtrm-footer--slim">
+  <div class="thtrm-footer-text">
+    <img class="thtrm-footer-logo" alt="thoughtram brain" src="/images/thoughtram-brain-white.png">
+    <p>This website was created in collaboration with <a href="http://twitter.com/timche_" title="Tim Cheung on Twitter"><strong>Tim Cheung</strong></a> and <a href="http://twitter.com/tim_hartmann_" title="Tim Hartmann on Twitter"><strong>Tim Hartmann</strong></a>.</p>
+    <p ><a href="http://thoughtram.io/code-of-conduct.html" title="Code of Conduct">Code of Conduct</a> &bullet; <a href="http://thoughtram.io/imprint.html" title="Legal Notice">Legal notice</a></p>
+    <p class="thtrm-footer-bottom">&copy; 2014-2017 thoughtram GmbH</p>
+  </div>
+</footer>
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-51360648-2', 'auto');
+ga('send', 'pageview');
+
+var form = document.getElementById('search-form');
+var eventCta = document.getElementById('event-cta');
+
+if (eventCta) {
+
+  eventCta.addEventListener('click', function (event) {
+    event.preventDefault();
+
+    setTimeout(clickLink, 1000);
+
+    function clickLink() {
+      window.location.replace(eventCta.getAttribute('href'));
+    }
+
+    ga('send', 'event', {
+      eventCategory: 'Event Link',
+      eventAction: 'click',
+      eventLabel: eventCta.getAttribute('title'),
+      hitCallback: clickLink
+    });
+  });
+}
+
+if (form) {
+
+  var searchTerm = document.getElementById('search-term');
+
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    var formSubmitted = false;
+
+    setTimeout(submitForm, 1000);
+
+    function submitForm() {
+      if (!formSubmitted) {
+        formSubmitted = true;
+        form.submit();
+      }
+    }
+
+    ga('send', 'event', {
+      eventCategory: 'Search Form',
+      eventAction: 'submit',
+      eventLabel: searchTerm.value,
+      hitCallback: submitForm
+    });
+  });
+}
+</script>
+
+
+
+    <script src="/scripts/stickyfill.js"></script>
+    <script src="/scripts/linkjuice/dist/linkjuice.js"></script>
+    <script>
+    (function (doc, win) {
+
+      linkjuice.init('.thtrm-article', {
+        selector: ['h2', 'h3'],
+        icon: ''
+      });
+
+      if (win.matchMedia && win.matchMedia('(min-width: 1200px)').matches) {
+        var stickyElements = doc.querySelectorAll('.is-sticky');
+
+        for (var i = stickyElements.length - 1; i >= 0; i--) {
+          var el = stickyElements[i];
+
+          if (el.classList.contains('thtrm-toc')) {
+            el.classList.add('thtrm-toc--sticky');
+            el.classList.add('thtrm-toc--faded');
+          } 
+          if (el.classList.contains('thtrm-ad')) {
+            el.classList.add('thtrm-ad--sticky');
+            el.classList.add('thtrm-ad--description');
+          }
+
+          Stickyfill.add(el);
+        }
+      }
+    }(document, window));
+    </script>
+  </body>
+</html>

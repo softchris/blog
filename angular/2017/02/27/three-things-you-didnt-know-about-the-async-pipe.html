@@ -1,0 +1,623 @@
+
+
+
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="This article explains three lesser known features of the AsyncPipe that help us to write better async code.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="thoughtram">
+    <title>Three things you didn't know about the AsyncPipe by thoughtram</title>
+    <meta name="google-site-verification" content="o9eGPEgIETEqYGombq7NiQuBIB_qa6gz1yAL7PxKyK0">
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#4D8799">
+    <link rel="icon" sizes="192x192" href="/images/touch/chrome-touch-icon-192x192.png">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="thoughtram">
+    <link rel="apple-touch-icon" href="/images/touch/apple-touch-icon.png">
+
+    <!-- Tile icon for Win8 (144x144 + tile color) -->
+    <meta name="msapplication-TileImage" content="/images/touch/ms-touch-icon-144x144-precomposed.png">
+    <meta name="msapplication-TileColor" content="#4D8799">
+
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Three things you didn't know about the AsyncPipe">
+    <meta property="og:description" content="This article explains three lesser known features of the AsyncPipe that help us to write better async code.">
+    <meta property="og:url" content="http://blog.thoughtram.io/angular/2017/02/27/three-things-you-didnt-know-about-the-async-pipe.html">
+    <meta property="og:site_name" content="Articles by thoughtram">
+    <meta property="og:image" content="http://blog.thoughtram.io/images/banner/three-things-about-the-async-pipe.jpg">
+    <meta property="og:publisher" content="http://www.facebook.com/thoughtram">
+
+    <meta property="twitter:card" content="summary">
+    <meta property="twitter:title" content="Three things you didn't know about the AsyncPipe">
+    <meta property="twitter:site" content="thoughtram Blog">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css" type="text/css">
+  </head>
+  <body class="sub-site">
+    <!-- Add your site or app content here -->
+
+    <!--[if lt IE 10]>
+        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <header class="thtrm-header" role="banner">
+      <div class="thtrm-header-bar">
+        <div class="thtrm-constraint">
+          <a href="http://thoughtram.io" class="thtrm-header-logo-link" title="thoughtram.io Start Page"><h1 class="thtrm-header-logo">thoughtram</h1></a>
+          <div class="thtrm-header-menu-wrapper">
+            <span role="button" tabindex="0" class="thtrm-header-menu-label">Menu</span>
+            <ul class="thtrm-header-menu">
+              <li><a title="Training" class="thtrm-header-menu-item" href="http://thoughtram.io/training.html">Training</a></li>
+              <li><a title="Code Review" class="thtrm-header-menu-item" href="http://thoughtram.io/code-review.html">Code Review</a></li>
+              <li><a title="Casts" class="thtrm-header-menu-item " href="http://casts.thoughtram.io">Casts</a></li>
+              <li><a title="Blog" class="thtrm-header-menu-item" href="/">Blog</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main role="main" class="thtrm-main">
+    <div class="thtrm-banner" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%), url('/images/banner/three-things-about-the-async-pipe.jpg');">
+        <hgroup class="thtrm-banner-container">
+          <div class="thtrm-constraint thtrm-constraint--slim">
+            <h2 class="thtrm-banner-text">Three things you didn't know about the AsyncPipe</h2>
+            <span>by <a href="http://twitter.com/" title="Christoph Burgdorf on Twitter">Christoph Burgdorf</a> on Feb 27, 2017<br>12 minute read</span>
+
+          </div>
+        </hgroup>
+      </div>
+      <div class="thtrm-constraint thtrm-constraint--slim">
+
+        <div class="thtrm-article">
+          <section class="thtrm-ad thtrm-section thtrm-section--is-promo is-sticky">
+  <img width="100" src="/images/angular2-shield-inverse.svg">
+  <h3 class="thtrm-section-headline">Need private training?</h3>
+  <p class="thtrm-section-text">Get customized training for your corporation</p>
+  <a href="mailto:hello@thoughtram.io" title="Request Training Quote" id="event-cta" class="thtrm-layout-divider-cta">Request quote <strong>&rarr;</strong></a>
+</section>
+
+
+          
+          <p style="background-color: lightgoldenrodyellow; border: solid 2px #f9dead; padding: 1em; text-align: center; border-radius: 0.3em;">Contents are based on Angular version <strong>>= 2.x</strong> unless explicitely stated differently.</p>
+          
+
+          <p>You sure heard about Angular’s <code>AsyncPipe</code> haven’t you? It’s this handy little pipe that we can use from within our templates so that we don’t have to deal with unwrapping data from Observables or Promises imperatively. Turns out the <code>AsyncPipe</code> is full of little wonders that may not be obvious at first sight. In this article we like to shed some light on the inner workings of this useful little tool.</p>
+
+<div class="thtrm-toc is-sticky">
+  <h3 class="no_toc" id="table-of-contents">TABLE OF CONTENTS</h3>
+<ul id="markdown-toc">
+  <li><a href="#subscribing-to-long-lived-observables" id="markdown-toc-subscribing-to-long-lived-observables">Subscribing to long-lived Observables</a></li>
+  <li><a href="#keeping-track-of-references" id="markdown-toc-keeping-track-of-references">Keeping track of references</a></li>
+  <li><a href="#marking-things-for-check" id="markdown-toc-marking-things-for-check">Marking things for check</a></li>
+  <li><a href="#conclusion" id="markdown-toc-conclusion">Conclusion</a></li>
+</ul>
+
+</div>
+
+<h2 id="subscribing-to-long-lived-observables">Subscribing to long-lived Observables</h2>
+
+<p>Often when we think about the <code>AsyncPipe</code>, we only think about values that resolve from some http call. We issue an http call, get an <code>Observable&lt;Response&gt;</code> back, apply some transformations (e.g. <code>map(...).filter(...)</code>) and finally expose an Observable to the template of our component. Here is what that typically looks like.</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="p">...</span>
+<span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
+  <span class="p">...</span>
+  <span class="na">template</span><span class="p">:</span> <span class="s2">`
+    &lt;md-list&gt;
+      &lt;a md-list-item
+        *ngFor="let contact of contacts | async"
+        title="View {{contact.name}} details"&gt;
+        &lt;img md-list-avatar [src]="contact.image" alt="Picture of {{contact.name}}"&gt;
+        &lt;h3 md-line&gt;{{contact.name}}&lt;/h3&gt;
+      &lt;/a&gt;
+    &lt;/md-list&gt;`</span><span class="p">,</span>
+<span class="p">})</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">ContactsListComponent</span> <span class="kr">implements</span> <span class="nx">OnInit</span> <span class="p">{</span>
+
+  <span class="nl">contacts</span><span class="p">:</span> <span class="nx">Observable</span><span class="o">&lt;</span><span class="nb">Array</span><span class="o">&lt;</span><span class="nx">Contact</span><span class="o">&gt;&gt;</span><span class="p">;</span>
+
+  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">contactsService</span><span class="p">:</span> <span class="nx">ContactsService</span><span class="p">)</span> <span class="p">{}</span>
+
+  <span class="nx">ngOnInit</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">contacts</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">contactsService</span><span class="p">.</span><span class="nx">getContacts</span><span class="p">();</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p>In the described scenario our Observable is what we like to refer to as short-lived. The Observable emits exactly one value - an array of contacts in this case - and completes right after that. That’s the typical scenario when working with http and it’s basically the only scenario when working with Promises.</p>
+
+<p>However, we can totally have Observables that emit multiple values. Think about working with websockets for instance. We may have an array that builds up over time! Let’s simulate an Observable that emits an array of numbers. But instead of emitting just a single array once, it will emit an array every time a new item was added. To not let the array grow infinitely we will limit it to the last five items.</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="p">...</span>
+<span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
+  <span class="na">selector</span><span class="p">:</span> <span class="s1">'my-app'</span><span class="p">,</span>
+  <span class="na">template</span><span class="p">:</span> <span class="s2">`
+    &lt;ul&gt;
+      &lt;li *ngFor="let item of items | async"&gt;{{item}}&lt;/li&gt;
+    &lt;/ul&gt;`</span>
+<span class="p">})</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">AppComponent</span> <span class="p">{</span>
+  <span class="nx">items</span> <span class="o">=</span> <span class="nx">Observable</span><span class="p">.</span><span class="nx">interval</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+                    <span class="p">.</span><span class="nx">scan</span><span class="p">((</span><span class="nx">acc</span><span class="p">,</span> <span class="nx">cur</span><span class="p">)</span><span class="o">=&gt;</span><span class="p">[</span><span class="nx">cur</span><span class="p">,</span> <span class="p">...</span><span class="nx">acc</span><span class="p">].</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="p">[]);</span>             
+<span class="p">}</span></code></pre></div>
+
+<iframe src="http://embed.plnkr.co/qG9tOINwYPL0gKf2Pxqd/?deferRun" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe>
+
+<p>Notice how our list is kept nicely in sync without further ado thanks to the <code>AsyncPipe</code>!</p>
+
+<h2 id="keeping-track-of-references">Keeping track of references</h2>
+
+<p>Let’s back of and refactor above code to what it would look like without the help of the <code>AsyncPipe</code>. But while we’re at it, let’s introduce a button to restart generating numbers and pick a random background color for the elements each time we regenerate the sequence.</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="p">...</span>
+<span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
+  <span class="na">selector</span><span class="p">:</span> <span class="s1">'my-app'</span><span class="p">,</span>
+  <span class="na">template</span><span class="p">:</span> <span class="s2">`
+    &lt;button (click)="newSeq()"&gt;New random sequence&lt;/button&gt;
+    &lt;ul&gt;
+      &lt;li [style.background-color]="item.color"
+          *ngFor="let item of items"&gt;{{item.num}}&lt;/li&gt;
+    &lt;/ul&gt;`</span>
+<span class="p">})</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">AppComponent</span> <span class="p">{</span>
+  <span class="nx">items</span> <span class="o">=</span> <span class="p">[];</span>
+
+  <span class="nx">constructor</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">newSeq</span><span class="p">();</span>
+  <span class="p">}</span>
+
+  <span class="nx">newSeq</span><span class="p">()</span> <span class="p">{</span>
+
+    <span class="c1">// generate a random color</span>
+    <span class="kd">let</span> <span class="nx">color</span> <span class="o">=</span> <span class="s1">'#'</span> <span class="o">+</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">().</span><span class="nx">toString</span><span class="p">(</span><span class="mi">16</span><span class="p">).</span><span class="nx">slice</span><span class="p">(</span><span class="o">-</span><span class="mi">6</span><span class="p">);</span>
+
+    <span class="nx">Observable</span><span class="p">.</span><span class="nx">interval</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">scan</span><span class="p">((</span><span class="nx">acc</span><span class="p">,</span> <span class="nx">num</span><span class="p">)</span><span class="o">=&gt;</span><span class="p">[{</span><span class="nx">num</span><span class="p">,</span> <span class="nx">color</span> <span class="p">},</span> <span class="p">...</span><span class="nx">acc</span><span class="p">].</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="p">[])</span>
+          <span class="p">.</span><span class="nx">subscribe</span><span class="p">(</span><span class="nx">items</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">items</span> <span class="o">=</span> <span class="nx">items</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<iframe src="http://embed.plnkr.co/sxYyq3m4PfnLfyeGW1Gx/?deferRun" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe>
+
+<p>Click on the button and play with the demo. Notice something? The color flips back and forth between more and more different colors with every click of the button. That’s because in this case the Observable is what we like to refer to as long-lived. And furthermore, every time we click the button we are creating one more of these long-lived Observables without cleaning up the previous.</p>
+
+<p>Let’s refactor the code to track subscriptions and tear down our long-lived Observable every time that we create a new one.</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="p">...</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">AppComponent</span> <span class="p">{</span>
+  <span class="p">...</span>
+  <span class="nl">subscription</span><span class="p">:</span> <span class="nx">Subscription</span><span class="p">;</span>
+
+  <span class="nx">newSeq</span><span class="p">()</span> <span class="p">{</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">subscription</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">subscription</span><span class="p">.</span><span class="nx">unsubscribe</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="c1">// generate a random color</span>
+    <span class="kd">let</span> <span class="nx">color</span> <span class="o">=</span> <span class="s1">'#'</span> <span class="o">+</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">().</span><span class="nx">toString</span><span class="p">(</span><span class="mi">16</span><span class="p">).</span><span class="nx">slice</span><span class="p">(</span><span class="o">-</span><span class="mi">6</span><span class="p">);</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">subscription</span> <span class="o">=</span> <span class="nx">Observable</span><span class="p">.</span><span class="nx">interval</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">scan</span><span class="p">((</span><span class="nx">acc</span><span class="p">,</span> <span class="nx">num</span><span class="p">)</span><span class="o">=&gt;</span><span class="p">[{</span><span class="nx">num</span><span class="p">,</span> <span class="nx">color</span> <span class="p">},</span> <span class="p">...</span><span class="nx">acc</span><span class="p">].</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="p">[])</span>
+          <span class="p">.</span><span class="nx">subscribe</span><span class="p">(</span><span class="nx">items</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">items</span> <span class="o">=</span> <span class="nx">items</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<iframe src="http://embed.plnkr.co/kRDcQJEJkiBErNGdKKNl/?deferRun" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe>
+
+<p>Every time we subscribe to our Observable we save the subscription in an instance member of our component. Then, when we run <code>newSeq</code> again we check if there’s a subscription that we need to call <code>unsubscribe</code> on. That’s why we don’t see our list flipping between different colors anymore no matter how often we click the button.</p>
+
+<p>Now meet the <code>AsyncPipe</code> again. Let’s change the <code>ngFor</code> again to apply the <code>AsyncPipe</code> and get rid of all the manual bookkeeping.</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
+  <span class="na">selector</span><span class="p">:</span> <span class="s1">'my-app'</span><span class="p">,</span>
+  <span class="na">template</span><span class="p">:</span> <span class="s2">`
+    &lt;button (click)="newSeq()"&gt;New random sequence&lt;/button&gt;
+    &lt;ul&gt;
+      &lt;li [style.background-color]="item.color"
+          *ngFor="let item of items | async"&gt;{{item.num}}&lt;/li&gt;
+    &lt;/ul&gt;`</span>
+<span class="p">})</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">AppComponent</span> <span class="p">{</span>
+  <span class="nl">items</span><span class="p">:</span> <span class="nx">Observable</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span><span class="p">;</span>
+
+  <span class="nx">constructor</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">newSeq</span><span class="p">();</span>
+  <span class="p">}</span>
+
+  <span class="nx">newSeq</span><span class="p">()</span> <span class="p">{</span>
+
+    <span class="c1">// generate a random color</span>
+    <span class="kd">let</span> <span class="nx">color</span> <span class="o">=</span> <span class="s1">'#'</span> <span class="o">+</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">().</span><span class="nx">toString</span><span class="p">(</span><span class="mi">16</span><span class="p">).</span><span class="nx">slice</span><span class="p">(</span><span class="o">-</span><span class="mi">6</span><span class="p">);</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">items</span> <span class="o">=</span> <span class="nx">Observable</span><span class="p">.</span><span class="nx">interval</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+                           <span class="p">.</span><span class="nx">scan</span><span class="p">((</span><span class="nx">acc</span><span class="p">,</span> <span class="nx">num</span><span class="p">)</span><span class="o">=&gt;</span><span class="p">[{</span><span class="nx">num</span><span class="p">,</span> <span class="nx">color</span> <span class="p">},</span> <span class="p">...</span><span class="nx">acc</span><span class="p">].</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="p">[]);</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<iframe src="http://embed.plnkr.co/Oga2810Sq4FJLA3klU7o/?deferRun" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe>
+
+<p>I’m sure you’ve heard that the <code>AsyncPipe</code> unsubscribes from Observables as soon as the component gets destroyed. But did you also know it unsubscribes as soon as the reference of the expression changes? That’s right, as soon as we assign a new Observable to <code>this.items</code> the <code>AsyncPipe</code> will automatically unsubscribe from the previous bound Observable! Not only does this make our code nice and clean, it’s protecting us from <em>very</em> subtle memory leaks.</p>
+
+<h2 id="marking-things-for-check">Marking things for check</h2>
+
+<p>Alright. We have one last nifty <code>AsyncPipe</code> feature for you! If you’ve read our article about <a href="/angular/2016/02/22/angular-2-change-detection-explained.html">Angular’s change detection</a> you sure know that you can speed up Angular’s blazingly fast change detection even further using the <code>OnPush</code> strategy. Let’s refactor our example and introduce a <code>SeqComponent</code> to display the sequences while our root component will manage the data and pass it on via an input binding.</p>
+
+<p>Let’s start creating the <code>SeqComponent</code> which is pretty straight forward.</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
+  <span class="na">selector</span><span class="p">:</span> <span class="s1">'my-seq'</span><span class="p">,</span>
+  <span class="na">template</span><span class="p">:</span> <span class="s2">`
+    &lt;ul&gt;
+      &lt;li [style.background-color]="item.color" 
+          *ngFor="let item of items"&gt;{{item.num}}&lt;/li&gt;
+    &lt;/ul&gt;`</span>
+<span class="p">})</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">SeqComponent</span> <span class="p">{</span>
+  <span class="err">@</span><span class="nx">Input</span><span class="p">()</span>
+  <span class="nl">items</span><span class="p">:</span> <span class="nb">Array</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">}</span></code></pre></div>
+
+<p>Notice the <code>@Input()</code>decorator for <code>items</code> which means the component will receive those from the outside via a property binding.
+Our root component maintains an array <code>seqs</code> and pushes new long-lived Observables into it with the click of a button. It uses an <code>*ngFor</code> to pass each of these Observables on to a new <code>SeqComponent</code> instance. Also notice that we are using the <code>AsyncPipe</code> in our property binding expression (<code>[items]="seq | async"</code>) to pass on the plain array instead of the Observable since that’s what the <code>SeqComponent</code> expects.</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
+  <span class="na">selector</span><span class="p">:</span> <span class="s1">'my-app'</span><span class="p">,</span>
+  <span class="na">template</span><span class="p">:</span> <span class="s2">`
+    &lt;button (click)="newSeq()"&gt;New random sequence&lt;/button&gt;
+    &lt;ul&gt;
+      &lt;my-seq *ngFor="let seq of seqs" [items]="seq | async"&gt;&lt;/my-seq&gt;
+    &lt;/ul&gt;`</span>
+<span class="p">})</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">AppComponent</span> <span class="p">{</span>
+  <span class="nx">seqs</span> <span class="o">=</span> <span class="p">[];</span>
+  
+  <span class="nx">constructor</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">newSeq</span><span class="p">();</span>
+  <span class="p">}</span>
+  
+  <span class="nx">newSeq</span><span class="p">()</span> <span class="p">{</span>
+    
+    <span class="c1">// generate a random color</span>
+    <span class="kd">let</span> <span class="nx">color</span> <span class="o">=</span> <span class="s1">'#'</span> <span class="o">+</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">().</span><span class="nx">toString</span><span class="p">(</span><span class="mi">16</span><span class="p">).</span><span class="nx">slice</span><span class="p">(</span><span class="o">-</span><span class="mi">6</span><span class="p">);</span>
+    
+    <span class="k">this</span><span class="p">.</span><span class="nx">seqs</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">Observable</span><span class="p">.</span><span class="nx">interval</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+                           <span class="p">.</span><span class="nx">scan</span><span class="p">((</span><span class="nx">acc</span><span class="p">,</span> <span class="nx">num</span><span class="p">)</span><span class="o">=&gt;</span><span class="p">[{</span><span class="nx">num</span><span class="p">,</span> <span class="nx">color</span> <span class="p">},</span> <span class="p">...</span><span class="nx">acc</span><span class="p">].</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="p">[]));</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p>So far, we haven’t made any changes to the underlying change detection strategy. If you click the button a couple of times, notice how we get multiple lists that update independently at a different timing.</p>
+
+<iframe src="http://embed.plnkr.co/aFqRxUXaokBTxqluKZTy/?deferRun" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe>
+
+<p>However, in terms of change detection, it means that all components are checked each time <em>any</em> of the Observables fire. That’s a waste of resources. We can do better by setting the change detection for our <code>SeqComponent</code> to <code>OnPush</code> which means it will only check it’s bindings if the inputs - the array in our case - changes.</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
+  <span class="na">changeDetection</span><span class="p">:</span> <span class="nx">ChangeDetectionStrategy</span><span class="p">.</span><span class="nx">OnPush</span><span class="p">,</span>
+  <span class="na">selector</span><span class="p">:</span> <span class="s1">'my-seq'</span><span class="p">,</span>
+  <span class="p">...</span>
+<span class="p">})</span></code></pre></div>
+
+<p>That works and seems to be an easy quick win. But here comes the thing: It only works because our Observable creates an entirely new array each time it emits a new value. And even though that’s actually not too bad and in fact beneficial in most scenarios, let’s consider we use a different implementation which <em>mutates</em> the existing array rather than recreating it every time.</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">Observable</span><span class="p">.</span><span class="nx">interval</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">scan</span><span class="p">((</span><span class="nx">acc</span><span class="p">,</span> <span class="nx">num</span><span class="p">)</span><span class="o">=&gt;</span><span class="p">{</span>
+            <span class="nx">acc</span><span class="p">.</span><span class="nx">splice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">{</span><span class="nx">num</span><span class="p">,</span> <span class="nx">color</span><span class="p">});</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">acc</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">)</span> <span class="p">{</span>
+              <span class="nx">acc</span><span class="p">.</span><span class="nx">pop</span><span class="p">()</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="nx">acc</span><span class="p">;</span>
+          <span class="p">},</span> <span class="p">[])</span></code></pre></div>
+
+<p>If we try that out <code>OnPush</code> doesn’t seem to work anymore because the reference of <code>items</code> simply won’t change anymore. In fact, when we try that out we see each list doesn’t grow beyond its first element.</p>
+
+<iframe src="http://embed.plnkr.co/FTfazxpTsya8n7cEkcDO/?deferRun" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe>
+
+<p>Meet the <code>AsyncPipe</code> again! Let’s change our <code>SeqComponent</code> so that it takes an Observable instead of an array as its input.</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
+  <span class="na">changeDetection</span><span class="p">:</span> <span class="nx">ChangeDetectionStrategy</span><span class="p">.</span><span class="nx">OnPush</span><span class="p">,</span>
+  <span class="na">selector</span><span class="p">:</span> <span class="s1">'my-seq'</span><span class="p">,</span>
+  <span class="na">template</span><span class="p">:</span> <span class="s2">`
+    &lt;ul&gt;
+      &lt;li [style.background-color]="item.color" 
+          *ngFor="let item of items | async"&gt;{{item.num}}&lt;/li&gt;
+    &lt;/ul&gt;`</span>
+<span class="p">})</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">SeqComponent</span> <span class="p">{</span>
+  <span class="err">@</span><span class="nx">Input</span><span class="p">()</span>
+  <span class="nl">items</span><span class="p">:</span> <span class="nx">Observable</span><span class="o">&lt;</span><span class="nb">Array</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;&gt;</span><span class="p">;</span>
+<span class="p">}</span></code></pre></div>
+
+<p>Also note that it now applies the <code>AsyncPipe</code> in its template since it’s not dealing with a plain array anymore. Our <code>AppComponent</code> needs to be changed as well to <strong>not</strong> apply the <code>AsyncPipe</code> in the property binding anymore.</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="o">&lt;</span><span class="nx">ul</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="nx">my</span><span class="o">-</span><span class="nx">seq</span> <span class="o">*</span><span class="nx">ngFor</span><span class="o">=</span><span class="s2">"let seq of seqs"</span> <span class="p">[</span><span class="nx">items</span><span class="p">]</span><span class="o">=</span><span class="s2">"seq"</span><span class="o">&gt;&lt;</span><span class="sr">/my-seq</span><span class="err">&gt;
+</span><span class="o">&lt;</span><span class="sr">/ul&gt;</span></code></pre></div>
+
+<iframe src="http://embed.plnkr.co/HUgTj5qzAYcbNaHYWawu/?deferRun" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe>
+
+<p>Voila! That seems to work!</p>
+
+<p>Let’s recap, our array instance doesn’t change nor does the instance of our Observable ever change. So why would <code>OnPush</code> work in this case? The reason can be found in the source code of the <code>AsyncPipe</code> itself</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">private</span> <span class="nx">_updateLatestValue</span><span class="p">(</span><span class="nx">async</span><span class="p">:</span> <span class="nx">any</span><span class="p">,</span> <span class="nx">value</span><span class="p">:</span> <span class="nb">Object</span><span class="p">):</span> <span class="k">void</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">async</span> <span class="o">===</span> <span class="k">this</span><span class="p">.</span><span class="nx">_obj</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_latestValue</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_ref</span><span class="p">.</span><span class="nx">markForCheck</span><span class="p">();</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p>The <code>AsyncPipe</code> marks the <code>ChangeDetectorRef</code> of our component to be checked, effectively telling the change detection that there may be a change in this component. If you like to get a more detailed understanding of how that works we recommend reading our <a href="/angular/2016/02/22/angular-2-change-detection-explained.html">in-depth change detection article</a>.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>We use to look at the <code>AsyncPipe</code> as a nifty little tool to save a couple of lines of code in our components. In practice though, it hides a lot of complexity from us that comes with managing async tasks. It’s pure gold.</p>
+
+
+          
+
+
+
+
+        </div>
+
+        <div class="thtrm-subscriber">
+  <h3>Get updates on new articles and trainings.</h3>
+  <p>Join over 1400 other developers who get our content first.</p>
+  <form action="//thoughtram.us8.list-manage.com/subscribe/post?u=dfbb1507fbced5a20d9dc5698&amp;id=731f22cdca" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" novalidate>
+    <label for="mce-EMAIL"></label>
+    <input type="email" value="" name="EMAIL" placeholder="Your email address..." required>
+    <div style="position: absolute; left: -5000px;"><input type="text" name="b_dfbb1507fbced5a20d9dc5698_731f22cdca" tabindex="-1" value=""></div>
+    <input type="submit" value="Subscribe" name="subscribe" class="thtrm-cta thtrm-cta--small">
+  </form>
+</div>
+
+
+
+        <div class="thtrm-social-links">
+            <!-- Sharingbutton Facebook -->
+            <a class="resp-sharing-button__link" href="https://facebook.com/sharer/sharer.php?u=http%3A%2F%2Fblog.thoughtram.io/angular/2017/02/27/three-things-you-didnt-know-about-the-async-pipe.html" target="_blank" aria-label="Share on Facebook">
+              <div class="resp-sharing-button resp-sharing-button--facebook resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M18.768,7.465H14.5V5.56c0-0.896,0.594-1.105,1.012-1.105s2.988,0,2.988,0V0.513L14.171,0.5C10.244,0.5,9.5,3.438,9.5,5.32 v2.145h-3v4h3c0,5.212,0,12,0,12h5c0,0,0-6.85,0-12h3.851L18.768,7.465z"/>
+                    </g>
+                </svg>
+                </div>Share on Facebook</div>
+            </a>
+
+            <!-- Sharingbutton Twitter -->
+            <a class="resp-sharing-button__link" href="https://twitter.com/intent/tweet/?text=Three%20things%20you%20didn't%20know%20about%20the%20AsyncPipe&amp;url=http://blog.thoughtram.io/angular/2017/02/27/three-things-you-didnt-know-about-the-async-pipe.html" target="_blank" aria-label="Share on Twitter">
+              <div class="resp-sharing-button resp-sharing-button--twitter resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M23.444,4.834c-0.814,0.363-1.5,0.375-2.228,0.016c0.938-0.562,0.981-0.957,1.32-2.019c-0.878,0.521-1.851,0.9-2.886,1.104 C18.823,3.053,17.642,2.5,16.335,2.5c-2.51,0-4.544,2.036-4.544,4.544c0,0.356,0.04,0.703,0.117,1.036 C8.132,7.891,4.783,6.082,2.542,3.332C2.151,4.003,1.927,4.784,1.927,5.617c0,1.577,0.803,2.967,2.021,3.782 C3.203,9.375,2.503,9.171,1.891,8.831C1.89,8.85,1.89,8.868,1.89,8.888c0,2.202,1.566,4.038,3.646,4.456 c-0.666,0.181-1.368,0.209-2.053,0.079c0.579,1.804,2.257,3.118,4.245,3.155C5.783,18.102,3.372,18.737,1,18.459 C3.012,19.748,5.399,20.5,7.966,20.5c8.358,0,12.928-6.924,12.928-12.929c0-0.198-0.003-0.393-0.012-0.588 C21.769,6.343,22.835,5.746,23.444,4.834z"/>
+                    </g>
+                </svg>
+                </div>Share on Twitter</div>
+            </a>
+
+            <!-- Sharingbutton Google+ -->
+            <a class="resp-sharing-button__link" href="https://plus.google.com/share?url=http%3A%2F%2Fblog.thoughtram.io/angular/2017/02/27/three-things-you-didnt-know-about-the-async-pipe.html" target="_blank" aria-label="Share on Google+">
+              <div class="resp-sharing-button resp-sharing-button--google resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M11.366,12.928c-0.729-0.516-1.393-1.273-1.404-1.505c0-0.425,0.038-0.627,0.988-1.368 c1.229-0.962,1.906-2.228,1.906-3.564c0-1.212-0.37-2.289-1.001-3.044h0.488c0.102,0,0.2-0.033,0.282-0.091l1.364-0.989 c0.169-0.121,0.24-0.338,0.176-0.536C14.102,1.635,13.918,1.5,13.709,1.5H7.608c-0.667,0-1.345,0.118-2.011,0.347 c-2.225,0.766-3.778,2.66-3.778,4.605c0,2.755,2.134,4.845,4.987,4.91c-0.056,0.22-0.084,0.434-0.084,0.645 c0,0.425,0.108,0.827,0.33,1.216c-0.026,0-0.051,0-0.079,0c-2.72,0-5.175,1.334-6.107,3.32C0.623,17.06,0.5,17.582,0.5,18.098 c0,0.501,0.129,0.984,0.382,1.438c0.585,1.046,1.843,1.861,3.544,2.289c0.877,0.223,1.82,0.335,2.8,0.335 c0.88,0,1.718-0.114,2.494-0.338c2.419-0.702,3.981-2.482,3.981-4.538C13.701,15.312,13.068,14.132,11.366,12.928z M3.66,17.443 c0-1.435,1.823-2.693,3.899-2.693h0.057c0.451,0.005,0.892,0.072,1.309,0.2c0.142,0.098,0.28,0.192,0.412,0.282 c0.962,0.656,1.597,1.088,1.774,1.783c0.041,0.175,0.063,0.35,0.063,0.519c0,1.787-1.333,2.693-3.961,2.693 C5.221,20.225,3.66,19.002,3.66,17.443z M5.551,3.89c0.324-0.371,0.75-0.566,1.227-0.566l0.055,0 c1.349,0.041,2.639,1.543,2.876,3.349c0.133,1.013-0.092,1.964-0.601,2.544C8.782,9.589,8.363,9.783,7.866,9.783H7.865H7.844 c-1.321-0.04-2.639-1.6-2.875-3.405C4.836,5.37,5.049,4.462,5.551,3.89z"/>
+                        <polygon points="23.5,9.5 20.5,9.5 20.5,6.5 18.5,6.5 18.5,9.5 15.5,9.5 15.5,11.5 18.5,11.5 18.5,14.5 20.5,14.5 20.5,11.5  23.5,11.5   "/>
+                    </g>
+                </svg>
+                </div>Share on Google+</div>
+            </a>
+        </div>
+
+        <h3 class="thtrm-section-headline thtrm-section-headline--with-margin">Author</h3>
+        <div class="thtrm-article-author">
+          <span class="thtrm-article-author-avatar"><img src="/images/author-christoph.jpg" alt="Picture of Christoph Burgdorf"></span>
+          <div class="thtrm-article-author-matter">
+            <h4 class="thtrm-article-author-name">Christoph Burgdorf</h4>
+            <p class="thtrm-article-author-text">Christoph began programming at the age of 10. He is the creator of the Nickel.rs web framework and a contributor of the AngularJS project. Christoph is also part of the Angular 2 Docs Authoring team.</p>
+            <p>
+              <a class="thtrm-article-author-cta thtrm-article-author-cta-twitter" href="http://twitter.com/cburgdorf" title="Christoph Burgdorf on Twitter">Twitter</a>
+              <a class="thtrm-article-author-cta" href="http://github.com/cburgdorf" title="Christoph Burgdorf on GitHub">GitHub</a>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="thtrm-constraint">
+
+        
+        <h4 class="thtrm-section-headline thtrm-section-headline--with-big-margin thtrm-section-headline--centered">Related Posts</h4>
+        <ul class="thtrm-three-column-list thtrm-three-column-list--with-padding">
+        
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/rx/2016/08/01/exploring-rx-operators-flatmap.html" title="Exploring Rx Operators: flatMap">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/rx-flatmap.jpeg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Exploring Rx Operators: flatMap</h3>
+                <p>Another post in a series of articles to discover the magic of different Rx operators. In this article we like...</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2016/01/07/taking-advantage-of-observables-in-angular2-pt2.html" title="Taking advantage of Observables in Angular 2 - Part 2">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/fallback.jpeg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Taking advantage of Observables in Angular 2 - Part 2</h3>
+                <p>This is a follow up article that demonstrates how Observables can influence our API design.</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2016/01/06/taking-advantage-of-observables-in-angular2.html" title="Taking advantage of Observables in Angular">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/taking-advantage-of-observables.png);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Taking advantage of Observables in Angular</h3>
+                <p>Since version 2.x Angular favors Observables over Promises when it comes to async. In this article we explore some practical...</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2016/06/16/cold-vs-hot-observables.html" title="Cold vs Hot Observables">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/hot-vs-cold-observables.jpeg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Cold vs Hot Observables</h3>
+                <p>In this article we are going to demystify what the term hot vs cold means when it comes to Observables....</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2016/05/16/exploring-rx-operators-map.html" title="Exploring Rx Operators: map">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/rx-map.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Exploring Rx Operators: map</h3>
+                <p>This is the first article that is part of a new series where we take a look at different operators...</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2017/02/21/using-zones-in-angular-for-better-performance.html" title="Using Zones in Angular for better performance">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/using-zones-in-angular-for-better-performance.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Using Zones in Angular for better performance</h3>
+                <p>In this article we'll take a look at how to use Zone APIs to improve our app's performance!</p>
+              </div>
+            </a>
+          </li>
+        
+        
+        </ul>
+        
+
+      
+
+      </div>
+    </main>
+    <footer role="contentinfo" class="thtrm-footer thtrm-footer--slim">
+  <div class="thtrm-footer-text">
+    <img class="thtrm-footer-logo" alt="thoughtram brain" src="/images/thoughtram-brain-white.png">
+    <p>This website was created in collaboration with <a href="http://twitter.com/timche_" title="Tim Cheung on Twitter"><strong>Tim Cheung</strong></a> and <a href="http://twitter.com/tim_hartmann_" title="Tim Hartmann on Twitter"><strong>Tim Hartmann</strong></a>.</p>
+    <p ><a href="http://thoughtram.io/code-of-conduct.html" title="Code of Conduct">Code of Conduct</a> &bullet; <a href="http://thoughtram.io/imprint.html" title="Legal Notice">Legal notice</a></p>
+    <p class="thtrm-footer-bottom">&copy; 2014-2017 thoughtram GmbH</p>
+  </div>
+</footer>
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-51360648-2', 'auto');
+ga('send', 'pageview');
+
+var form = document.getElementById('search-form');
+var eventCta = document.getElementById('event-cta');
+
+if (eventCta) {
+
+  eventCta.addEventListener('click', function (event) {
+    event.preventDefault();
+
+    setTimeout(clickLink, 1000);
+
+    function clickLink() {
+      window.location.replace(eventCta.getAttribute('href'));
+    }
+
+    ga('send', 'event', {
+      eventCategory: 'Event Link',
+      eventAction: 'click',
+      eventLabel: eventCta.getAttribute('title'),
+      hitCallback: clickLink
+    });
+  });
+}
+
+if (form) {
+
+  var searchTerm = document.getElementById('search-term');
+
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    var formSubmitted = false;
+
+    setTimeout(submitForm, 1000);
+
+    function submitForm() {
+      if (!formSubmitted) {
+        formSubmitted = true;
+        form.submit();
+      }
+    }
+
+    ga('send', 'event', {
+      eventCategory: 'Search Form',
+      eventAction: 'submit',
+      eventLabel: searchTerm.value,
+      hitCallback: submitForm
+    });
+  });
+}
+</script>
+
+
+
+    <script src="/scripts/stickyfill.js"></script>
+    <script src="/scripts/linkjuice/dist/linkjuice.js"></script>
+    <script>
+    (function (doc, win) {
+
+      linkjuice.init('.thtrm-article', {
+        selector: ['h2', 'h3'],
+        icon: ''
+      });
+
+      if (win.matchMedia && win.matchMedia('(min-width: 1200px)').matches) {
+        var stickyElements = doc.querySelectorAll('.is-sticky');
+
+        for (var i = stickyElements.length - 1; i >= 0; i--) {
+          var el = stickyElements[i];
+
+          if (el.classList.contains('thtrm-toc')) {
+            el.classList.add('thtrm-toc--sticky');
+            el.classList.add('thtrm-toc--faded');
+          } 
+          if (el.classList.contains('thtrm-ad')) {
+            el.classList.add('thtrm-ad--sticky');
+            el.classList.add('thtrm-ad--description');
+          }
+
+          Stickyfill.add(el);
+        }
+      }
+    }(document, window));
+    </script>
+  </body>
+</html>

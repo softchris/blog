@@ -1,0 +1,706 @@
+
+
+
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="In this article we discuss tips and tricks to make Angular blazingly fast!">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="thoughtram">
+    <title>Making your Angular apps fast by thoughtram</title>
+    <meta name="google-site-verification" content="o9eGPEgIETEqYGombq7NiQuBIB_qa6gz1yAL7PxKyK0">
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#4D8799">
+    <link rel="icon" sizes="192x192" href="/images/touch/chrome-touch-icon-192x192.png">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="thoughtram">
+    <link rel="apple-touch-icon" href="/images/touch/apple-touch-icon.png">
+
+    <!-- Tile icon for Win8 (144x144 + tile color) -->
+    <meta name="msapplication-TileImage" content="/images/touch/ms-touch-icon-144x144-precomposed.png">
+    <meta name="msapplication-TileColor" content="#4D8799">
+
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Making your Angular apps fast">
+    <meta property="og:description" content="In this article we discuss tips and tricks to make Angular blazingly fast!">
+    <meta property="og:url" content="http://blog.thoughtram.io/angular/2017/02/02/making-your-angular-app-fast.html">
+    <meta property="og:site_name" content="Articles by thoughtram">
+    <meta property="og:image" content="http://blog.thoughtram.io/images/banner/angular-performance-tips.jpg">
+    <meta property="og:publisher" content="http://www.facebook.com/thoughtram">
+
+    <meta property="twitter:card" content="summary">
+    <meta property="twitter:title" content="Making your Angular apps fast">
+    <meta property="twitter:site" content="thoughtram Blog">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css" type="text/css">
+  </head>
+  <body class="sub-site">
+    <!-- Add your site or app content here -->
+
+    <!--[if lt IE 10]>
+        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <header class="thtrm-header" role="banner">
+      <div class="thtrm-header-bar">
+        <div class="thtrm-constraint">
+          <a href="http://thoughtram.io" class="thtrm-header-logo-link" title="thoughtram.io Start Page"><h1 class="thtrm-header-logo">thoughtram</h1></a>
+          <div class="thtrm-header-menu-wrapper">
+            <span role="button" tabindex="0" class="thtrm-header-menu-label">Menu</span>
+            <ul class="thtrm-header-menu">
+              <li><a title="Training" class="thtrm-header-menu-item" href="http://thoughtram.io/training.html">Training</a></li>
+              <li><a title="Code Review" class="thtrm-header-menu-item" href="http://thoughtram.io/code-review.html">Code Review</a></li>
+              <li><a title="Casts" class="thtrm-header-menu-item " href="http://casts.thoughtram.io">Casts</a></li>
+              <li><a title="Blog" class="thtrm-header-menu-item" href="/">Blog</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main role="main" class="thtrm-main">
+    <div class="thtrm-banner" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%), url('/images/banner/angular-performance-tips.jpg');">
+        <hgroup class="thtrm-banner-container">
+          <div class="thtrm-constraint thtrm-constraint--slim">
+            <h2 class="thtrm-banner-text">Making your Angular apps fast</h2>
+            <span>by <a href="http://twitter.com/" title="Pascal Precht on Twitter">Pascal Precht</a> on Feb 2, 2017<br>18 minute read</span>
+
+          </div>
+        </hgroup>
+      </div>
+      <div class="thtrm-constraint thtrm-constraint--slim">
+
+        <div class="thtrm-article">
+          <section class="thtrm-ad thtrm-section thtrm-section--is-promo is-sticky">
+  <img width="100" src="/images/angular2-shield-inverse.svg">
+  <h3 class="thtrm-section-headline">Need private training?</h3>
+  <p class="thtrm-section-text">Get customized training for your corporation</p>
+  <a href="mailto:hello@thoughtram.io" title="Request Training Quote" id="event-cta" class="thtrm-layout-divider-cta">Request quote <strong>&rarr;</strong></a>
+</section>
+
+
+          
+          <p style="background-color: lightgoldenrodyellow; border: solid 2px #f9dead; padding: 1em; text-align: center; border-radius: 0.3em;">Contents are based on Angular version <strong>>= 2.x</strong> unless explicitely stated differently.</p>
+          
+
+          <p>Angular claims to be very fast by default. What does “fast” really mean? Of course, this always depends on the context. What does our application do? How many different things is it doing at a certain point? How is our application’s component tree structured and how many bindings does it introduce? This and other questions come into play when trying to figure out, how we can make our applications faster.</p>
+
+<p>A couple of weeks ago, I had the honour to give a <a href="https://www.youtube.com/watch?v=FIi6AkI7wKE">talk</a> about <a href="http://pascalprecht.github.io/slides/angular2-react/">Angular and React - Friends learning from each other</a> at <a href="https://ng-be.org/">NG-BE</a> together with <a href="http://twitter.com/DJCordhose">Oliver Zeigermann</a>, and we were discussing a demo application in which we compared the default performance and what we can do to make it faster. In this article we’d like to take this demo and show some tips and tricks to make it blazingly fast. One or the other trick might help speeding up <strong>your</strong> application as well.</p>
+
+<p><strong>UPDATE:</strong> We’ve written a follow-up article that discusses another option to make your app faster using <a href="/angular/2017/02/02/making-your-angular-app-fast.html">Zones in Angular</a></p>
+
+<div class="thtrm-toc is-sticky">
+  <h3 class="no_toc" id="table-of-contents">TABLE OF CONTENTS</h3>
+<ul id="markdown-toc">
+  <li><a href="#rendering-10000-draggable-svg-boxes" id="markdown-toc-rendering-10000-draggable-svg-boxes">Rendering 10000 draggable SVG boxes</a></li>
+  <li><a href="#measuring-the-apps-performance" id="markdown-toc-measuring-the-apps-performance">Measuring the app’s performance</a></li>
+  <li><a href="#how-to-make-it-faster" id="markdown-toc-how-to-make-it-faster">How to make it fast(er)</a>    <ul>
+      <li><a href="#use-onpush-change-detection-strategy" id="markdown-toc-use-onpush-change-detection-strategy">Use OnPush change detection strategy</a></li>
+      <li><a href="#using-a-simpler-ngfor" id="markdown-toc-using-a-simpler-ngfor">Using a simpler NgFor</a></li>
+      <li><a href="#detach-change-detectors-from-change-detector-tree" id="markdown-toc-detach-change-detectors-from-change-detector-tree">Detach change detectors from change detector tree</a></li>
+    </ul>
+  </li>
+  <li><a href="#conclusion" id="markdown-toc-conclusion">Conclusion</a></li>
+</ul>
+
+</div>
+
+<h2 id="rendering-10000-draggable-svg-boxes">Rendering 10000 draggable SVG boxes</h2>
+
+<p>Let’s start off with the demo itself. We wanted to go with a scenario in which the framework reaches its boundaries, so that possible performance improvements are easier to visualise. This doesn’t have to be a real world scenario, but rather challenging enough to showcase what we can do. That’s why we decided to render 10000 <strong>draggable</strong> SVG boxes. Rendering 10000 SVG boxes isn’t necessarily a hard nor realistic task, however, it gets quite interesting when each of these boxes need to be draggable, because… well whenever there’s a <code>mousemove</code> event being fired, Angular has to perform change detection and rerender what needs to be rerendered. With 10000 boxes, this can be quite a lot of work.</p>
+
+<blockquote>
+  <p><strong>Special Tip</strong>: Learn in our article about <a href="/angular/2016/02/22/angular-2-change-detection-explained.html">Angular’s Change Detection</a> why it’s performed on every <code>mousemove</code> event</p>
+</blockquote>
+
+<p>The application consists of two components - <code>AppComponent</code> and <code>BoxComponent</code> -  here’s what <code>AppComponent</code> looks like:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
+  <span class="na">selector</span><span class="p">:</span> <span class="s1">'demo-app'</span><span class="p">,</span>
+  <span class="na">template</span><span class="p">:</span> <span class="s2">`
+    &lt;svg (mousedown)="mouseDown($event)"
+         (mouseup)="mouseUp($event)"
+         (mousemove)="mouseMove($event)"&gt;
+
+      &lt;svg:g box *ngFor="let box of boxes" [box]="box"&gt;
+      &lt;/svg:g&gt;
+
+    &lt;/svg&gt;
+  `</span>
+<span class="p">})</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">AppComponent</span> <span class="kr">implements</span> <span class="nx">OnInit</span> <span class="p">{</span>
+
+  <span class="nx">currentId</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="nx">boxes</span> <span class="o">=</span> <span class="p">[];</span>
+  <span class="nx">offsetX</span><span class="p">;</span>
+  <span class="nx">offsetY</span><span class="p">;</span>
+
+  <span class="nx">ngOnInit</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">boxes</span> <span class="o">=</span> <span class="p">...</span> <span class="c1">// generate 10000 random box coordinates</span>
+  <span class="p">}</span>
+
+  <span class="nx">mouseDown</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kr">const</span> <span class="nx">id</span> <span class="o">=</span> <span class="nb">Number</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">getAttribute</span><span class="p">(</span><span class="s2">"dataId"</span><span class="p">));</span>
+    <span class="kr">const</span> <span class="nx">box</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">boxes</span><span class="p">[</span><span class="nx">id</span><span class="p">];</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">offsetX</span> <span class="o">=</span> <span class="nx">box</span><span class="p">.</span><span class="nx">x</span> <span class="o">-</span> <span class="nx">event</span><span class="p">.</span><span class="nx">clientX</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">offsetY</span> <span class="o">=</span> <span class="nx">box</span><span class="p">.</span><span class="nx">y</span> <span class="o">-</span> <span class="nx">event</span><span class="p">.</span><span class="nx">clientY</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">currentId</span> <span class="o">=</span> <span class="nx">id</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="nx">mouseMove</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">currentId</span> <span class="o">!==</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">updateBox</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">currentId</span><span class="p">,</span> <span class="nx">event</span><span class="p">.</span><span class="nx">clientX</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">offsetX</span><span class="p">,</span> <span class="nx">event</span><span class="p">.</span><span class="nx">clientY</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">offsetY</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="nx">mouseUp</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">currentId</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="nx">updateBox</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kr">const</span> <span class="nx">box</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">boxes</span><span class="p">[</span><span class="nx">id</span><span class="p">];</span>
+    <span class="nx">box</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="nx">box</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="nx">y</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p>Let’s not get too overwhelmed by the code. The only really important parts here are:</p>
+
+<ul>
+  <li>We have an SVG element with event handlers for <code>mousedown</code>, <code>mousemove</code> and <code>mouseup</code></li>
+  <li>We generate 10000 random coordinates for the boxes, which are rendered using <code>ngFor</code></li>
+  <li>We update the box that is being dragged in <code>mouseMove()</code></li>
+</ul>
+
+<p>Okay, next we take a look at the <code>BoxComponent</code>.</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
+  <span class="na">selector</span><span class="p">:</span> <span class="s1">'[box]'</span><span class="p">,</span>
+  <span class="na">template</span><span class="p">:</span> <span class="s2">`
+    &lt;svg:rect
+      [attr.dataId]="box.id"
+      [attr.x]="box.x"
+      [attr.y]="box.y"
+      width="20"
+      height="20"
+      stroke="black"
+      [attr.fill]="selected ? 'red' : 'transparent'"
+      strokeWidth="1"&gt;&lt;/svg:rect&gt;
+  `</span>
+<span class="p">})</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">BoxComponent</span> <span class="p">{</span>
+  <span class="err">@</span><span class="nx">Input</span><span class="p">()</span> <span class="nx">box</span><span class="p">;</span>
+  <span class="err">@</span><span class="nx">Input</span><span class="p">()</span> <span class="nx">selected</span><span class="p">;</span>
+<span class="p">}</span></code></pre></div>
+
+<p>This one really just renders an SVG rect element using a couple of bindings to set the coordinates from the given box object.</p>
+
+<p>Okay cool, so that’s our app. Let’s try it out and see how it performs. Simply run it and click and drag and drop a box.</p>
+
+<iframe src="https://embed.plnkr.co/UBI5Sc5eDMpkDDkJfeGX/?deferRun" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe>
+
+<p>By clicking and dragging a box, we can see and feel that the app is quite <a href="http://jankfree.org/">janky</a>. Time to measure how fast it really is!</p>
+
+<h2 id="measuring-the-apps-performance">Measuring the app’s performance</h2>
+
+<p>We’re interested in runtime performance and how long it takes Angular to perform a task when the <code>mousemove</code> event has been fired, as this is the work Angular has to do when we drag and drop a box.</p>
+
+<p>Measuring these kind of things nowadays is fairly easy. Chrome’s devtools for example come with an excellent <strong>Timeline Tool</strong> that lets us profile JavaScript execution and paint times per frame in the browser with a couple of mouse clicks.</p>
+
+<p>Try it out yourself, all you need to do is:</p>
+
+<ul>
+  <li>Open the devtools (ALT+CMD+I)</li>
+  <li>Choose <strong>Timeline</strong></li>
+  <li>Press the record button in the top right corner or (CMD+E)</li>
+  <li>Click and drag a box</li>
+  <li>Stop the recording by clicking the red record button again</li>
+</ul>
+
+<p>Ideally, any kind of measuring is done in an incognito browser tab so the recorded numbers won’t be affected by resources used by browser extensions or other browser tabs. Also, try to measure not only once but rather 3-5 times as the results will always vary a little bit. This helps us coming up with a decent average value.</p>
+
+<blockquote>
+  <p><strong>Special Tip</strong>: Always profile in incognito tabs to makes sure recorded numbers aren’t affected by browser extensions or tabs taking up resources.</p>
+</blockquote>
+
+<p>Here are the numbers we measured on a MacBook Air (<em>1,7 GHz Intel Core i7, 8 GB DDR3</em>) in Chrome (<em>Version 55.0.2883.95 (64-bit)</em>):</p>
+
+<p><a href="/images/dnd-perf-profile.png" title="Screenshot of the first profile"><img src="/images/dnd-perf-profile.png" alt="Screenshot of the first profile" /></a></p>
+
+<ul>
+  <li>1st Profile, Event (mousemove): <strong>~40ms, ~52ms (fastest, slowest)</strong></li>
+  <li>2nd Profile, Event (mousemove): <strong>~45ms, ~61ms (fastest, slowest)</strong></li>
+  <li>3rd Profile, Event (mousemove): <strong>~41ms, ~52ms (fastest, slowest)</strong></li>
+</ul>
+
+<p>Please note that there are multiple <code>mousemove</code> events being fired when moving the mouse, that’s why we’re showing fastest and slowest numbers. Also, these numbers might look different on your local machine. Okay, so it takes Angular roughly ~42ms - ~55ms in average to render 10000 boxes. That’s not too bad, <strong>considering that this is completely unoptimized</strong>. However, we want to learn how to make it faster. Let’s take a look!</p>
+
+<h2 id="how-to-make-it-faster">How to make it fast(er)</h2>
+
+<p>Again, Angular is very fast right out of the box. However, it turns out that there are a lot of things we can do to make our code even faster. The following are ideas for performance improvements we’ve came up with in collaboration with Angular’s core team member Tobias, who mainly works on the compiler and kind of knows how to make things fast.</p>
+
+<ul>
+  <li><a href="#use-onpush-change-detection-strategy" title="Use OnPush to save bindings">ChangeDetectionStrategy.OnPush</a> - Use Angular’s <strong>OnPush</strong> change detection strategy to save view bindings per change detection task</li>
+  <li><a href="#using-a-simpler-ngfor" title="Use SimpleNgFor">“Simple” NgFor</a> - Angular’s <strong>NgFor</strong> directive is sometimes a little bit too smart. A simpler version of it could be faster</li>
+  <li><a href="#detach-change-detectors-from-change-detector-tree" title="Detach change detectors">Detach change detectors</a> - Another option is to <strong>detach all change detectors</strong> from the tree and only perform change detection for the components that is actually changing</li>
+</ul>
+
+<h3 id="use-onpush-change-detection-strategy">Use OnPush change detection strategy</h3>
+
+<p>Probably the most obvious thing to do. In our article on <a href="/angular/2016/02/22/angular-2-change-detection-explained.html">Change Detection in Angular</a> we talked about how Angular’s <code>OnPush</code> change detection strategy enables us to reduce the number of checks Angular has to make when a change in our application happens.</p>
+
+<p>The idea is to make Angular only check a component’s view bindings if one of its inputs have changed. In our demo, we have only two components - <code>AppComponent</code> and <code>BoxComponent</code> - and only <code>BoxComponent</code> is receiving inputs. If we set <code>BoxComponent</code>’s change detection strategy to <code>OnPush</code>, we should be able to save 4 bindings per box (4 bindings, because there are 4 property bindings in <code>BoxComponent</code>’s view). That is 39996 bindings in total (one box is changing). In order to use <code>OnPush</code> properly, we need to make two tiny changes in our code: Set the change detection strategy and make sure that <code>BoxComponent</code>’s input values are immutable.</p>
+
+<p>Here’s how we set the change detection strategy to <code>OnPush</code>:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> 
+  <span class="nx">Component</span><span class="p">,</span>
+  <span class="nx">Input</span><span class="p">,</span>
+  <span class="nx">ChangeDetectionStrategy</span>
+<span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/core'</span><span class="p">;</span>
+
+<span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
+  <span class="na">selector</span><span class="p">:</span> <span class="s1">'[box]'</span><span class="p">,</span>
+  <span class="na">changeDetection</span><span class="p">:</span> <span class="nx">ChangeDetectionStrategy</span><span class="p">.</span><span class="nx">OnPush</span><span class="p">,</span> <span class="c1">// set to OnPush</span>
+  <span class="p">...</span>
+<span class="p">})</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">BoxComponent</span> <span class="p">{</span>
+  <span class="err">@</span><span class="nx">Input</span><span class="p">()</span> <span class="nx">box</span><span class="p">;</span>
+  <span class="err">@</span><span class="nx">Input</span><span class="p">()</span> <span class="nx">selected</span><span class="p">;</span>
+<span class="p">}</span></code></pre></div>
+
+<p>To make all inputs immutable, we simply create new references every time we update a box:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">(...)</span>
+<span class="kr">class</span> <span class="nx">AppComponent</span> <span class="p">{</span>
+  <span class="p">...</span>
+  <span class="nx">updateBox</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">boxes</span><span class="p">[</span><span class="nx">id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">id</span><span class="p">,</span> <span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="p">};</span> <span class="c1">// new references instead of mutation</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p>That’s it! Here’s a the improved demo:</p>
+
+<iframe src="http://embed.plnkr.co/F9DgvCHV7ayw4x9545DM/?deferRun" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe>
+
+<p>At this point it gets rather hard to notice an actual difference. This is because the previous unoptimized demo was already pretty fast. Let’s measure again and see if our application is faster (these profiles are made on the same machine as the previous ones).</p>
+
+<p><a href="/images/dnd-perf-profile-2.png" title="Screenshot of the second profile"><img src="/images/dnd-perf-profile-2.png" alt="Screenshot of the second profile" /></a></p>
+
+<ul>
+  <li>1st Profile, Event (mousemove): <strong>~25ms, ~35ms (fastest, slowest)</strong></li>
+  <li>2nd Profile, Event (mousemove): <strong>~21ms, ~44ms (fastest, slowest)</strong></li>
+  <li>3rd Profile, Event (mousemove): <strong>~23ms, ~37ms (fastest, slowest)</strong></li>
+</ul>
+
+<p>As we can see, using <code>OnPush</code> does indeed improve our runtime performance. We may not notice a huge visual difference, but as we can see in the numbers, our application is now about as twice as fast. Considering the small change we needed to do, this is a great result!</p>
+
+<p>It turns out, we could improve this even further. Right now, all 10000 boxes are checked, only the views are skipped - you know, the 39996 bindings. This is because in order to find out if an input has changed or not (to skip a component’s view), Angular needs to check the component. We could introduce some kind of segmentation model that divides the 10000 boxes into, let’s say ten, segments with 1000 boxes each. This would reduce the number of components to be checked to just 999.</p>
+
+<p>However, this would not only make our code way more complicated, it also changes the application algorithm, which is what we’re trying to avoid in the first place.</p>
+
+<h3 id="using-a-simpler-ngfor">Using a simpler NgFor</h3>
+
+<p>Another thing that is rather not obvious in our demo, is that <code>NgFor</code> might take up more time than it should. Now, what does that mean? Well, if we take a look at <code>NgFor</code>’s source code, we can see that it not only creates DOM items it iterates through, it also keeps track of the <strong>position</strong> of each item, in case things have been moved around. This is great for animations as we can animate-in and -out naturally.</p>
+
+<p>In our demo however, we don’t really move the items in the collection itself. In fact, we don’t really touch it at all. So what if we can use a simpler <code>NgFor</code> that doesn’t care about item positions in the collection? Creating such a directive requires a bit more work and it would not fit in the scope of this article, which is why we will discuss the implementation of <code>SimpleNgFor</code> in another article. However, we put the source code in the following demo, feel free to check it out:</p>
+
+<iframe src="http://embed.plnkr.co/rCqTphznFbImsy9wbWP6/?deferRun" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe>
+
+<p><a href="/images/dnd-perf-profile-3.png" title="Screenshot of the third profile"><img src="/images/dnd-perf-profile-3.png" alt="Screenshot of the third profile" /></a></p>
+
+<p><strong>SimpleNgFor (without OnPush)</strong></p>
+
+<ul>
+  <li>1st Profile, Event (mousemove): <strong>~45ms, ~50ms (fastest, slowest)</strong></li>
+  <li>2nd Profile, Event (mousemove): <strong>~43ms, ~53ms (fastest, slowest)</strong></li>
+  <li>3rd Profile, Event (mousemove): <strong>~42ms, ~50ms (fastest, slowest)</strong></li>
+</ul>
+
+<p><strong>SimpleNgFor (with OnPush)</strong></p>
+
+<ul>
+  <li>1st Profile, Event (mousemove): <strong>~22ms, ~32ms (fastest, slowest)</strong></li>
+  <li>2nd Profile, Event (mousemove): <strong>~22ms, ~39ms (fastest, slowest)</strong></li>
+  <li>3rd Profile, Event (mousemove): <strong>~21ms, ~30ms (fastest, slowest)</strong></li>
+</ul>
+
+<p>We’ve performed six measurements in total, three for the demo with just the <code>SimpleNgFor</code> directive and another three with <code>OnPush</code> enabled. As we can see, <code>SimpleNgFor</code> improves the numbers a little tiny bit. Again, if you profile on your local machine, those numbers might be different. Considering the amount of work that needs to be done to create <code>SimpleNgFor</code>, it’s <strong>probably not worth it</strong> if we only save ~5ms in average.</p>
+
+<h3 id="detach-change-detectors-from-change-detector-tree">Detach change detectors from change detector tree</h3>
+
+<p>Angular is pretty powerful when it comes to giving us developers control over  how things are processed in the platform. <code>OnPush</code> enables us to decide when and where in the component tree change detection is skipped when a change has happened. While this is already super powerful, it turns out that there can be cases where even that is not enough. That’s why Angular gives us access to <code>ChangeDetectorRef</code>’s of each component, with which we can enable or disable change detection entirely. We touched on that in our article on <a href="/angular/2016/02/22/angular-2-change-detection-explained.html">change detection in Angular</a> as well, but let’s discuss how this is useful in our demo application.</p>
+
+<p>We’re dealing with 10000 draggable SVG boxes and all of them are checked on every change (every <code>mousemove</code> event). As discussed earlier, as of how our application is constructed right now,  <code>OnPush</code> doesn’t prevent Angular from checking the boxes themselves, only their views. However, what if we could turn off change detection entirely for all components and only perform change detection for the box component that is actually being moved? This would obviously result in way less work per task as we aren’t checking 10000 boxes anymore, but only one.</p>
+
+<p>How do we get there? The first thing we do is, we detach the component’s change detectors from the tree. We can inject a component’s <code>ChangeDetectorRef</code> using DI and use its <code>detach()</code> method for that. The only thing we need to keep in mind is that we only want to detach the change detectors after change detection has been performed for the first time, otherwise we won’t see any boxes. To call <code>detach()</code> in the right moment, we can take advantage of Angular’s <code>AfterViewInit</code> life cycle hook.</p>
+
+<p>Here’s what that looks like:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">AfterViewInit</span><span class="p">,</span> <span class="nx">ChangeDetectorRef</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/core'</span><span class="p">;</span>
+
+<span class="err">@</span><span class="nx">Component</span><span class="p">(...)</span>
+<span class="kr">class</span> <span class="nx">AppComponent</span> <span class="kr">implements</span> <span class="nx">AfterViewInit</span> <span class="p">{</span>
+  <span class="p">...</span>
+  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">cdr</span><span class="p">:</span> <span class="nx">ChangeDetectorRef</span><span class="p">)</span> <span class="p">{}</span>
+
+  <span class="nx">ngAfterViewInit</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">cdr</span><span class="p">.</span><span class="nx">detach</span><span class="p">();</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p>We do exactly the same for the all box components.</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">(...)</span>
+<span class="kr">class</span> <span class="nx">BoxComponent</span> <span class="kr">implements</span> <span class="nx">AfterViewInit</span> <span class="p">{</span>
+  <span class="p">...</span>
+  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">cdr</span><span class="p">:</span> <span class="nx">ChangeDetectorRef</span><span class="p">)</span> <span class="p">{}</span>
+
+  <span class="nx">ngAfterViewInit</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">cdr</span><span class="p">.</span><span class="nx">detach</span><span class="p">();</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p>Okay cool, now we should see all the boxes but the dragging and dropping doesn’t work anymore. That makes sense because change detection is turned off entirely and no handlers for any events are executed anymore.</p>
+
+<p>The next thing we need to do, is to make sure that change detection is performed for the box that is being dragged. We can extend our <code>BoxComponent</code> to have a method <code>update()</code> which performs change detection just like this:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">(...)</span>
+<span class="kr">class</span> <span class="nx">BoxComponent</span> <span class="kr">implements</span> <span class="nx">AfterViewInit</span> <span class="p">{</span>
+  <span class="p">...</span>
+  <span class="nx">update</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">cdr</span><span class="p">.</span><span class="nx">detectChanges</span><span class="p">();</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p>Cool, now we need to call this method whenever needed. This is essentially in our <code>mouseDown()</code>, <code>mouseMove()</code> and <code>mouseUp()</code> handlers. But how to do we get access to that one particular box component instance that is touched? Simply relying on <code>this.boxes[id]</code> doesn’t do the trick anymore because it’s not an instance of <code>BoxComponent</code>. We need to extend the <code>event</code> object with such an instance so we access it accordingly.</p>
+
+<p><strong>This is where it gets a liiiittle hacky</strong>. We could expect the <code>BoxComponent</code> instance on the DOM event object we get from the <code>mousedown</code> event like this:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">(...)</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">AppComponent</span> <span class="kr">implements</span> <span class="nx">AfterViewInit</span> <span class="p">{</span>
+  <span class="p">...</span>
+  <span class="nx">mouseDown</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kr">const</span> <span class="nx">boxComponent</span> <span class="o">=</span> <span class="o">&lt;</span><span class="nx">BoxComponent</span><span class="o">&gt;</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">[</span><span class="s1">'BoxComponent'</span><span class="p">];</span>
+
+    <span class="kr">const</span> <span class="nx">box</span> <span class="o">=</span> <span class="nx">boxComponent</span><span class="p">.</span><span class="nx">box</span><span class="p">;</span>
+    <span class="kr">const</span> <span class="nx">mouseX</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">clientX</span><span class="p">;</span>
+    <span class="kr">const</span> <span class="nx">mouseY</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">clientY</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">offsetX</span> <span class="o">=</span> <span class="nx">box</span><span class="p">.</span><span class="nx">x</span> <span class="o">-</span> <span class="nx">mouseX</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">offsetY</span> <span class="o">=</span> <span class="nx">box</span><span class="p">.</span><span class="nx">y</span> <span class="o">-</span> <span class="nx">mouseY</span><span class="p">;</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">currentBox</span> <span class="o">=</span> <span class="nx">boxComponent</span><span class="p">;</span>
+
+    <span class="nx">boxComponent</span><span class="p">.</span><span class="nx">selected</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+    <span class="nx">boxComponent</span><span class="p">.</span><span class="nx">update</span><span class="p">();</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p>To make the box component instance available on <code>event.target</code>, where <code>target</code> is the underlying SVG rect element, we can access it as a view child of <code>BoxComponent</code> and extend it with a new property that has the <code>BoxComponent</code> instance. We also add a local template variable <code>#rect</code> to the SVG element, so that <code>ViewChild('rect')</code> can query it accordingly.</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
+  <span class="na">selector</span><span class="p">:</span> <span class="s1">'[box]'</span><span class="p">,</span>
+  <span class="na">template</span><span class="p">:</span> <span class="s2">`
+    &lt;svg:rect #rect ...&gt;&lt;/svg:rect&gt;
+  `</span>
+<span class="p">})</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">BoxComponent</span> <span class="kr">implements</span> <span class="nx">AfterViewInit</span> <span class="p">{</span>
+
+  <span class="err">@</span><span class="nx">ViewChild</span><span class="p">(</span><span class="s1">'rect'</span><span class="p">)</span>
+  <span class="nx">set</span> <span class="nx">rect</span><span class="p">(</span><span class="nx">value</span><span class="p">:</span> <span class="nx">ElementRef</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">value</span><span class="p">.</span><span class="nx">nativeElement</span><span class="p">[</span><span class="s1">'BoxComponent'</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="p">...</span>
+<span class="p">}</span></code></pre></div>
+
+<p>Great! We can now go ahead and use <code>BoxComponent.update()</code> in all other methods where needed.</p>
+
+<p>Here’s the demo application in action, updating only the box that is being dragged:</p>
+
+<iframe src="http://embed.plnkr.co/3aVnNf7sogtvUa9Nng51/?deferRun" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe>
+
+<p><a href="/images/dnd-perf-profile-4.png" title="Screenshot of the fourth profile"><img src="/images/dnd-perf-profile-4.png" alt="Screenshot of the fourth profile" /></a></p>
+
+<p>JavaScript execution time is now <strong>always below 1ms</strong>, which makes sense as Angular has to only check the box component that is dragged by the user. This shows very nicely how much control Angular gives us as developers and how we can take advantage of that for our specific needs.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>Angular is very fast by default and still, it gives us tools to fine tune the performance of our applications by handing over a lot of control over how change detection is performed. Is there anything else we can do? It turns out yes.</p>
+
+<p><strong>All demos have been executed in Angular’s dev mode</strong>. We can turn on production mode, which should increase performance a little bit further as it makes sure to run change detection only once, as opposed to twice in dev mode.</p>
+
+<p>We should keep in mind though, that none of the shown tricks is a silver bullet. They may or may not work for your particular use case.</p>
+
+<p>Hopefully you’ve learned one or the other thing about how to make your apps faster!</p>
+
+
+
+          
+
+
+
+
+        </div>
+
+        <div class="thtrm-subscriber">
+  <h3>Get updates on new articles and trainings.</h3>
+  <p>Join over 1400 other developers who get our content first.</p>
+  <form action="//thoughtram.us8.list-manage.com/subscribe/post?u=dfbb1507fbced5a20d9dc5698&amp;id=731f22cdca" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" novalidate>
+    <label for="mce-EMAIL"></label>
+    <input type="email" value="" name="EMAIL" placeholder="Your email address..." required>
+    <div style="position: absolute; left: -5000px;"><input type="text" name="b_dfbb1507fbced5a20d9dc5698_731f22cdca" tabindex="-1" value=""></div>
+    <input type="submit" value="Subscribe" name="subscribe" class="thtrm-cta thtrm-cta--small">
+  </form>
+</div>
+
+
+
+        <div class="thtrm-social-links">
+            <!-- Sharingbutton Facebook -->
+            <a class="resp-sharing-button__link" href="https://facebook.com/sharer/sharer.php?u=http%3A%2F%2Fblog.thoughtram.io/angular/2017/02/02/making-your-angular-app-fast.html" target="_blank" aria-label="Share on Facebook">
+              <div class="resp-sharing-button resp-sharing-button--facebook resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M18.768,7.465H14.5V5.56c0-0.896,0.594-1.105,1.012-1.105s2.988,0,2.988,0V0.513L14.171,0.5C10.244,0.5,9.5,3.438,9.5,5.32 v2.145h-3v4h3c0,5.212,0,12,0,12h5c0,0,0-6.85,0-12h3.851L18.768,7.465z"/>
+                    </g>
+                </svg>
+                </div>Share on Facebook</div>
+            </a>
+
+            <!-- Sharingbutton Twitter -->
+            <a class="resp-sharing-button__link" href="https://twitter.com/intent/tweet/?text=Making%20your%20Angular%20apps%20fast&amp;url=http://blog.thoughtram.io/angular/2017/02/02/making-your-angular-app-fast.html" target="_blank" aria-label="Share on Twitter">
+              <div class="resp-sharing-button resp-sharing-button--twitter resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M23.444,4.834c-0.814,0.363-1.5,0.375-2.228,0.016c0.938-0.562,0.981-0.957,1.32-2.019c-0.878,0.521-1.851,0.9-2.886,1.104 C18.823,3.053,17.642,2.5,16.335,2.5c-2.51,0-4.544,2.036-4.544,4.544c0,0.356,0.04,0.703,0.117,1.036 C8.132,7.891,4.783,6.082,2.542,3.332C2.151,4.003,1.927,4.784,1.927,5.617c0,1.577,0.803,2.967,2.021,3.782 C3.203,9.375,2.503,9.171,1.891,8.831C1.89,8.85,1.89,8.868,1.89,8.888c0,2.202,1.566,4.038,3.646,4.456 c-0.666,0.181-1.368,0.209-2.053,0.079c0.579,1.804,2.257,3.118,4.245,3.155C5.783,18.102,3.372,18.737,1,18.459 C3.012,19.748,5.399,20.5,7.966,20.5c8.358,0,12.928-6.924,12.928-12.929c0-0.198-0.003-0.393-0.012-0.588 C21.769,6.343,22.835,5.746,23.444,4.834z"/>
+                    </g>
+                </svg>
+                </div>Share on Twitter</div>
+            </a>
+
+            <!-- Sharingbutton Google+ -->
+            <a class="resp-sharing-button__link" href="https://plus.google.com/share?url=http%3A%2F%2Fblog.thoughtram.io/angular/2017/02/02/making-your-angular-app-fast.html" target="_blank" aria-label="Share on Google+">
+              <div class="resp-sharing-button resp-sharing-button--google resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M11.366,12.928c-0.729-0.516-1.393-1.273-1.404-1.505c0-0.425,0.038-0.627,0.988-1.368 c1.229-0.962,1.906-2.228,1.906-3.564c0-1.212-0.37-2.289-1.001-3.044h0.488c0.102,0,0.2-0.033,0.282-0.091l1.364-0.989 c0.169-0.121,0.24-0.338,0.176-0.536C14.102,1.635,13.918,1.5,13.709,1.5H7.608c-0.667,0-1.345,0.118-2.011,0.347 c-2.225,0.766-3.778,2.66-3.778,4.605c0,2.755,2.134,4.845,4.987,4.91c-0.056,0.22-0.084,0.434-0.084,0.645 c0,0.425,0.108,0.827,0.33,1.216c-0.026,0-0.051,0-0.079,0c-2.72,0-5.175,1.334-6.107,3.32C0.623,17.06,0.5,17.582,0.5,18.098 c0,0.501,0.129,0.984,0.382,1.438c0.585,1.046,1.843,1.861,3.544,2.289c0.877,0.223,1.82,0.335,2.8,0.335 c0.88,0,1.718-0.114,2.494-0.338c2.419-0.702,3.981-2.482,3.981-4.538C13.701,15.312,13.068,14.132,11.366,12.928z M3.66,17.443 c0-1.435,1.823-2.693,3.899-2.693h0.057c0.451,0.005,0.892,0.072,1.309,0.2c0.142,0.098,0.28,0.192,0.412,0.282 c0.962,0.656,1.597,1.088,1.774,1.783c0.041,0.175,0.063,0.35,0.063,0.519c0,1.787-1.333,2.693-3.961,2.693 C5.221,20.225,3.66,19.002,3.66,17.443z M5.551,3.89c0.324-0.371,0.75-0.566,1.227-0.566l0.055,0 c1.349,0.041,2.639,1.543,2.876,3.349c0.133,1.013-0.092,1.964-0.601,2.544C8.782,9.589,8.363,9.783,7.866,9.783H7.865H7.844 c-1.321-0.04-2.639-1.6-2.875-3.405C4.836,5.37,5.049,4.462,5.551,3.89z"/>
+                        <polygon points="23.5,9.5 20.5,9.5 20.5,6.5 18.5,6.5 18.5,9.5 15.5,9.5 15.5,11.5 18.5,11.5 18.5,14.5 20.5,14.5 20.5,11.5  23.5,11.5   "/>
+                    </g>
+                </svg>
+                </div>Share on Google+</div>
+            </a>
+        </div>
+
+        <h3 class="thtrm-section-headline thtrm-section-headline--with-margin">Author</h3>
+        <div class="thtrm-article-author">
+          <span class="thtrm-article-author-avatar"><img src="/images/author-pascal.jpg" alt="Picture of Pascal Precht"></span>
+          <div class="thtrm-article-author-matter">
+            <h4 class="thtrm-article-author-name">Pascal Precht</h4>
+            <p class="thtrm-article-author-text">Pascal is a front-end engineer and a Angular Developer Expert nominated by Google. He created the angular-translate module, is an Angular 2 contributor and also part of the Angular 2 Docs Authoring team.</p>
+            <p>
+              <a class="thtrm-article-author-cta thtrm-article-author-cta-twitter" href="http://twitter.com/PascalPrecht" title="Pascal Precht on Twitter">Twitter</a>
+              <a class="thtrm-article-author-cta" href="http://github.com/PascalPrecht" title="Pascal Precht on GitHub">GitHub</a>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="thtrm-constraint">
+
+        
+        <h4 class="thtrm-section-headline thtrm-section-headline--with-big-margin thtrm-section-headline--centered">Related Posts</h4>
+        <ul class="thtrm-three-column-list thtrm-three-column-list--with-padding">
+        
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angularjs/2015/01/14/exploring-angular-1.3-speed-up-with-applyAsync.html" title="Go fast with $applyAsync in Angular 1.3">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/fallback.jpeg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Go fast with $applyAsync in Angular 1.3</h3>
+                <p>Angular 1.3 comes with a feature to share a running $digest cycle across multiple XHR calls. This articles details how...</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angularjs/2014/12/22/exploring-angular-1.3-disabling-debug-info.html" title="Disabling Debug Info in Angular 1.3">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/fallback.jpeg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Disabling Debug Info in Angular 1.3</h3>
+                <p>This article details how to give your app a performance boost in production environments with just a single line of...</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2017/02/21/using-zones-in-angular-for-better-performance.html" title="Using Zones in Angular for better performance">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/using-zones-in-angular-for-better-performance.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Using Zones in Angular for better performance</h3>
+                <p>In this article we'll take a look at how to use Zone APIs to improve our app's performance!</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2017/02/27/three-things-you-didnt-know-about-the-async-pipe.html" title="Three things you didn't know about the AsyncPipe">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/three-things-about-the-async-pipe.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Three things you didn't know about the AsyncPipe</h3>
+                <p>This article explains three lesser known features of the AsyncPipe that help us to write better async code.</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2016/12/27/angular-2-advance-testing-with-custom-matchers.html" title="Testing Angular Directives with Custom Matchers">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/testing-directives-with-custom-matchers2.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Testing Angular Directives with Custom Matchers</h3>
+                <p>Deliver terse, DRY, self-documenting unit tests with Angular using custom Jasmine Matchers and  Helper functions.</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2016/11/28/testing-services-with-http-in-angular-2.html" title="Testing Services with Http in Angular">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/testing-services-with-http-in-angular-2.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Testing Services with Http in Angular</h3>
+                <p>Want to learn how to test services in Angular that have an Http dependency? Read more here!</p>
+              </div>
+            </a>
+          </li>
+        
+        
+        </ul>
+        
+
+      
+
+      </div>
+    </main>
+    <footer role="contentinfo" class="thtrm-footer thtrm-footer--slim">
+  <div class="thtrm-footer-text">
+    <img class="thtrm-footer-logo" alt="thoughtram brain" src="/images/thoughtram-brain-white.png">
+    <p>This website was created in collaboration with <a href="http://twitter.com/timche_" title="Tim Cheung on Twitter"><strong>Tim Cheung</strong></a> and <a href="http://twitter.com/tim_hartmann_" title="Tim Hartmann on Twitter"><strong>Tim Hartmann</strong></a>.</p>
+    <p ><a href="http://thoughtram.io/code-of-conduct.html" title="Code of Conduct">Code of Conduct</a> &bullet; <a href="http://thoughtram.io/imprint.html" title="Legal Notice">Legal notice</a></p>
+    <p class="thtrm-footer-bottom">&copy; 2014-2017 thoughtram GmbH</p>
+  </div>
+</footer>
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-51360648-2', 'auto');
+ga('send', 'pageview');
+
+var form = document.getElementById('search-form');
+var eventCta = document.getElementById('event-cta');
+
+if (eventCta) {
+
+  eventCta.addEventListener('click', function (event) {
+    event.preventDefault();
+
+    setTimeout(clickLink, 1000);
+
+    function clickLink() {
+      window.location.replace(eventCta.getAttribute('href'));
+    }
+
+    ga('send', 'event', {
+      eventCategory: 'Event Link',
+      eventAction: 'click',
+      eventLabel: eventCta.getAttribute('title'),
+      hitCallback: clickLink
+    });
+  });
+}
+
+if (form) {
+
+  var searchTerm = document.getElementById('search-term');
+
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    var formSubmitted = false;
+
+    setTimeout(submitForm, 1000);
+
+    function submitForm() {
+      if (!formSubmitted) {
+        formSubmitted = true;
+        form.submit();
+      }
+    }
+
+    ga('send', 'event', {
+      eventCategory: 'Search Form',
+      eventAction: 'submit',
+      eventLabel: searchTerm.value,
+      hitCallback: submitForm
+    });
+  });
+}
+</script>
+
+
+
+    <script src="/scripts/stickyfill.js"></script>
+    <script src="/scripts/linkjuice/dist/linkjuice.js"></script>
+    <script>
+    (function (doc, win) {
+
+      linkjuice.init('.thtrm-article', {
+        selector: ['h2', 'h3'],
+        icon: ''
+      });
+
+      if (win.matchMedia && win.matchMedia('(min-width: 1200px)').matches) {
+        var stickyElements = doc.querySelectorAll('.is-sticky');
+
+        for (var i = stickyElements.length - 1; i >= 0; i--) {
+          var el = stickyElements[i];
+
+          if (el.classList.contains('thtrm-toc')) {
+            el.classList.add('thtrm-toc--sticky');
+            el.classList.add('thtrm-toc--faded');
+          } 
+          if (el.classList.contains('thtrm-ad')) {
+            el.classList.add('thtrm-ad--sticky');
+            el.classList.add('thtrm-ad--description');
+          }
+
+          Stickyfill.add(el);
+        }
+      }
+    }(document, window));
+    </script>
+  </body>
+</html>

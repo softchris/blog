@@ -1,0 +1,687 @@
+
+
+
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Want to learn how to test services in Angular that have an Http dependency? Read more here!">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="thoughtram">
+    <title>Testing Services with Http in Angular by thoughtram</title>
+    <meta name="google-site-verification" content="o9eGPEgIETEqYGombq7NiQuBIB_qa6gz1yAL7PxKyK0">
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#4D8799">
+    <link rel="icon" sizes="192x192" href="/images/touch/chrome-touch-icon-192x192.png">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="thoughtram">
+    <link rel="apple-touch-icon" href="/images/touch/apple-touch-icon.png">
+
+    <!-- Tile icon for Win8 (144x144 + tile color) -->
+    <meta name="msapplication-TileImage" content="/images/touch/ms-touch-icon-144x144-precomposed.png">
+    <meta name="msapplication-TileColor" content="#4D8799">
+
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Testing Services with Http in Angular">
+    <meta property="og:description" content="Want to learn how to test services in Angular that have an Http dependency? Read more here!">
+    <meta property="og:url" content="http://blog.thoughtram.io/angular/2016/11/28/testing-services-with-http-in-angular-2.html">
+    <meta property="og:site_name" content="Articles by thoughtram">
+    <meta property="og:image" content="http://blog.thoughtram.io/images/banner/testing-services-with-http-in-angular-2.jpg">
+    <meta property="og:publisher" content="http://www.facebook.com/thoughtram">
+
+    <meta property="twitter:card" content="summary">
+    <meta property="twitter:title" content="Testing Services with Http in Angular">
+    <meta property="twitter:site" content="thoughtram Blog">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css" type="text/css">
+  </head>
+  <body class="sub-site">
+    <!-- Add your site or app content here -->
+
+    <!--[if lt IE 10]>
+        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <header class="thtrm-header" role="banner">
+      <div class="thtrm-header-bar">
+        <div class="thtrm-constraint">
+          <a href="http://thoughtram.io" class="thtrm-header-logo-link" title="thoughtram.io Start Page"><h1 class="thtrm-header-logo">thoughtram</h1></a>
+          <div class="thtrm-header-menu-wrapper">
+            <span role="button" tabindex="0" class="thtrm-header-menu-label">Menu</span>
+            <ul class="thtrm-header-menu">
+              <li><a title="Training" class="thtrm-header-menu-item" href="http://thoughtram.io/training.html">Training</a></li>
+              <li><a title="Code Review" class="thtrm-header-menu-item" href="http://thoughtram.io/code-review.html">Code Review</a></li>
+              <li><a title="Casts" class="thtrm-header-menu-item " href="http://casts.thoughtram.io">Casts</a></li>
+              <li><a title="Blog" class="thtrm-header-menu-item" href="/">Blog</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main role="main" class="thtrm-main">
+    <div class="thtrm-banner" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%), url('/images/banner/testing-services-with-http-in-angular-2.jpg');">
+        <hgroup class="thtrm-banner-container">
+          <div class="thtrm-constraint thtrm-constraint--slim">
+            <h2 class="thtrm-banner-text">Testing Services with Http in Angular</h2>
+            <span>by <a href="http://twitter.com/" title="Pascal Precht on Twitter">Pascal Precht</a> on Nov 28, 2016, last updated on Feb 28, 2017<br>17 minute read</span>
+
+          </div>
+        </hgroup>
+      </div>
+      <div class="thtrm-constraint thtrm-constraint--slim">
+
+        <div class="thtrm-article">
+          <section class="thtrm-ad thtrm-section thtrm-section--is-promo is-sticky">
+  <img width="100" src="/images/angular2-shield-inverse.svg">
+  <h3 class="thtrm-section-headline">Need private training?</h3>
+  <p class="thtrm-section-text">Get customized training for your corporation</p>
+  <a href="mailto:hello@thoughtram.io" title="Request Training Quote" id="event-cta" class="thtrm-layout-divider-cta">Request quote <strong>&rarr;</strong></a>
+</section>
+
+
+          
+          <p style="background-color: lightgoldenrodyellow; border: solid 2px #f9dead; padding: 1em; text-align: center; border-radius: 0.3em;">Contents are based on Angular version <strong>>= 2.x</strong> unless explicitely stated differently.</p>
+          
+
+          <p>Testing is important. That’s why Angular comes with a testing story out-of-the-box. Due to its dependency injection system, it’s fairly easy to mock dependencies, swap out Angular modules, or even create so called “shallow” tests, which enable us to test Angular components, without actually depending on their views (DOM). In this article we’re going to take a look at how to unit test a service that performs http calls, since there’s a little bit more knowledge required to make this work.</p>
+
+<div class="thtrm-toc is-sticky">
+  <h3 class="no_toc" id="table-of-contents">TABLE OF CONTENTS</h3>
+<ul id="markdown-toc">
+  <li><a href="#the-service-we-want-to-test" id="markdown-toc-the-service-we-want-to-test">The Service we want to test</a></li>
+  <li><a href="#configuring-a-testing-module" id="markdown-toc-configuring-a-testing-module">Configuring a testing module</a>    <ul>
+      <li><a href="#overriding-the-http-backend" id="markdown-toc-overriding-the-http-backend">Overriding the Http Backend</a></li>
+    </ul>
+  </li>
+  <li><a href="#testing-the-service" id="markdown-toc-testing-the-service">Testing the service</a>    <ul>
+      <li><a href="#injecting-services" id="markdown-toc-injecting-services">Injecting Services</a></li>
+      <li><a href="#mocking-http-responses" id="markdown-toc-mocking-http-responses">Mocking http responses</a></li>
+      <li><a href="#making-the-test-asynchronous" id="markdown-toc-making-the-test-asynchronous">Making the test asynchronous</a></li>
+    </ul>
+  </li>
+  <li><a href="#the-complete-code" id="markdown-toc-the-complete-code">The complete code</a></li>
+</ul>
+
+</div>
+
+<h2 id="the-service-we-want-to-test">The Service we want to test</h2>
+
+<p>Let’s start off by taking a look at the service want to test. Sure, sometimes we actually want to do test-driven development, where we <strong>first</strong> create the test and <strong>then</strong> implement the actual service. However, from a learning point of view, it’s probably easier to grasp testing concepts when we first explore the APIs we want to test.</p>
+
+<p>At thoughtram, we’re currently recording screencasts and video tutorials, to provide additional content to our blog readers. In order to make all these videos more explorable, we’re also building a little application that lets users browse and watch them. The video data is hosted on Vimeo, so we’ve created a service that fetches the data from their API.</p>
+
+<p>Here’s what our <code>VideoService</code> roughly looks like:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">Injectable</span><span class="p">,</span> <span class="nx">Inject</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/core'</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">VIMEO_API_URL</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'../config'</span><span class="p">;</span>
+
+<span class="kr">import</span> <span class="s1">'rxjs/add/operator/map'</span><span class="p">;</span>
+
+<span class="err">@</span><span class="nx">Injectable</span><span class="p">()</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">VideoService</span> <span class="p">{</span>
+
+  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">http</span><span class="p">:</span> <span class="nx">Http</span><span class="p">,</span> <span class="err">@</span><span class="nx">Inject</span><span class="p">(</span><span class="nx">VIMEO_API_URL</span><span class="p">)</span> <span class="kr">private</span> <span class="nx">apiUrl</span><span class="p">)</span> <span class="p">{}</span>
+
+  <span class="nx">getVideos</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">http</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">`</span><span class="p">${</span><span class="k">this</span><span class="p">.</span><span class="nx">apiUrl</span><span class="p">}</span><span class="s2">/videos`</span><span class="p">)</span>
+                    <span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">res</span> <span class="o">=&gt;</span> <span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">().</span><span class="nx">data</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p><code>getVideos()</code> returns an <code>Observable&lt;Array&lt;Video&gt;&gt;</code>. This is just an excerpt of the actual service we use in production. In reality, we cache the responses so we don’t peform an http request every single time we call this method.</p>
+
+<blockquote>
+  <p><strong>Special Tip</strong>: If the <code>@Inject()</code> decorator is new to you, make sure to checkout this <a href="/angular/2015/09/17/resolve-service-dependencies-in-angular-2.html">article</a></p>
+</blockquote>
+
+<p>To use this service in our application, we first need to create a provider for it on our application module, later we will use it in our tests:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">NgModule</span><span class="p">({</span>
+  <span class="na">imports</span><span class="p">:</span> <span class="p">[</span><span class="nx">HttpModule</span><span class="p">]</span>
+  <span class="na">providers</span><span class="p">:</span> <span class="p">[</span><span class="nx">VideoService</span><span class="p">]</span>
+  <span class="p">...</span>
+<span class="p">})</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">AppModule</span> <span class="p">{}</span></code></pre></div>
+
+<p>Since the API returns an Observable, we need to subscribe to it to actually perform the http request. That’s why the call side of the method looks something like this:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">()</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">VideoDashboard</span> <span class="p">{</span>
+  
+  <span class="kr">private</span> <span class="nx">videos</span> <span class="o">=</span> <span class="p">[];</span>
+
+  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">videoService</span><span class="p">:</span> <span class="nx">VideoService</span><span class="p">)</span> <span class="p">{}</span>
+
+  <span class="nx">ngOnInit</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">videoService</span><span class="p">.</span><span class="nx">getVideos</span><span class="p">()</span>
+        <span class="p">.</span><span class="nx">subscribe</span><span class="p">(</span><span class="nx">videos</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">videos</span> <span class="o">=</span> <span class="nx">videos</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p>Notice how we’re passing a callback function to access the video data that is emitted by the Observable. We need to keep that in mind when testing these methods, because we can’t call them synchronously. To get an introduction to Observables in conjunction with Angular, make sure to read <a href="/angular/2016/01/06/taking-advantage-of-observables-in-angular2.html">this article</a>.</p>
+
+<p>Alright, now that we know what the service we want to test looks like, let’s take a look at writing the tests.</p>
+
+<h2 id="configuring-a-testing-module">Configuring a testing module</h2>
+
+<p>Before we can start writing test specs for our service APIs, we need to configure a testing module. This is needed because in our tests, we want to make sure that we aren’t performing actual http requests and use a <code>MockBackend</code> instead. Our goal is to isolate the test scenario as much as we can without touching any other <strong>real</strong> dependencies. Since NgModules configure injectors, a testing module allows us to do exactly that.</p>
+
+<p>When testing services or components that don’t have any dependencies, we can just go ahead an instantiate them manually, using their constructors like this:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">it</span><span class="p">(</span><span class="s1">'should do something'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">service</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">VimeoService</span><span class="p">();</span>
+
+  <span class="nx">expect</span><span class="p">(</span><span class="nx">service</span><span class="p">.</span><span class="nx">foo</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">'bar'</span><span class="p">);</span>
+<span class="p">});</span></code></pre></div>
+
+<blockquote>
+  <p><strong>Special Tip</strong>: When testing components and services that don’t have any dependencies, we don’t necessarily need to create a testing module.</p>
+</blockquote>
+
+<p>To configure a testing module, we use Angular’s <code>TestBed</code>. <code>TestBed</code> is Angular’s primary API to configure and initialize environments for unit testing and provides methods for creating components and services in unit tests. We can create a module that overrides the actual dependencies with testing dependencies, using <code>TestBed.configureTestingModule()</code>.</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">TestBed</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/core/testing'</span><span class="p">;</span>
+
+<span class="nx">describe</span><span class="p">(</span><span class="s1">'VideoService'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+
+  <span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+
+    <span class="nx">TestBed</span><span class="p">.</span><span class="nx">configureTestingModule</span><span class="p">({</span>
+      <span class="p">...</span>
+    <span class="p">});</span>
+
+  <span class="p">});</span>
+<span class="p">});</span></code></pre></div>
+
+<p>This will create an NgModule for every test spec, as we’re running this code as part of a <code>beforeEach()</code> block. This is a <a href="https://jasmine.github.io/">Jasmine</a> API. If you aren’t familiar with Jasmine, we highly recommend reading their documentation.</p>
+
+<p>Okay, but what does a configuration for such a testing module look like? Well, it’s an NgModule, so it has pretty much the same API. Let’s start with adding an <code>import</code> for <code>HttpModule</code> and a provider for <code>VideoService</code> like this:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">HttpModule</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/http'</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">VideoService</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'./video.service'</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">VIMEO_API_URL</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'../config'</span><span class="p">;</span>
+<span class="p">...</span>
+<span class="nx">TestBed</span><span class="p">.</span><span class="nx">configureTestingModule</span><span class="p">({</span>
+  <span class="na">imports</span><span class="p">:</span> <span class="p">[</span><span class="nx">HttpModule</span><span class="p">],</span>
+  <span class="na">providers</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span> <span class="na">provide</span><span class="p">:</span> <span class="nx">VIMEO_API_URL</span><span class="p">,</span> <span class="na">useValue</span><span class="p">:</span> <span class="s1">'http://example.com'</span> <span class="p">},</span>
+    <span class="nx">VideoService</span>
+  <span class="p">]</span>
+<span class="p">});</span>
+<span class="p">...</span></code></pre></div>
+
+<p>This configures an injector for our tests that knows how to create our <code>VideoService</code>, as well as the <code>Http</code> service. However, what we actually want is an <code>Http</code> service that doesn’t really perform http requests. How do we do that? It turns out that the <code>Http</code> service uses a <code>ConnectionBackend</code> to perform requests. If we find a way to swap that one out with a different backend, we get what we want.</p>
+
+<p>To give a better picture, here’s what the constructor of Angular’s <code>Http</code> service looks like:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Injectable</span><span class="p">()</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">Http</span> <span class="p">{</span>
+
+  <span class="nx">constructor</span><span class="p">(</span>
+    <span class="kr">protected</span> <span class="nx">_backend</span><span class="p">:</span> <span class="nx">ConnectionBackend</span><span class="p">,</span>
+    <span class="kr">protected</span> <span class="nx">_defaultOptions</span><span class="p">:</span> <span class="nx">RequestOptions</span>
+  <span class="p">)</span> <span class="p">{}</span>
+
+  <span class="p">...</span>
+<span class="p">}</span></code></pre></div>
+
+<p>By adding an <code>HttpModule</code> to our testing module, providers for <code>Http</code>, <code>ConnectionBackend</code> and <code>RequestOptions</code> are already configured. However, using an NgModule’s <code>providers</code> property, we can <strong>override</strong> providers that have been introduced by other imported NgModules! This is where Angular’s dependency injection really shines!</p>
+
+<h3 id="overriding-the-http-backend">Overriding the Http Backend</h3>
+
+<p>In practice, this means we need to create a new provider for <code>Http</code>, which instantiates the class with a different <code>ConnectionBackend</code>. Angular’s http module comes with a testing class <code>MockBackend</code>. <strong>That</strong> one not only ensures that no real http requests are performed, it also provides APIs to subscribe to opened connections and send mock responses.</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">HttpModule</span><span class="p">,</span> <span class="nx">Http</span><span class="p">,</span> <span class="nx">BaseRequestOptions</span><span class="p">,</span> <span class="nx">XHRBackend</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/http'</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">MockBackend</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/http/testing'</span><span class="p">;</span>
+<span class="p">...</span>
+<span class="nx">TestBed</span><span class="p">.</span><span class="nx">configureTestingModule</span><span class="p">({</span>
+  <span class="p">...</span>
+  <span class="na">providers</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">...</span>
+    <span class="p">{</span> <span class="na">provide</span><span class="p">:</span> <span class="nx">XHRBackend</span><span class="p">,</span> <span class="na">useClass</span><span class="p">:</span> <span class="nx">MockBackend</span> <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">});</span>
+<span class="p">...</span></code></pre></div>
+
+<p>Wow, that was easy! We simply tell our injector to inject an instance of <code>MockBackend</code> whenever someone asks for an <code>XHRBackend</code>, which is what Angular’s Http module does behind the scenes.</p>
+
+<p>Awesome! We’ve created a testing module that uses an <code>Http</code> service with a <code>MockBackend</code>. Now let’s take a look at how to actually test our service.</p>
+
+<h2 id="testing-the-service">Testing the service</h2>
+
+<p>When writing unit tests with Jasmine, every test spec is written as an <code>it()</code> block, where an assertion is made and then checked if that assertion is true or not. We won’t go into too much detail here, since there’s a lot of documentation for Jasmine out there. We want to test if our <code>VideoService</code> returns an <code>Observable&lt;Array&lt;Video&gt;&gt;</code>, so let’s start with the following <code>it()</code> statement:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">describe</span><span class="p">(</span><span class="s1">'VideoService'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="p">...</span>
+  <span class="nx">describe</span><span class="p">(</span><span class="s1">'getVideos()'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+
+    <span class="nx">it</span><span class="p">(</span><span class="s1">'should return an Observable&lt;Array&lt;Video&gt;&gt;'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="c1">// test goes here</span>
+    <span class="p">});</span>
+  <span class="p">});</span>
+<span class="p">});</span></code></pre></div>
+
+<p>We’ve also added another nested <code>describe()</code> block so we can group all tests that are related to that particular method we test. Okay, next we need to get an instance of our <code>VideoService</code>. Since we’ve created a testing module that comes with all providers for our services, we can use dependency injection to inject instances accordingly.</p>
+
+<h3 id="injecting-services">Injecting Services</h3>
+
+<p>Angular’s testing module comes with a helper function <code>inject()</code>, which injects service dependencies. This turns out to be super handy as we don’t have to take care of getting access to the injector ourselves. <code>inject()</code> takes a list of provider tokens and a function with the test code, and it <strong>returns</strong> a function in which the test code is executed. That’s why we can pass it straight to our spec and remove the anonymous function we’ve introduced in the first place:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">TestBed</span><span class="p">,</span> <span class="nx">inject</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/core/testing'</span><span class="p">;</span>
+<span class="p">...</span>
+<span class="nx">it</span><span class="p">(</span><span class="s1">'should return an Observable&lt;Array&lt;Video&gt;&gt;'</span><span class="p">,</span>
+  <span class="nx">inject</span><span class="p">([</span><span class="cm">/* provider tokens */</span><span class="p">],</span> <span class="p">(</span><span class="cm">/* dependencies */</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="c1">// test goes here</span>
+<span class="p">}));</span></code></pre></div>
+
+<p>Cool, now we have all the tools we need to inject our services and write a test. Let’s go ahead an do exactly that. Once we have our service injected, we can call <code>getVideos()</code> and subscribe to the Observable it returns, to then test if the emitted value is the one we expect.</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">it</span><span class="p">(</span><span class="s1">'should return an Observable&lt;Array&lt;Video&gt;&gt;'</span><span class="p">,</span>
+  <span class="nx">inject</span><span class="p">([</span><span class="nx">VideoService</span><span class="p">],</span> <span class="p">(</span><span class="nx">videoService</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+
+    <span class="nx">videoService</span><span class="p">.</span><span class="nx">getVideos</span><span class="p">().</span><span class="nx">subscribe</span><span class="p">((</span><span class="nx">videos</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">expect</span><span class="p">(</span><span class="nx">videos</span><span class="p">.</span><span class="nx">length</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+      <span class="nx">expect</span><span class="p">(</span><span class="nx">videos</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">name</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">'Video 0'</span><span class="p">);</span>
+      <span class="nx">expect</span><span class="p">(</span><span class="nx">videos</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="nx">name</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">'Video 1'</span><span class="p">);</span>
+      <span class="nx">expect</span><span class="p">(</span><span class="nx">videos</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="nx">name</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">'Video 2'</span><span class="p">);</span>
+      <span class="nx">expect</span><span class="p">(</span><span class="nx">videos</span><span class="p">[</span><span class="mi">3</span><span class="p">].</span><span class="nx">name</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">'Video 3'</span><span class="p">);</span>
+    <span class="p">});</span>
+<span class="p">}));</span></code></pre></div>
+
+<p><strong>This test is not finished yet.</strong> Right now we’re having a test that expects some certain data that is going to be emitted by <code>getVideos()</code>, however, remember we’ve swapped out the <code>Http</code> backend so there’s no actual http request performed? Right, if there’s no request performed, this Observable won’t emit anything. We need a way to fake a response that is emitted when we subscribe to our Observable.</p>
+
+<h3 id="mocking-http-responses">Mocking http responses</h3>
+
+<p>As mentioned earlier, <code>MockBackend</code> provides APIs to not only subscribe to http connections, it also enables us to send mock responses. What we want is, when the underlying <code>Http</code> service creates a connection (performs a request), send a fake http response with the data we’re asserting in our <code>getVideos()</code> subscription.</p>
+
+<p>We can subscribe to all opened http connections via <code>MockBackend.connections</code>, and get access to a <code>MockConnection</code> like this:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">it</span><span class="p">(</span><span class="s1">'should return an Observable&lt;Array&lt;Video&gt;&gt;'</span><span class="p">,</span>
+  <span class="nx">inject</span><span class="p">([</span><span class="nx">VideoService</span><span class="p">,</span> <span class="nx">XHRBackend</span><span class="p">],</span> <span class="p">(</span><span class="nx">videoService</span><span class="p">,</span> <span class="nx">mockBackend</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">mockBackend</span><span class="p">.</span><span class="nx">connections</span><span class="p">.</span><span class="nx">subscribe</span><span class="p">((</span><span class="nx">connection</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="c1">// This is called every time someone subscribes to</span>
+      <span class="c1">// an http call.</span>
+      <span class="c1">//</span>
+      <span class="c1">// Here we want to fake the http response.</span>
+    <span class="p">});</span>
+
+    <span class="p">...</span>
+<span class="p">}));</span></code></pre></div>
+
+<p>The next thing we need to do, is to make the connection send a response. We use <code>MockConnection.mockRespond()</code> for that, which takes an instance of Angular’s <code>Response</code> class. In order to define what the response looks like, we need to create <code>ResponseOptions</code> and define the response body we want to send (which is a string):</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="p">...</span>
+<span class="kr">const</span> <span class="nx">mockResponse</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">data</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span> <span class="na">id</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="na">name</span><span class="p">:</span> <span class="s1">'Video 0'</span> <span class="p">},</span>
+    <span class="p">{</span> <span class="na">id</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="na">name</span><span class="p">:</span> <span class="s1">'Video 1'</span> <span class="p">},</span>
+    <span class="p">{</span> <span class="na">id</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="na">name</span><span class="p">:</span> <span class="s1">'Video 2'</span> <span class="p">},</span>
+    <span class="p">{</span> <span class="na">id</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="na">name</span><span class="p">:</span> <span class="s1">'Video 3'</span> <span class="p">},</span>
+  <span class="p">]</span>
+<span class="p">};</span>
+
+<span class="nx">mockBackend</span><span class="p">.</span><span class="nx">connections</span><span class="p">.</span><span class="nx">subscribe</span><span class="p">((</span><span class="nx">connection</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">connection</span><span class="p">.</span><span class="nx">mockRespond</span><span class="p">(</span><span class="k">new</span> <span class="nx">Response</span><span class="p">(</span><span class="k">new</span> <span class="nx">ResponseOptions</span><span class="p">({</span>
+    <span class="na">body</span><span class="p">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">mockResponse</span><span class="p">)</span>
+  <span class="p">})));</span>
+<span class="p">});</span>
+<span class="p">...</span></code></pre></div>
+
+<p>Cool! With this code we now get a fake response inside that particular test spec. Even though it looks like we’re done, <strong>there’s one more thing we need to do</strong>.</p>
+
+<h3 id="making-the-test-asynchronous">Making the test asynchronous</h3>
+
+<p><s>Because the code we want to test is asynchronous, we need to inform Jasmine when the asynchronous operation is done, so it can run our assertions.</s></p>
+
+<p><a href="http://stackoverflow.com/questions/41273244/angular-testing-http-with-mockbackend-is-async-really-required">Johannes Hoppe pointed out</a> that <code>MockConnection.mockRespond()</code> actually emits <strong>synchronously</strong>, not asynchronously, which means that the rest of this section is not needed for our particular test (Thank you Johannes!). However, it’s still a useful gem if we <strong>are</strong> writing tests that need asynchronous operations, read on!</p>
+
+<p>When testing asynchronous code, assertions might be executed later in another tick. That’s why we can explicitly tell Jasmine that we’re writing an asynchronous test. We just need to also tell Jasmine, when the actual code is “done”.</p>
+
+<p>Jasmine usually provides access to a function <code>done()</code> that we can ask for inside our test spec and then call it when we think our code is done. This looks something like this:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">it</span><span class="p">(</span><span class="s1">'should do something async'</span><span class="p">,</span> <span class="p">(</span><span class="nx">done</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">setTimeout</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="kc">true</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+    <span class="nx">done</span><span class="p">();</span>
+  <span class="p">},</span> <span class="mi">2000</span><span class="p">);</span>
+<span class="p">});</span></code></pre></div>
+
+<p>Angular makes this a little bit more convenient. It comes with another helper function <code>async()</code> which takes a test spec and then runs <code>done()</code> behind the scenes for us. This is pretty cool, because we can write our test code as if it was synchronous!</p>
+
+<p>How does that work? Well… Angular takes advantage of a feature called Zones. It creates a “testZone”, which automatically figures out when it needs to call <code>done()</code>. If you havent heard about Zones before, we wrote about them <a href="/angular/2016/01/22/understanding-zones.html">here</a> and <a href="/angular/2016/02/01/zones-in-angular-2.html">here</a>.</p>
+
+<blockquote>
+  <p><strong>Special Tip</strong>: Angular’s <code>async()</code> function executes test specs in a test zone!</p>
+</blockquote>
+
+<h2 id="the-complete-code">The complete code</h2>
+
+<p>Putting it all together, here’s what the test spec for the <code>getVideos()</code> method looks like:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">TestBed</span><span class="p">,</span> <span class="nx">async</span><span class="p">,</span> <span class="nx">inject</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/core/testing'</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span>
+  <span class="nx">HttpModule</span><span class="p">,</span>
+  <span class="nx">Http</span><span class="p">,</span>
+  <span class="nx">Response</span><span class="p">,</span>
+  <span class="nx">ResponseOptions</span><span class="p">,</span>
+  <span class="nx">XHRBackend</span>
+<span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/http'</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">MockBackend</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/http/testing'</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">VideoService</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'./video.service'</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">VIMEO_API_URL</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'../config'</span><span class="p">;</span>
+
+<span class="nx">describe</span><span class="p">(</span><span class="s1">'VideoService'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+
+  <span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+
+    <span class="nx">TestBed</span><span class="p">.</span><span class="nx">configureTestingModule</span><span class="p">({</span>
+      <span class="na">imports</span><span class="p">:</span> <span class="p">[</span><span class="nx">HttpModule</span><span class="p">],</span>
+      <span class="na">providers</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span> <span class="na">provide</span><span class="p">:</span> <span class="nx">VIMEO_API_URL</span><span class="p">,</span> <span class="na">useValue</span><span class="p">:</span> <span class="s1">'http://example.com'</span> <span class="p">},</span>
+        <span class="nx">VideoService</span><span class="p">,</span>
+        <span class="p">{</span> <span class="na">provide</span><span class="p">:</span> <span class="nx">XHRBackend</span><span class="p">,</span> <span class="na">useClass</span><span class="p">:</span> <span class="nx">MockBackend</span> <span class="p">},</span>
+      <span class="p">]</span>
+    <span class="p">});</span>
+  <span class="p">});</span>
+
+  <span class="nx">describe</span><span class="p">(</span><span class="s1">'getVideos()'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+
+    <span class="nx">it</span><span class="p">(</span><span class="s1">'should return an Observable&lt;Array&lt;Video&gt;&gt;'</span><span class="p">,</span>
+        <span class="nx">inject</span><span class="p">([</span><span class="nx">VideoService</span><span class="p">,</span> <span class="nx">MockBackend</span><span class="p">],</span> <span class="p">(</span><span class="nx">videoService</span><span class="p">,</span> <span class="nx">mockBackend</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+
+        <span class="kr">const</span> <span class="nx">mockResponse</span> <span class="o">=</span> <span class="p">{</span>
+          <span class="na">data</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span> <span class="na">id</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="na">name</span><span class="p">:</span> <span class="s1">'Video 0'</span> <span class="p">},</span>
+            <span class="p">{</span> <span class="na">id</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="na">name</span><span class="p">:</span> <span class="s1">'Video 1'</span> <span class="p">},</span>
+            <span class="p">{</span> <span class="na">id</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="na">name</span><span class="p">:</span> <span class="s1">'Video 2'</span> <span class="p">},</span>
+            <span class="p">{</span> <span class="na">id</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="na">name</span><span class="p">:</span> <span class="s1">'Video 3'</span> <span class="p">},</span>
+          <span class="p">]</span>
+        <span class="p">};</span>
+
+        <span class="nx">mockBackend</span><span class="p">.</span><span class="nx">connections</span><span class="p">.</span><span class="nx">subscribe</span><span class="p">((</span><span class="nx">connection</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+          <span class="nx">connection</span><span class="p">.</span><span class="nx">mockRespond</span><span class="p">(</span><span class="k">new</span> <span class="nx">Response</span><span class="p">(</span><span class="k">new</span> <span class="nx">ResponseOptions</span><span class="p">({</span>
+            <span class="na">body</span><span class="p">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">mockResponse</span><span class="p">)</span>
+          <span class="p">})));</span>
+        <span class="p">});</span>
+
+        <span class="nx">videoService</span><span class="p">.</span><span class="nx">getVideos</span><span class="p">().</span><span class="nx">subscribe</span><span class="p">((</span><span class="nx">videos</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+          <span class="nx">expect</span><span class="p">(</span><span class="nx">videos</span><span class="p">.</span><span class="nx">length</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+          <span class="nx">expect</span><span class="p">(</span><span class="nx">videos</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">name</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">'Video 0'</span><span class="p">);</span>
+          <span class="nx">expect</span><span class="p">(</span><span class="nx">videos</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="nx">name</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">'Video 1'</span><span class="p">);</span>
+          <span class="nx">expect</span><span class="p">(</span><span class="nx">videos</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="nx">name</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">'Video 2'</span><span class="p">);</span>
+          <span class="nx">expect</span><span class="p">(</span><span class="nx">videos</span><span class="p">[</span><span class="mi">3</span><span class="p">].</span><span class="nx">name</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">'Video 3'</span><span class="p">);</span>
+        <span class="p">});</span>
+
+    <span class="p">}));</span>
+  <span class="p">});</span>
+<span class="p">});</span></code></pre></div>
+
+<p>This pattern works for pretty much every test that involves http operations. Hopefully this gave you a better understanding of what <code>TestBed</code>, <code>MockBackend</code> and <code>async</code> are all about.</p>
+
+
+          
+
+
+
+
+        </div>
+
+        <div class="thtrm-subscriber">
+  <h3>Get updates on new articles and trainings.</h3>
+  <p>Join over 1400 other developers who get our content first.</p>
+  <form action="//thoughtram.us8.list-manage.com/subscribe/post?u=dfbb1507fbced5a20d9dc5698&amp;id=731f22cdca" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" novalidate>
+    <label for="mce-EMAIL"></label>
+    <input type="email" value="" name="EMAIL" placeholder="Your email address..." required>
+    <div style="position: absolute; left: -5000px;"><input type="text" name="b_dfbb1507fbced5a20d9dc5698_731f22cdca" tabindex="-1" value=""></div>
+    <input type="submit" value="Subscribe" name="subscribe" class="thtrm-cta thtrm-cta--small">
+  </form>
+</div>
+
+
+
+        <div class="thtrm-social-links">
+            <!-- Sharingbutton Facebook -->
+            <a class="resp-sharing-button__link" href="https://facebook.com/sharer/sharer.php?u=http%3A%2F%2Fblog.thoughtram.io/angular/2016/11/28/testing-services-with-http-in-angular-2.html" target="_blank" aria-label="Share on Facebook">
+              <div class="resp-sharing-button resp-sharing-button--facebook resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M18.768,7.465H14.5V5.56c0-0.896,0.594-1.105,1.012-1.105s2.988,0,2.988,0V0.513L14.171,0.5C10.244,0.5,9.5,3.438,9.5,5.32 v2.145h-3v4h3c0,5.212,0,12,0,12h5c0,0,0-6.85,0-12h3.851L18.768,7.465z"/>
+                    </g>
+                </svg>
+                </div>Share on Facebook</div>
+            </a>
+
+            <!-- Sharingbutton Twitter -->
+            <a class="resp-sharing-button__link" href="https://twitter.com/intent/tweet/?text=Testing%20Services%20with%20Http%20in%20Angular&amp;url=http://blog.thoughtram.io/angular/2016/11/28/testing-services-with-http-in-angular-2.html" target="_blank" aria-label="Share on Twitter">
+              <div class="resp-sharing-button resp-sharing-button--twitter resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M23.444,4.834c-0.814,0.363-1.5,0.375-2.228,0.016c0.938-0.562,0.981-0.957,1.32-2.019c-0.878,0.521-1.851,0.9-2.886,1.104 C18.823,3.053,17.642,2.5,16.335,2.5c-2.51,0-4.544,2.036-4.544,4.544c0,0.356,0.04,0.703,0.117,1.036 C8.132,7.891,4.783,6.082,2.542,3.332C2.151,4.003,1.927,4.784,1.927,5.617c0,1.577,0.803,2.967,2.021,3.782 C3.203,9.375,2.503,9.171,1.891,8.831C1.89,8.85,1.89,8.868,1.89,8.888c0,2.202,1.566,4.038,3.646,4.456 c-0.666,0.181-1.368,0.209-2.053,0.079c0.579,1.804,2.257,3.118,4.245,3.155C5.783,18.102,3.372,18.737,1,18.459 C3.012,19.748,5.399,20.5,7.966,20.5c8.358,0,12.928-6.924,12.928-12.929c0-0.198-0.003-0.393-0.012-0.588 C21.769,6.343,22.835,5.746,23.444,4.834z"/>
+                    </g>
+                </svg>
+                </div>Share on Twitter</div>
+            </a>
+
+            <!-- Sharingbutton Google+ -->
+            <a class="resp-sharing-button__link" href="https://plus.google.com/share?url=http%3A%2F%2Fblog.thoughtram.io/angular/2016/11/28/testing-services-with-http-in-angular-2.html" target="_blank" aria-label="Share on Google+">
+              <div class="resp-sharing-button resp-sharing-button--google resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M11.366,12.928c-0.729-0.516-1.393-1.273-1.404-1.505c0-0.425,0.038-0.627,0.988-1.368 c1.229-0.962,1.906-2.228,1.906-3.564c0-1.212-0.37-2.289-1.001-3.044h0.488c0.102,0,0.2-0.033,0.282-0.091l1.364-0.989 c0.169-0.121,0.24-0.338,0.176-0.536C14.102,1.635,13.918,1.5,13.709,1.5H7.608c-0.667,0-1.345,0.118-2.011,0.347 c-2.225,0.766-3.778,2.66-3.778,4.605c0,2.755,2.134,4.845,4.987,4.91c-0.056,0.22-0.084,0.434-0.084,0.645 c0,0.425,0.108,0.827,0.33,1.216c-0.026,0-0.051,0-0.079,0c-2.72,0-5.175,1.334-6.107,3.32C0.623,17.06,0.5,17.582,0.5,18.098 c0,0.501,0.129,0.984,0.382,1.438c0.585,1.046,1.843,1.861,3.544,2.289c0.877,0.223,1.82,0.335,2.8,0.335 c0.88,0,1.718-0.114,2.494-0.338c2.419-0.702,3.981-2.482,3.981-4.538C13.701,15.312,13.068,14.132,11.366,12.928z M3.66,17.443 c0-1.435,1.823-2.693,3.899-2.693h0.057c0.451,0.005,0.892,0.072,1.309,0.2c0.142,0.098,0.28,0.192,0.412,0.282 c0.962,0.656,1.597,1.088,1.774,1.783c0.041,0.175,0.063,0.35,0.063,0.519c0,1.787-1.333,2.693-3.961,2.693 C5.221,20.225,3.66,19.002,3.66,17.443z M5.551,3.89c0.324-0.371,0.75-0.566,1.227-0.566l0.055,0 c1.349,0.041,2.639,1.543,2.876,3.349c0.133,1.013-0.092,1.964-0.601,2.544C8.782,9.589,8.363,9.783,7.866,9.783H7.865H7.844 c-1.321-0.04-2.639-1.6-2.875-3.405C4.836,5.37,5.049,4.462,5.551,3.89z"/>
+                        <polygon points="23.5,9.5 20.5,9.5 20.5,6.5 18.5,6.5 18.5,9.5 15.5,9.5 15.5,11.5 18.5,11.5 18.5,14.5 20.5,14.5 20.5,11.5  23.5,11.5   "/>
+                    </g>
+                </svg>
+                </div>Share on Google+</div>
+            </a>
+        </div>
+
+        <h3 class="thtrm-section-headline thtrm-section-headline--with-margin">Author</h3>
+        <div class="thtrm-article-author">
+          <span class="thtrm-article-author-avatar"><img src="/images/author-pascal.jpg" alt="Picture of Pascal Precht"></span>
+          <div class="thtrm-article-author-matter">
+            <h4 class="thtrm-article-author-name">Pascal Precht</h4>
+            <p class="thtrm-article-author-text">Pascal is a front-end engineer and a Angular Developer Expert nominated by Google. He created the angular-translate module, is an Angular 2 contributor and also part of the Angular 2 Docs Authoring team.</p>
+            <p>
+              <a class="thtrm-article-author-cta thtrm-article-author-cta-twitter" href="http://twitter.com/PascalPrecht" title="Pascal Precht on Twitter">Twitter</a>
+              <a class="thtrm-article-author-cta" href="http://github.com/PascalPrecht" title="Pascal Precht on GitHub">GitHub</a>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="thtrm-constraint">
+
+        
+        <h4 class="thtrm-section-headline thtrm-section-headline--with-big-margin thtrm-section-headline--centered">Related Posts</h4>
+        <ul class="thtrm-three-column-list thtrm-three-column-list--with-padding">
+        
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2016/12/27/angular-2-advance-testing-with-custom-matchers.html" title="Testing Angular Directives with Custom Matchers">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/testing-directives-with-custom-matchers2.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Testing Angular Directives with Custom Matchers</h3>
+                <p>Deliver terse, DRY, self-documenting unit tests with Angular using custom Jasmine Matchers and  Helper functions.</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2017/02/27/three-things-you-didnt-know-about-the-async-pipe.html" title="Three things you didn't know about the AsyncPipe">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/three-things-about-the-async-pipe.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Three things you didn't know about the AsyncPipe</h3>
+                <p>This article explains three lesser known features of the AsyncPipe that help us to write better async code.</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2017/02/21/using-zones-in-angular-for-better-performance.html" title="Using Zones in Angular for better performance">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/using-zones-in-angular-for-better-performance.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Using Zones in Angular for better performance</h3>
+                <p>In this article we'll take a look at how to use Zone APIs to improve our app's performance!</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2017/02/02/making-your-angular-app-fast.html" title="Making your Angular apps fast">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/angular-performance-tips.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Making your Angular apps fast</h3>
+                <p>In this article we discuss tips and tricks to make Angular blazingly fast!</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2016/10/13/two-way-data-binding-in-angular-2.html" title="Two-way Data Binding in Angular">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/two-way-data-binding-in-angular-2.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Two-way Data Binding in Angular</h3>
+                <p>Two-way data binding was one of the main selling points of Angular. Since version 2.x, we can build directives that...</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2016/10/10/resolving-route-data-in-angular-2.html" title="Resolving route data in Angular">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/resolving-route-data-in-angular-2.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Resolving route data in Angular</h3>
+                <p>We often want to make sure that certain data is available before a component is instantiated via routing. In this...</p>
+              </div>
+            </a>
+          </li>
+        
+        
+        </ul>
+        
+
+      
+
+      </div>
+    </main>
+    <footer role="contentinfo" class="thtrm-footer thtrm-footer--slim">
+  <div class="thtrm-footer-text">
+    <img class="thtrm-footer-logo" alt="thoughtram brain" src="/images/thoughtram-brain-white.png">
+    <p>This website was created in collaboration with <a href="http://twitter.com/timche_" title="Tim Cheung on Twitter"><strong>Tim Cheung</strong></a> and <a href="http://twitter.com/tim_hartmann_" title="Tim Hartmann on Twitter"><strong>Tim Hartmann</strong></a>.</p>
+    <p ><a href="http://thoughtram.io/code-of-conduct.html" title="Code of Conduct">Code of Conduct</a> &bullet; <a href="http://thoughtram.io/imprint.html" title="Legal Notice">Legal notice</a></p>
+    <p class="thtrm-footer-bottom">&copy; 2014-2017 thoughtram GmbH</p>
+  </div>
+</footer>
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-51360648-2', 'auto');
+ga('send', 'pageview');
+
+var form = document.getElementById('search-form');
+var eventCta = document.getElementById('event-cta');
+
+if (eventCta) {
+
+  eventCta.addEventListener('click', function (event) {
+    event.preventDefault();
+
+    setTimeout(clickLink, 1000);
+
+    function clickLink() {
+      window.location.replace(eventCta.getAttribute('href'));
+    }
+
+    ga('send', 'event', {
+      eventCategory: 'Event Link',
+      eventAction: 'click',
+      eventLabel: eventCta.getAttribute('title'),
+      hitCallback: clickLink
+    });
+  });
+}
+
+if (form) {
+
+  var searchTerm = document.getElementById('search-term');
+
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    var formSubmitted = false;
+
+    setTimeout(submitForm, 1000);
+
+    function submitForm() {
+      if (!formSubmitted) {
+        formSubmitted = true;
+        form.submit();
+      }
+    }
+
+    ga('send', 'event', {
+      eventCategory: 'Search Form',
+      eventAction: 'submit',
+      eventLabel: searchTerm.value,
+      hitCallback: submitForm
+    });
+  });
+}
+</script>
+
+
+
+    <script src="/scripts/stickyfill.js"></script>
+    <script src="/scripts/linkjuice/dist/linkjuice.js"></script>
+    <script>
+    (function (doc, win) {
+
+      linkjuice.init('.thtrm-article', {
+        selector: ['h2', 'h3'],
+        icon: ''
+      });
+
+      if (win.matchMedia && win.matchMedia('(min-width: 1200px)').matches) {
+        var stickyElements = doc.querySelectorAll('.is-sticky');
+
+        for (var i = stickyElements.length - 1; i >= 0; i--) {
+          var el = stickyElements[i];
+
+          if (el.classList.contains('thtrm-toc')) {
+            el.classList.add('thtrm-toc--sticky');
+            el.classList.add('thtrm-toc--faded');
+          } 
+          if (el.classList.contains('thtrm-ad')) {
+            el.classList.add('thtrm-ad--sticky');
+            el.classList.add('thtrm-ad--description');
+          }
+
+          Stickyfill.add(el);
+        }
+      }
+    }(document, window));
+    </script>
+  </body>
+</html>

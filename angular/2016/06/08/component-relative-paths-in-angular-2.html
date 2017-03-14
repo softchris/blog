@@ -1,0 +1,722 @@
+
+
+
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Component-relative enable developers to more easily create maintainable, reusable, portable components in Angular. Here's how!">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="thoughtram">
+    <title>Component-Relative Paths in Angular by thoughtram</title>
+    <meta name="google-site-verification" content="o9eGPEgIETEqYGombq7NiQuBIB_qa6gz1yAL7PxKyK0">
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#4D8799">
+    <link rel="icon" sizes="192x192" href="/images/touch/chrome-touch-icon-192x192.png">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="thoughtram">
+    <link rel="apple-touch-icon" href="/images/touch/apple-touch-icon.png">
+
+    <!-- Tile icon for Win8 (144x144 + tile color) -->
+    <meta name="msapplication-TileImage" content="/images/touch/ms-touch-icon-144x144-precomposed.png">
+    <meta name="msapplication-TileColor" content="#4D8799">
+
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Component-Relative Paths in Angular">
+    <meta property="og:description" content="Component-relative enable developers to more easily create maintainable, reusable, portable components in Angular. Here's how!">
+    <meta property="og:url" content="http://blog.thoughtram.io/angular/2016/06/08/component-relative-paths-in-angular-2.html">
+    <meta property="og:site_name" content="Articles by thoughtram">
+    <meta property="og:image" content="http://blog.thoughtram.io/images/banner/component-relative-paths-in-angular-2.jpg">
+    <meta property="og:publisher" content="http://www.facebook.com/thoughtram">
+
+    <meta property="twitter:card" content="summary">
+    <meta property="twitter:title" content="Component-Relative Paths in Angular">
+    <meta property="twitter:site" content="thoughtram Blog">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css" type="text/css">
+  </head>
+  <body class="sub-site">
+    <!-- Add your site or app content here -->
+
+    <!--[if lt IE 10]>
+        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <header class="thtrm-header" role="banner">
+      <div class="thtrm-header-bar">
+        <div class="thtrm-constraint">
+          <a href="http://thoughtram.io" class="thtrm-header-logo-link" title="thoughtram.io Start Page"><h1 class="thtrm-header-logo">thoughtram</h1></a>
+          <div class="thtrm-header-menu-wrapper">
+            <span role="button" tabindex="0" class="thtrm-header-menu-label">Menu</span>
+            <ul class="thtrm-header-menu">
+              <li><a title="Training" class="thtrm-header-menu-item" href="http://thoughtram.io/training.html">Training</a></li>
+              <li><a title="Code Review" class="thtrm-header-menu-item" href="http://thoughtram.io/code-review.html">Code Review</a></li>
+              <li><a title="Casts" class="thtrm-header-menu-item " href="http://casts.thoughtram.io">Casts</a></li>
+              <li><a title="Blog" class="thtrm-header-menu-item" href="/">Blog</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main role="main" class="thtrm-main">
+    <div class="thtrm-banner" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%), url('/images/banner/component-relative-paths-in-angular-2.jpg');">
+        <hgroup class="thtrm-banner-container">
+          <div class="thtrm-constraint thtrm-constraint--slim">
+            <h2 class="thtrm-banner-text">Component-Relative Paths in Angular</h2>
+            <span>by <a href="http://twitter.com/" title="Thomas Burleson on Twitter">Thomas Burleson</a> on Jun 8, 2016, last updated on Dec 18, 2016<br>12 minute read</span>
+
+          </div>
+        </hgroup>
+      </div>
+      <div class="thtrm-constraint thtrm-constraint--slim">
+
+        <div class="thtrm-article">
+          <section class="thtrm-ad thtrm-section thtrm-section--is-promo is-sticky">
+  <img width="100" src="/images/angular2-shield-inverse.svg">
+  <h3 class="thtrm-section-headline">Need private training?</h3>
+  <p class="thtrm-section-text">Get customized training for your corporation</p>
+  <a href="mailto:hello@thoughtram.io" title="Request Training Quote" id="event-cta" class="thtrm-layout-divider-cta">Request quote <strong>&rarr;</strong></a>
+</section>
+
+
+          
+          <p style="background-color: lightgoldenrodyellow; border: solid 2px #f9dead; padding: 1em; text-align: center; border-radius: 0.3em;">Contents are based on Angular version <strong>>= 2.x</strong> unless explicitely stated differently.</p>
+          
+
+          <div class="thtrm-toc is-sticky">
+  <h3 class="no_toc" id="table-of-contents">TABLE OF CONTENTS</h3>
+<ul id="markdown-toc">
+  <li><a href="#components-with-inline-metadata" id="markdown-toc-components-with-inline-metadata">Components with Inline Metadata</a></li>
+  <li><a href="#components-with-external-assets" id="markdown-toc-components-with-external-assets">Components with External Assets</a></li>
+  <li><a href="#components-with-relative-path-urls" id="markdown-toc-components-with-relative-path-urls">Components with Relative-Path URLs</a></li>
+  <li><a href="#why-component-relative-paths-are-not-supported" id="markdown-toc-why-component-relative-paths-are-not-supported">Why Component-Relative Paths are not supported</a></li>
+  <li><a href="#agreeing-on-constraints" id="markdown-toc-agreeing-on-constraints">Agreeing on Constraints</a></li>
+  <li><a href="#conclusion" id="markdown-toc-conclusion">Conclusion</a></li>
+</ul>
+
+</div>
+
+<p>Component-based development is Angular’s <em>most-loved</em> feature. By now you should be familiar with using the <code>@Component</code> decorators to create components. You should be familiar with the required metadata information such as <code>selector</code> and <code>template</code>.</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">Component</span><span class="p">,</span> <span class="nx">OnInit</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/core'</span><span class="p">;</span>
+
+<span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
+  <span class="na">selector</span><span class="p">:</span> <span class="s1">'contacts-header'</span><span class="p">,</span>
+  <span class="na">template</span><span class="p">:</span> <span class="s2">`
+    &lt;nav class="navbar-fixed"&gt;
+      &lt;span class="brand-logo center"&gt;Contacts&lt;/span&gt;
+    &lt;/nav&gt;
+  `</span><span class="p">,</span>
+  <span class="na">styles</span><span class="p">:</span> <span class="p">[</span><span class="s1">'.navbar-fixed { position:fixed; }'</span><span class="p">]</span>
+<span class="p">})</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">HeaderComponent</span> <span class="kr">implements</span> <span class="nx">OnInit</span> <span class="p">{</span>  <span class="p">}</span></code></pre></div>
+
+<blockquote>
+  <p>If the above component syntax is new and strange, you should first review our article on <a href="/angular/2015/03/27/building-a-zippy-component-in-angular-2.html">Building a Zipping Component in Angular</a>.</p>
+</blockquote>
+
+<p>If you are familiar with these concepts and you happen to be lucky, your components load without any problems.  Mostly likely, though, you have already encountered (or soon will) the dreaded, frustrating 404 component-loading errors:</p>
+
+<p><img src="https://cloud.githubusercontent.com/assets/210413/15878482/eca5cba2-2ce0-11e6-8fb4-78868bec2644.png" alt="component_url_404" /></p>
+
+<blockquote>
+  <p>These errors mean your template HTML or styles (CSS) cannot be loaded!</p>
+</blockquote>
+
+<p>Let’s talk about why that happens and see how we can solve such problems in a way that is flexible and portable.  Before we jump into the actual problem we want to solve, let’s first review two (2) types of custom component implementations.</p>
+
+<h2 id="components-with-inline-metadata">Components with Inline Metadata</h2>
+
+<p>For every Angular component that we implement, we define not only an HTML template, but may also define the CSS styles that go with that template, specifying any selectors, rules, and media queries that we need.</p>
+
+<p>One way to do this is to set the <code>styles</code> and <code>template</code> property in the component metadata. Consider a simple <em>Header</em> component:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">Component</span><span class="p">,</span> <span class="nx">OnInit</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/core'</span><span class="p">;</span>
+
+<span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
+  <span class="na">selector</span><span class="p">:</span> <span class="s1">'contacts-header'</span><span class="p">,</span>
+  <span class="na">template</span><span class="p">:</span> <span class="s2">`
+    &lt;nav class="navbar-fixed"&gt;
+      &lt;div class="nav-wrapper"&gt;
+        &lt;span class="brand-logo center"&gt;Contacts&lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/nav&gt;
+  `</span><span class="p">,</span>
+  <span class="na">styles</span><span class="p">:</span> <span class="p">[</span><span class="s1">'.navbar-fixed { position:fixed; }'</span><span class="p">]</span>
+<span class="p">})</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">HeaderComponent</span> <span class="kr">implements</span> <span class="nx">OnInit</span> <span class="p">{</span>
+<span class="p">}</span></code></pre></div>
+
+<blockquote>
+  <p>We actually use this component in our <a href="http://thoughtram.io/angular2-master-class.html">Angular Master Class training</a>.</p>
+</blockquote>
+
+<p>Using this component is super easy. There are no external file dependencies as all the HTML and CSS is defined inline. Therefore we should <em>never</em> see [in the DevTools console] a 404 loading error for this component.</p>
+
+<h2 id="components-with-external-assets">Components with External Assets</h2>
+
+<p>Another component feature allows us to load HTML and styles from external files: using URLs in the metadata configuration block. Refactoring a component’s code, HTML, and CSS into three separate files [in the same package] is a common <a href="https://angular.io/docs/ts/latest/guide/style-guide.html#!#components">Angular Best-Practice</a>.</p>
+
+<ul>
+  <li>header.component.ts</li>
+  <li>header.component.html</li>
+  <li>header.component.css</li>
+</ul>
+
+<p>This practice of using external files is especially important when your HTML or CSS is non-trivial. And using external files keeps your *.ts logic files much cleaner and easier to maintain.</p>
+
+<p><strong>header.component.ts</strong></p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">Component</span><span class="p">,</span> <span class="nx">OnInit</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/core'</span><span class="p">;</span>
+
+<span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
+  <span class="na">selector</span>   <span class="p">:</span> <span class="s1">'contacts-header'</span><span class="p">,</span>
+  <span class="na">templateUrl</span><span class="p">:</span> <span class="s1">'header.component.html'</span><span class="p">,</span>
+  <span class="na">styleUrls</span>  <span class="p">:</span> <span class="p">[</span><span class="s1">'header.component.css'</span><span class="p">]</span>
+<span class="p">})</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">HeaderComponent</span> <span class="kr">implements</span> <span class="nx">OnInit</span> <span class="p">{</span>
+<span class="p">}</span></code></pre></div>
+
+<p><strong>header.component.css</strong></p>
+
+<div class="highlight"><pre><code class="language-css" data-lang="css"><span class="nc">.navbar-fixed</span> <span class="p">{</span>
+  <span class="nl">position</span><span class="p">:</span><span class="nb">fixed</span><span class="p">;</span>
+<span class="p">}</span></code></pre></div>
+
+<p><strong>header.component.html</strong></p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;nav</span> <span class="na">class=</span><span class="s">"navbar-fixed"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"nav-wrapper"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"brand-logo center"</span><span class="nt">&gt;</span>Contacts<span class="nt">&lt;/span&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/nav&gt;</span></code></pre></div>
+
+<p>Above we used URLs to specify external HTML and CSS resources. The important factor to note is that the URL required above [in <code>header.component.ts</code>] is not an absolute path. The path is actually relative to the <strong>application root</strong>: which is usually the location of the <code>index.html</code> web page that hosts the application.</p>
+
+<p>So the above component - without any url path information - must be stored in the application root in order to avoid 404 errors.  Wow, this does not scale well!</p>
+
+<ul>
+  <li>What if we have many components all at the root level ?</li>
+  <li>What if my components are organized in distinct packages ?</li>
+  <li>What if we want to organize our components by feature or context ?</li>
+</ul>
+
+<blockquote>
+  <p>‘Organizing by feature’ is actually an <a href="https://angular.io/docs/ts/latest/guide/style-guide.html#!#application-structure">Angular Style Guide - Best Practice</a></p>
+</blockquote>
+
+<p>To explore the issue, let’s consider the scenario where our details component (and files) are in the <code>src/app/header</code> package. The urls used above ( <code>header.component.html</code> and <code>header.component.css</code> ) would cause the loader to fail and the developer would see the following 404 error in the developers console:</p>
+
+<p><img src="https://cloud.githubusercontent.com/assets/210413/15878482/eca5cba2-2ce0-11e6-8fb4-78868bec2644.png" alt="component_url_404" /></p>
+
+<p>If path to the component HTML or CSS file is not valid, the <strong>EASY</strong> workaround is to add absolute paths to the URLs. Let’s briefly explore that idea:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">Component</span><span class="p">,</span> <span class="nx">OnInit</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/core'</span><span class="p">;</span>
+
+<span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
+  <span class="na">selector</span>   <span class="p">:</span> <span class="s1">'contacts-header'</span><span class="p">,</span>
+  <span class="na">templateUrl</span><span class="p">:</span> <span class="s1">'src/app/header/header.component.html'</span><span class="p">,</span>
+  <span class="na">styleUrls</span>  <span class="p">:</span> <span class="p">[</span><span class="s1">'src/app/header/header.component.css'</span><span class="p">]</span>
+<span class="p">})</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">HeaderComponent</span> <span class="kr">implements</span> <span class="nx">OnInit</span> <span class="p">{</span>
+<span class="p">}</span></code></pre></div>
+
+<p>This approach immediately triggers important questions and concerns:</p>
+
+<ul>
+  <li>What if we move our components to other packages?</li>
+  <li>What if we want to reuse our components in other applications?</li>
+  <li>Can we not use using relative-paths in our components ?</li>
+</ul>
+
+<p>Using absolute paths in our URLs for component HTML or CSS is a horrible idea and band-aid solution. Don’t do it!</p>
+
+<p><img src="https://cloud.githubusercontent.com/assets/210413/15881568/9c552dac-2cfc-11e6-808c-f84540d2d758.gif" alt="no-gif" /></p>
+
+<h2 id="components-with-relative-path-urls">Components with Relative-Path URLs</h2>
+
+<p>In fact, we can use relative paths. But not the way you may first think… and not without understanding and accepting some constraints.</p>
+
+<p>At first we might be tempted to try this:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">Component</span><span class="p">,</span> <span class="nx">OnInit</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/core'</span><span class="p">;</span>
+
+<span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
+  <span class="na">selector</span>   <span class="p">:</span> <span class="s1">'contacts-header'</span><span class="p">,</span>
+  <span class="na">templateUrl</span><span class="p">:</span> <span class="s1">'./header.component.html'</span><span class="p">,</span>
+  <span class="na">styleUrls</span>  <span class="p">:</span> <span class="p">[</span><span class="s1">'./header.component.css'</span><span class="p">]</span>
+<span class="p">})</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">HeaderComponent</span> <span class="kr">implements</span> <span class="nx">OnInit</span> <span class="p">{</span>
+<span class="p">}</span></code></pre></div>
+
+<p>We might expect that <code>./header.component.html</code> is a path relative to the <code>header.component.ts</code> file and that component-relative paths should work, right?</p>
+
+<p>Instead, we get another <strong>404 - Not found - Exception</strong>.</p>
+
+<p>Remember we noted that the paths are relative to the <strong>Application Root</strong> (at load time)? Since we are using the package <code>src/app/header/header.component.*</code>, then our files obviously are not at the app root. Even worse is a scenario where the deployed files have different structures than the originating source.</p>
+
+<p>We could use a gulp or grunt task to deploy to a <code>dist</code> directory and have all our components in the dist root directory. Don’t deploy all your component files to the app root… OMG, that is another horrible idea! Don’t do it.</p>
+
+<p><img src="https://cloud.githubusercontent.com/assets/210413/15881568/9c552dac-2cfc-11e6-808c-f84540d2d758.gif" alt="no-gif" /></p>
+
+<h2 id="why-component-relative-paths-are-not-supported">Why Component-Relative Paths are not supported</h2>
+
+<p>At first this limitation seems like a real feature screw-up within Angular. But the bright minds at Google know [from experience] that developers can [and will] load the files and modules using many different methods:</p>
+
+<ul>
+  <li>Loading each file explicitly with <code>&lt;script&gt;</code> tags</li>
+  <li>Loading from CommonJS packages</li>
+  <li>Loading from SystemJS</li>
+  <li>Loading using JSPM</li>
+  <li>Loading using WebPack</li>
+  <li>Loading using Browserify</li>
+</ul>
+
+<p>There are so many ways developers can deploy their apps: bundled or unbundled, different module formats, etc. It simply is not possible for Angular to absolutely know where the files reside at runtime.</p>
+
+<h2 id="agreeing-on-constraints">Agreeing on Constraints</h2>
+
+<p>If we decide on <strong>CommonJS</strong> formats AND we use a standard module loader, then we can use the <code>module.id</code> variable which contains the absolute URL of the component class [when the module file is actually loaded]: the exact syntax is <code>moduleId : module.id</code>.</p>
+
+<blockquote>
+  <p>This <strong><code>moduleId</code></strong> value is used by the Angular reflection processes and the <code>metadata_resolver</code> component to evaluate the fully-qualified component path before the component is constructed.</p>
+</blockquote>
+
+<p>Let’s see how this works with the component using <strong>CommonJS</strong>, <strong>SystemJS</strong>, <strong>JSPM</strong>, and <strong>WebPack</strong>:</p>
+
+<p><br /></p>
+
+<hr />
+
+<p><em>CommonJS</em></p>
+
+<p><strong>header.component.ts</strong></p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">Component</span><span class="p">,</span> <span class="nx">OnInit</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/core'</span><span class="p">;</span>
+
+<span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
+  <span class="na">moduleId</span><span class="p">:</span> <span class="nx">module</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>    <span class="c1">// fully resolved filename; defined at module load time</span>
+  <span class="na">selector</span><span class="p">:</span> <span class="s1">'contacts-header'</span><span class="p">,</span>
+  <span class="na">templateUrl</span><span class="p">:</span> <span class="s1">'header.component.html'</span><span class="p">,</span>
+  <span class="na">styleUrls</span><span class="p">:</span> <span class="p">[</span><span class="s1">'header.component.css'</span><span class="p">]</span>
+<span class="p">})</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">HeaderComponent</span> <span class="kr">implements</span> <span class="nx">OnInit</span> <span class="p">{</span>
+<span class="p">}</span></code></pre></div>
+
+<blockquote>
+  <p><em>Note:</em> the above requires that your <code>tsconfig.json</code> file specifies <strong>commonjs</strong>; since <code>module.id</code> is a variable available when using that module format:</p>
+</blockquote>
+
+<p><strong>tsconfig.json</strong></p>
+
+<div class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span><span class="w">
+  </span><span class="nt">"compilerOptions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"module"</span><span class="p">:</span><span class="w"> </span><span class="s2">"commonjs"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"target"</span><span class="p">:</span><span class="w"> </span><span class="s2">"es5"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span></code></pre></div>
+
+<p><br /></p>
+
+<hr />
+
+<p><em>SystemJS</em></p>
+
+<p>If we decide to use SystemJS, we use <strong><code>__moduleName</code></strong> variable instead of the <code>module.id variable</code>:</p>
+
+<p><strong>header.component.ts</strong></p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">Component</span><span class="p">,</span> <span class="nx">OnInit</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/core'</span><span class="p">;</span>
+
+<span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
+  <span class="na">moduleId</span><span class="p">:</span> <span class="nx">__moduleName</span><span class="p">,</span>    <span class="c1">// fully resolved filename; defined at module load time</span>
+  <span class="na">selector</span><span class="p">:</span> <span class="s1">'contacts-header'</span><span class="p">,</span>
+  <span class="na">templateUrl</span><span class="p">:</span> <span class="s1">'header.component.html'</span><span class="p">,</span>
+  <span class="na">styleUrls</span><span class="p">:</span> <span class="p">[</span><span class="s1">'header.component.css'</span><span class="p">]</span>
+<span class="p">})</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">HeaderComponent</span> <span class="kr">implements</span> <span class="nx">OnInit</span> <span class="p">{</span>
+<span class="p">}</span></code></pre></div>
+
+<p><br /></p>
+
+<hr />
+
+<p><em>JSPM</em></p>
+
+<p>If we decide to use <strong>JSPM</strong>, we use the <code>typescriptOptions</code> configuration format in the <code>config.js</code> file:</p>
+
+<p><strong>config.js</strong></p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">SystemJS</span><span class="p">.</span><span class="nx">config</span><span class="p">({</span>
+  <span class="na">typescriptOptions</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">module</span><span class="p">:</span> <span class="s2">"commonjs"</span><span class="p">,</span>
+    <span class="na">emitDecoratorMetadata</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="na">experimentalDecorators</span><span class="p">:</span> <span class="kc">true</span>
+  <span class="p">},</span>
+  <span class="na">transpiler</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+  <span class="na">baseURL</span><span class="p">:</span> <span class="s2">"/dist"</span><span class="p">,</span>
+  <span class="na">map</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">app</span><span class="p">:</span> <span class="s1">'src'</span><span class="p">,</span>
+    <span class="na">typescript</span><span class="p">:</span> <span class="s1">'node_modules/typescript/lib/typescript.js'</span><span class="p">,</span>
+    <span class="na">angular2</span><span class="p">:</span> <span class="s1">'node_modules/angular2'</span><span class="p">,</span>
+    <span class="na">rxjs</span><span class="p">:</span> <span class="s1">'node_modules/rxjs'</span>
+  <span class="p">},</span>
+  <span class="na">packages</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">app</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">defaultExtension</span><span class="p">:</span> <span class="s1">'ts'</span><span class="p">,</span>
+      <span class="na">main</span><span class="p">:</span> <span class="s1">'app.ts'</span>
+    <span class="p">},</span>
+    <span class="na">angular2</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">defaultExtension</span><span class="p">:</span> <span class="s1">'js'</span>
+    <span class="p">},</span>
+    <span class="na">rxjs</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">defaultExtension</span><span class="p">:</span> <span class="s1">'js'</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">});</span></code></pre></div>
+
+<blockquote>
+  <p><em>Note</em> this solution requires the <a href="https://github.com/frankwallis/plugin-typescript">SystemJS Typescript Plugin</a> to transcompile the typescript</p>
+</blockquote>
+
+<p><br /></p>
+
+<hr />
+
+<p><em>WebPack</em></p>
+
+<p>If we decide to use <strong>WebPack</strong> to bundle our files, we can use <code>require</code> or <code>import</code> to force Webpack to load the file contents and assign directly to the metadata property. This means that WebPack is loading the content <strong>instead</strong> of Angular’s runtime loader. See <a href="https://angular.io/docs/ts/latest/guide/webpack.html">WebPack : An Introduction</a> for more details.</p>
+
+<p>With WebPack there are three (3) options available to load the component’s external HTML and CSS.</p>
+
+<p>1) We can use <code>require( )</code> to reference component-relative paths.</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">Component</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/core'</span><span class="p">;</span>
+
+<span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
+  <span class="na">selector</span><span class="p">:</span> <span class="s1">'my-app'</span><span class="p">,</span>
+  <span class="na">template</span><span class="p">:</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'./header.component.html'</span><span class="p">),</span>
+  <span class="na">styles</span><span class="p">:</span> <span class="p">[</span><span class="nx">require</span><span class="p">(</span><span class="s1">'./header.component.css'</span><span class="p">)]</span>
+<span class="p">})</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">HeaderComponent</span> <span class="kr">implements</span> <span class="nx">OnInit</span> <span class="p">{</span>
+<span class="p">}</span></code></pre></div>
+
+<p>It is important to note that here we are not using the <code>templateUrl</code> or <code>styleUrls</code> keys. Instead we are using <code>require('...')</code> to load the data and assign the file contents directly to the metadata object key <code>template</code> <strong>BEFORE</strong> the Angular  component initializes.</p>
+
+<p>2) As an alternative approach to <code>require(...)</code>, we can instead use <code>import headerTemplate from './header.component.html';</code>:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">Component</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/core'</span><span class="p">;</span>
+
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">Component</span> <span class="p">}</span>  <span class="nx">from</span> <span class="s1">'@angular/core'</span><span class="p">;</span>
+<span class="kr">import</span> <span class="nx">headerTemplate</span> <span class="nx">from</span> <span class="s1">'./header.component.html'</span><span class="p">;</span>
+<span class="kr">import</span> <span class="nx">headerStyle</span>    <span class="nx">from</span> <span class="s1">'./header.component.css'</span><span class="p">;</span>
+
+<span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
+  <span class="na">selector</span> <span class="p">:</span> <span class="s1">'my-app'</span><span class="p">,</span>
+  <span class="na">template</span> <span class="p">:</span> <span class="nx">headerTemplate</span><span class="p">,</span>
+  <span class="na">styles</span>   <span class="p">:</span> <span class="p">[</span><span class="nx">headerStyle</span><span class="p">]</span>
+<span class="p">})</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">HeaderComponent</span> <span class="kr">implements</span> <span class="nx">OnInit</span> <span class="p">{</span>
+<span class="p">}</span></code></pre></div>
+
+<p>3) Finally, WebPack developers can load templates and styles at runtime by adding <code>./</code> at the beginning of the template,
+styles, and styleUrls properties that reference *component-relative URLS.</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">Component</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/core'</span><span class="p">;</span>
+
+<span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
+  <span class="na">selector</span> <span class="p">:</span> <span class="s1">'my-app'</span><span class="p">,</span>
+  <span class="na">templateUrl</span><span class="p">:</span> <span class="s1">'./header.component.html'</span><span class="p">,</span>
+  <span class="na">styleUrls</span><span class="p">:</span> <span class="p">[</span><span class="s1">'./header.component.css'</span><span class="p">]</span>
+<span class="p">})</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">HeaderComponent</span> <span class="kr">implements</span> <span class="nx">OnInit</span> <span class="p">{</span> <span class="p">}</span></code></pre></div>
+
+<blockquote>
+  <p>Behind the scenese, Webpack will actually still do a <code>require</code> to load the templates and styles.
+But our markup remains clean and uncluttered.</p>
+</blockquote>
+
+<p>Personally, I like (3) approach used with the <code>moduleId</code> property (as a backup). Thanks to Soós Gábor for his WebPack expertise and insight here.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>The key lesson is to set the <strong><code>moduleId :  module.id</code></strong> in the <code>@Component</code> decorator! Without the <strong>moduleId</strong> setting, Angular will look for our files in paths relative to the application root.</p>
+
+<blockquote>
+  <p>And don’t forget the <code>"module": "commonjs"</code> in your <strong>tsconfig.json</strong>.</p>
+</blockquote>
+
+<p>The beauty of this component-relative-path solution is that we can (1) easily repackage our components and (2) easily reuse components… all without changing the <code>@Component</code> metadata.</p>
+
+<blockquote>
+  <p>The <a href="https://github.com/angular/angular-cli/blob/master/WEBPACK_UPDATE.md">Angular Cli WebPack preview</a> now uses use webpack instead of Broccoli.
+And with WebPack, the Angular Cli defaults to using the component-relative path approach described here. #ftw</p>
+</blockquote>
+
+
+          
+
+
+
+
+        </div>
+
+        <div class="thtrm-subscriber">
+  <h3>Get updates on new articles and trainings.</h3>
+  <p>Join over 1400 other developers who get our content first.</p>
+  <form action="//thoughtram.us8.list-manage.com/subscribe/post?u=dfbb1507fbced5a20d9dc5698&amp;id=731f22cdca" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" novalidate>
+    <label for="mce-EMAIL"></label>
+    <input type="email" value="" name="EMAIL" placeholder="Your email address..." required>
+    <div style="position: absolute; left: -5000px;"><input type="text" name="b_dfbb1507fbced5a20d9dc5698_731f22cdca" tabindex="-1" value=""></div>
+    <input type="submit" value="Subscribe" name="subscribe" class="thtrm-cta thtrm-cta--small">
+  </form>
+</div>
+
+
+
+        <div class="thtrm-social-links">
+            <!-- Sharingbutton Facebook -->
+            <a class="resp-sharing-button__link" href="https://facebook.com/sharer/sharer.php?u=http%3A%2F%2Fblog.thoughtram.io/angular/2016/06/08/component-relative-paths-in-angular-2.html" target="_blank" aria-label="Share on Facebook">
+              <div class="resp-sharing-button resp-sharing-button--facebook resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M18.768,7.465H14.5V5.56c0-0.896,0.594-1.105,1.012-1.105s2.988,0,2.988,0V0.513L14.171,0.5C10.244,0.5,9.5,3.438,9.5,5.32 v2.145h-3v4h3c0,5.212,0,12,0,12h5c0,0,0-6.85,0-12h3.851L18.768,7.465z"/>
+                    </g>
+                </svg>
+                </div>Share on Facebook</div>
+            </a>
+
+            <!-- Sharingbutton Twitter -->
+            <a class="resp-sharing-button__link" href="https://twitter.com/intent/tweet/?text=Component-Relative%20Paths%20in%20Angular&amp;url=http://blog.thoughtram.io/angular/2016/06/08/component-relative-paths-in-angular-2.html" target="_blank" aria-label="Share on Twitter">
+              <div class="resp-sharing-button resp-sharing-button--twitter resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M23.444,4.834c-0.814,0.363-1.5,0.375-2.228,0.016c0.938-0.562,0.981-0.957,1.32-2.019c-0.878,0.521-1.851,0.9-2.886,1.104 C18.823,3.053,17.642,2.5,16.335,2.5c-2.51,0-4.544,2.036-4.544,4.544c0,0.356,0.04,0.703,0.117,1.036 C8.132,7.891,4.783,6.082,2.542,3.332C2.151,4.003,1.927,4.784,1.927,5.617c0,1.577,0.803,2.967,2.021,3.782 C3.203,9.375,2.503,9.171,1.891,8.831C1.89,8.85,1.89,8.868,1.89,8.888c0,2.202,1.566,4.038,3.646,4.456 c-0.666,0.181-1.368,0.209-2.053,0.079c0.579,1.804,2.257,3.118,4.245,3.155C5.783,18.102,3.372,18.737,1,18.459 C3.012,19.748,5.399,20.5,7.966,20.5c8.358,0,12.928-6.924,12.928-12.929c0-0.198-0.003-0.393-0.012-0.588 C21.769,6.343,22.835,5.746,23.444,4.834z"/>
+                    </g>
+                </svg>
+                </div>Share on Twitter</div>
+            </a>
+
+            <!-- Sharingbutton Google+ -->
+            <a class="resp-sharing-button__link" href="https://plus.google.com/share?url=http%3A%2F%2Fblog.thoughtram.io/angular/2016/06/08/component-relative-paths-in-angular-2.html" target="_blank" aria-label="Share on Google+">
+              <div class="resp-sharing-button resp-sharing-button--google resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M11.366,12.928c-0.729-0.516-1.393-1.273-1.404-1.505c0-0.425,0.038-0.627,0.988-1.368 c1.229-0.962,1.906-2.228,1.906-3.564c0-1.212-0.37-2.289-1.001-3.044h0.488c0.102,0,0.2-0.033,0.282-0.091l1.364-0.989 c0.169-0.121,0.24-0.338,0.176-0.536C14.102,1.635,13.918,1.5,13.709,1.5H7.608c-0.667,0-1.345,0.118-2.011,0.347 c-2.225,0.766-3.778,2.66-3.778,4.605c0,2.755,2.134,4.845,4.987,4.91c-0.056,0.22-0.084,0.434-0.084,0.645 c0,0.425,0.108,0.827,0.33,1.216c-0.026,0-0.051,0-0.079,0c-2.72,0-5.175,1.334-6.107,3.32C0.623,17.06,0.5,17.582,0.5,18.098 c0,0.501,0.129,0.984,0.382,1.438c0.585,1.046,1.843,1.861,3.544,2.289c0.877,0.223,1.82,0.335,2.8,0.335 c0.88,0,1.718-0.114,2.494-0.338c2.419-0.702,3.981-2.482,3.981-4.538C13.701,15.312,13.068,14.132,11.366,12.928z M3.66,17.443 c0-1.435,1.823-2.693,3.899-2.693h0.057c0.451,0.005,0.892,0.072,1.309,0.2c0.142,0.098,0.28,0.192,0.412,0.282 c0.962,0.656,1.597,1.088,1.774,1.783c0.041,0.175,0.063,0.35,0.063,0.519c0,1.787-1.333,2.693-3.961,2.693 C5.221,20.225,3.66,19.002,3.66,17.443z M5.551,3.89c0.324-0.371,0.75-0.566,1.227-0.566l0.055,0 c1.349,0.041,2.639,1.543,2.876,3.349c0.133,1.013-0.092,1.964-0.601,2.544C8.782,9.589,8.363,9.783,7.866,9.783H7.865H7.844 c-1.321-0.04-2.639-1.6-2.875-3.405C4.836,5.37,5.049,4.462,5.551,3.89z"/>
+                        <polygon points="23.5,9.5 20.5,9.5 20.5,6.5 18.5,6.5 18.5,9.5 15.5,9.5 15.5,11.5 18.5,11.5 18.5,14.5 20.5,14.5 20.5,11.5  23.5,11.5   "/>
+                    </g>
+                </svg>
+                </div>Share on Google+</div>
+            </a>
+        </div>
+
+        <h3 class="thtrm-section-headline thtrm-section-headline--with-margin">Author</h3>
+        <div class="thtrm-article-author">
+          <span class="thtrm-article-author-avatar"><img src="/images/thomas_high_res.png" alt="Picture of Thomas Burleson"></span>
+          <div class="thtrm-article-author-matter">
+            <h4 class="thtrm-article-author-name">Thomas Burleson</h4>
+            <p class="thtrm-article-author-text">Thomas was a late bloomer; programming at 24. He is a autodidact technologist with a passion for Angular, UX, and great software. Thomas is the Team Lead for Angular Material. He loves teaching, mentoring, and working with Angular developers. He also has the irritating habits of daily power-naps and starts a sentence and not finishing…. as his mind races ahead!</p>
+            <p>
+              <a class="thtrm-article-author-cta thtrm-article-author-cta-twitter" href="http://twitter.com/thomasburleson" title="Thomas Burleson on Twitter">Twitter</a>
+              <a class="thtrm-article-author-cta" href="http://github.com/thomasburleson" title="Thomas Burleson on GitHub">GitHub</a>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="thtrm-constraint">
+
+        
+        <h4 class="thtrm-section-headline thtrm-section-headline--with-big-margin thtrm-section-headline--centered">Related Posts</h4>
+        <ul class="thtrm-three-column-list thtrm-three-column-list--with-padding">
+        
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2016/09/16/angular-2-animation-important-concepts.html" title="Angular Animations - Foundation Concepts">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/angular-2-component-animations.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Angular Animations - Foundation Concepts</h3>
+                <p>Animation in Angular is now easy and more intuitive... Learn foundational animation concepts and start animating your Angular components!</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2017/02/27/three-things-you-didnt-know-about-the-async-pipe.html" title="Three things you didn't know about the AsyncPipe">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/three-things-about-the-async-pipe.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Three things you didn't know about the AsyncPipe</h3>
+                <p>This article explains three lesser known features of the AsyncPipe that help us to write better async code.</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2017/02/21/using-zones-in-angular-for-better-performance.html" title="Using Zones in Angular for better performance">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/using-zones-in-angular-for-better-performance.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Using Zones in Angular for better performance</h3>
+                <p>In this article we'll take a look at how to use Zone APIs to improve our app's performance!</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2017/02/02/making-your-angular-app-fast.html" title="Making your Angular apps fast">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/angular-performance-tips.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Making your Angular apps fast</h3>
+                <p>In this article we discuss tips and tricks to make Angular blazingly fast!</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2016/12/27/angular-2-advance-testing-with-custom-matchers.html" title="Testing Angular Directives with Custom Matchers">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/testing-directives-with-custom-matchers2.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Testing Angular Directives with Custom Matchers</h3>
+                <p>Deliver terse, DRY, self-documenting unit tests with Angular using custom Jasmine Matchers and  Helper functions.</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2016/11/28/testing-services-with-http-in-angular-2.html" title="Testing Services with Http in Angular">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/testing-services-with-http-in-angular-2.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Testing Services with Http in Angular</h3>
+                <p>Want to learn how to test services in Angular that have an Http dependency? Read more here!</p>
+              </div>
+            </a>
+          </li>
+        
+        
+        </ul>
+        
+
+      
+
+      </div>
+    </main>
+    <footer role="contentinfo" class="thtrm-footer thtrm-footer--slim">
+  <div class="thtrm-footer-text">
+    <img class="thtrm-footer-logo" alt="thoughtram brain" src="/images/thoughtram-brain-white.png">
+    <p>This website was created in collaboration with <a href="http://twitter.com/timche_" title="Tim Cheung on Twitter"><strong>Tim Cheung</strong></a> and <a href="http://twitter.com/tim_hartmann_" title="Tim Hartmann on Twitter"><strong>Tim Hartmann</strong></a>.</p>
+    <p ><a href="http://thoughtram.io/code-of-conduct.html" title="Code of Conduct">Code of Conduct</a> &bullet; <a href="http://thoughtram.io/imprint.html" title="Legal Notice">Legal notice</a></p>
+    <p class="thtrm-footer-bottom">&copy; 2014-2017 thoughtram GmbH</p>
+  </div>
+</footer>
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-51360648-2', 'auto');
+ga('send', 'pageview');
+
+var form = document.getElementById('search-form');
+var eventCta = document.getElementById('event-cta');
+
+if (eventCta) {
+
+  eventCta.addEventListener('click', function (event) {
+    event.preventDefault();
+
+    setTimeout(clickLink, 1000);
+
+    function clickLink() {
+      window.location.replace(eventCta.getAttribute('href'));
+    }
+
+    ga('send', 'event', {
+      eventCategory: 'Event Link',
+      eventAction: 'click',
+      eventLabel: eventCta.getAttribute('title'),
+      hitCallback: clickLink
+    });
+  });
+}
+
+if (form) {
+
+  var searchTerm = document.getElementById('search-term');
+
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    var formSubmitted = false;
+
+    setTimeout(submitForm, 1000);
+
+    function submitForm() {
+      if (!formSubmitted) {
+        formSubmitted = true;
+        form.submit();
+      }
+    }
+
+    ga('send', 'event', {
+      eventCategory: 'Search Form',
+      eventAction: 'submit',
+      eventLabel: searchTerm.value,
+      hitCallback: submitForm
+    });
+  });
+}
+</script>
+
+
+
+    <script src="/scripts/stickyfill.js"></script>
+    <script src="/scripts/linkjuice/dist/linkjuice.js"></script>
+    <script>
+    (function (doc, win) {
+
+      linkjuice.init('.thtrm-article', {
+        selector: ['h2', 'h3'],
+        icon: ''
+      });
+
+      if (win.matchMedia && win.matchMedia('(min-width: 1200px)').matches) {
+        var stickyElements = doc.querySelectorAll('.is-sticky');
+
+        for (var i = stickyElements.length - 1; i >= 0; i--) {
+          var el = stickyElements[i];
+
+          if (el.classList.contains('thtrm-toc')) {
+            el.classList.add('thtrm-toc--sticky');
+            el.classList.add('thtrm-toc--faded');
+          } 
+          if (el.classList.contains('thtrm-ad')) {
+            el.classList.add('thtrm-ad--sticky');
+            el.classList.add('thtrm-ad--description');
+          }
+
+          Stickyfill.add(el);
+        }
+      }
+    }(document, window));
+    </script>
+  </body>
+</html>
