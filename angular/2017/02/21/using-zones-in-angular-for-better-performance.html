@@ -144,7 +144,7 @@
 
   <span class="nl">data</span><span class="p">:</span> <span class="nx">any</span><span class="p">;</span> <span class="c1">// initial application state</span>
 
-  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">dataService</span><span class="p">:</span> <span class="nx">DataService</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">dataService</span><span class="err">:</span> <span class="nx">DataService</span><span class="p">)</span> <span class="p">{}</span>
 
   <span class="nx">ngOnInit</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">dataService</span><span class="p">.</span><span class="nx">fetchDataFromRemoteService</span><span class="p">().</span><span class="nx">subscribe</span><span class="p">(</span><span class="nx">data</span> <span class="o">=&gt;</span> <span class="p">{</span>
@@ -163,16 +163,16 @@
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="p">...</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;svg (mousedown)="mouseDown($event)"
-         (mouseup)="mouseUp($event)"
-         (mousemove)="mouseMove($event)"&gt;
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">svg</span> <span class="p">(</span><span class="nx">mousedown</span><span class="p">)</span><span class="o">=</span><span class="s2">"mouseDown($event)"</span>
+         <span class="p">(</span><span class="nx">mouseup</span><span class="p">)</span><span class="o">=</span><span class="s2">"mouseUp($event)"</span>
+         <span class="p">(</span><span class="nx">mousemove</span><span class="p">)</span><span class="o">=</span><span class="s2">"mouseMove($event)"</span><span class="o">&gt;</span>
 
-      &lt;svg:g box *ngFor="let box of boxes" [box]="box"&gt;
-      &lt;/svg:g&gt;
-
-    &lt;/svg&gt;
-  `</span>
+      <span class="o">&lt;</span><span class="na">svg</span><span class="p">:</span><span class="nx">g</span> <span class="nx">box</span> <span class="o">*</span><span class="nx">ngFor</span><span class="o">=</span><span class="s2">"let box of boxes"</span> <span class="p">[</span><span class="nx">box</span><span class="p">]</span><span class="o">=</span><span class="s2">"box"</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="sr">/svg:g</span><span class="err">&gt;
+</span>
+    <span class="o">&lt;</span><span class="sr">/svg</span><span class="err">&gt;
+</span>  <span class="err">`</span>
 <span class="p">})</span>
 <span class="kr">class</span> <span class="nx">AppComponent</span> <span class="p">{</span>
   <span class="p">...</span>
@@ -193,7 +193,7 @@
   <span class="p">...</span>
   <span class="nl">element</span><span class="p">:</span> <span class="nx">HTMLElement</span><span class="p">;</span>
 
-  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">zone</span><span class="p">:</span> <span class="nx">NgZone</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">zone</span><span class="err">:</span> <span class="nx">NgZone</span><span class="p">)</span> <span class="p">{}</span>
 
   <span class="nx">mouseDown</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
     <span class="p">...</span>
@@ -218,7 +218,7 @@
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="o">&lt;</span><span class="nx">svg</span> <span class="p">(</span><span class="nx">mousedown</span><span class="p">)</span><span class="o">=</span><span class="s2">"mouseDown($event)"</span>
       <span class="p">(</span><span class="nx">mouseup</span><span class="p">)</span><span class="o">=</span><span class="s2">"mouseUp($event)"</span><span class="o">&gt;</span>
 
-  <span class="o">&lt;</span><span class="nx">svg</span><span class="p">:</span><span class="nx">g</span> <span class="nx">box</span> <span class="o">*</span><span class="nx">ngFor</span><span class="o">=</span><span class="s2">"let box of boxes"</span> <span class="p">[</span><span class="nx">box</span><span class="p">]</span><span class="o">=</span><span class="s2">"box"</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="nx">svg</span><span class="err">:</span><span class="nx">g</span> <span class="nx">box</span> <span class="o">*</span><span class="nx">ngFor</span><span class="o">=</span><span class="s2">"let box of boxes"</span> <span class="p">[</span><span class="nx">box</span><span class="p">]</span><span class="o">=</span><span class="s2">"box"</span><span class="o">&gt;</span>
   <span class="o">&lt;</span><span class="sr">/svg:g</span><span class="err">&gt;
 </span>
 <span class="o">&lt;</span><span class="sr">/svg&gt;</span></code></pre></div>

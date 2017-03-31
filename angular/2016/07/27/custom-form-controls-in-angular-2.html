@@ -74,7 +74,7 @@
         <hgroup class="thtrm-banner-container">
           <div class="thtrm-constraint thtrm-constraint--slim">
             <h2 class="thtrm-banner-text">Custom Form Controls in Angular</h2>
-            <span>by <a href="http://twitter.com/" title="Pascal Precht on Twitter">Pascal Precht</a> on Jul 27, 2016, last updated on Dec 18, 2016<br>25 minute read</span>
+            <span>by <a href="http://twitter.com/" title="Pascal Precht on Twitter">Pascal Precht</a> on Jul 27, 2016, last updated on Dec 18, 2016<br>26 minute read</span>
 
           </div>
         </hgroup>
@@ -171,11 +171,11 @@
 
 <span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="na">selector</span><span class="p">:</span> <span class="s1">'counter-input'</span><span class="p">,</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;button (click)="increment()"&gt;+&lt;/button&gt;
-    {{counterValue}}
-    &lt;button (click)="decrement()"&gt;-&lt;/button&gt;
-  `</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">button</span> <span class="p">(</span><span class="nx">click</span><span class="p">)</span><span class="o">=</span><span class="s2">"increment()"</span><span class="o">&gt;+&lt;</span><span class="sr">/button</span><span class="err">&gt;
+</span>    <span class="p">{{</span><span class="nx">counterValue</span><span class="p">}}</span>
+    <span class="o">&lt;</span><span class="nx">button</span> <span class="p">(</span><span class="nx">click</span><span class="p">)</span><span class="o">=</span><span class="s2">"decrement()"</span><span class="o">&gt;-&lt;</span><span class="sr">/button</span><span class="err">&gt;
+</span>  <span class="err">`</span>
 <span class="p">})</span>
 <span class="kr">class</span> <span class="nx">CounterInputComponent</span> <span class="p">{</span>
 
@@ -208,9 +208,9 @@
 
 <span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="na">selector</span><span class="p">:</span> <span class="s1">'app-component'</span><span class="p">,</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;counter-input&gt;&lt;/counter-input&gt;
-  `</span><span class="p">,</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">counter</span><span class="o">-</span><span class="nx">input</span><span class="o">&gt;&lt;</span><span class="sr">/counter-input</span><span class="err">&gt;
+</span>  <span class="err">`</span><span class="p">,</span>
 <span class="p">})</span>
 <span class="kr">class</span> <span class="nx">AppComponent</span> <span class="p">{}</span></code></pre></div>
 
@@ -248,9 +248,9 @@
 <p>The <code>ControlValueAccessor</code> interface looks like this:</p>
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">export</span> <span class="kr">interface</span> <span class="nx">ControlValueAccessor</span> <span class="p">{</span>
-  <span class="nx">writeValue</span><span class="p">(</span><span class="nx">obj</span><span class="p">:</span> <span class="nx">any</span><span class="p">)</span> <span class="p">:</span> <span class="k">void</span>
-  <span class="nx">registerOnChange</span><span class="p">(</span><span class="nx">fn</span><span class="p">:</span> <span class="nx">any</span><span class="p">)</span> <span class="p">:</span> <span class="k">void</span>
-  <span class="nx">registerOnTouched</span><span class="p">(</span><span class="nx">fn</span><span class="p">:</span> <span class="nx">any</span><span class="p">)</span> <span class="p">:</span> <span class="k">void</span>
+  <span class="nx">writeValue</span><span class="p">(</span><span class="nx">obj</span><span class="err">:</span> <span class="nx">any</span><span class="p">)</span> <span class="err">:</span> <span class="k">void</span>
+  <span class="nx">registerOnChange</span><span class="p">(</span><span class="nx">fn</span><span class="err">:</span> <span class="nx">any</span><span class="p">)</span> <span class="err">:</span> <span class="k">void</span>
+  <span class="nx">registerOnTouched</span><span class="p">(</span><span class="nx">fn</span><span class="err">:</span> <span class="nx">any</span><span class="p">)</span> <span class="err">:</span> <span class="k">void</span>
 <span class="p">}</span></code></pre></div>
 
 <p><strong>writeValue(obj: any)</strong> is the method that writes a new value from the form model into the view or (if needed) DOM property. This is where we want to update our <code>counterValue</code> model, as that’s the thing that is used in the view.</p>
@@ -273,7 +273,7 @@
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">(...)</span>
 <span class="kr">class</span> <span class="nx">CounterInputComponent</span> <span class="kr">implements</span> <span class="nx">ControlValueAccessor</span> <span class="p">{</span>
   <span class="p">...</span>
-  <span class="nx">writeValue</span><span class="p">(</span><span class="nx">value</span><span class="p">:</span> <span class="nx">any</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">writeValue</span><span class="p">(</span><span class="nx">value</span><span class="err">:</span> <span class="nx">any</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">counterValue</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
   <span class="p">}</span>
 <span class="p">}</span></code></pre></div>
@@ -284,7 +284,7 @@
 
 <p>This will cause our component to render an empty string. As a quick fix, we only set the value when it’s not undefined:</p>
 
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">writeValue</span><span class="p">(</span><span class="nx">value</span><span class="p">:</span> <span class="nx">any</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">writeValue</span><span class="p">(</span><span class="nx">value</span><span class="err">:</span> <span class="nx">any</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">if</span> <span class="p">(</span><span class="nx">value</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">counterValue</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
   <span class="p">}</span>
@@ -295,7 +295,7 @@
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">(...)</span>
 <span class="kr">class</span> <span class="nx">CounterInputComponent</span> <span class="kr">implements</span> <span class="nx">ControlValueAccessor</span> <span class="p">{</span>
   <span class="p">...</span>
-  <span class="nx">propagateChange</span> <span class="o">=</span> <span class="p">(</span><span class="nx">_</span><span class="p">:</span> <span class="nx">any</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{};</span>
+  <span class="nx">propagateChange</span> <span class="o">=</span> <span class="p">(</span><span class="nx">_</span><span class="err">:</span> <span class="nx">any</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{};</span>
 
   <span class="nx">registerOnChange</span><span class="p">(</span><span class="nx">fn</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">propagateChange</span> <span class="o">=</span> <span class="nx">fn</span><span class="p">;</span>
@@ -403,13 +403,13 @@
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="na">selector</span><span class="p">:</span> <span class="s1">'app-component'</span><span class="p">,</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;form #form="ngForm"&gt;
-      &lt;counter-input name="counter" ngModel&gt;&lt;/counter-input&gt;
-    &lt;/form&gt;
-
-    &lt;pre&gt;{{ form.value | json }}&lt;/pre&gt;
-  `</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">form</span> <span class="err">#</span><span class="nx">form</span><span class="o">=</span><span class="s2">"ngForm"</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">counter</span><span class="o">-</span><span class="nx">input</span> <span class="nx">name</span><span class="o">=</span><span class="s2">"counter"</span> <span class="nx">ngModel</span><span class="o">&gt;&lt;</span><span class="sr">/counter-input</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/form</span><span class="err">&gt;
+</span>
+    <span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;</span><span class="p">{{</span> <span class="nx">form</span><span class="p">.</span><span class="nx">value</span> <span class="o">|</span> <span class="nx">json</span> <span class="p">}}</span><span class="o">&lt;</span><span class="sr">/pre</span><span class="err">&gt;
+</span>  <span class="err">`</span>
 <span class="p">})</span>
 <span class="kr">class</span> <span class="nx">AppComponent</span> <span class="p">{}</span></code></pre></div>
 
@@ -425,13 +425,13 @@
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="na">selector</span><span class="p">:</span> <span class="s1">'app-component'</span><span class="p">,</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;form #form="ngForm"&gt;
-      &lt;counter-input name="counter" [ngModel]="outerCounterValue"&gt;&lt;/counter-input&gt;
-    &lt;/form&gt;
-
-    &lt;pre&gt;{{ form.value | json }}&lt;/pre&gt;
-  `</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">form</span> <span class="err">#</span><span class="nx">form</span><span class="o">=</span><span class="s2">"ngForm"</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">counter</span><span class="o">-</span><span class="nx">input</span> <span class="nx">name</span><span class="o">=</span><span class="s2">"counter"</span> <span class="p">[</span><span class="nx">ngModel</span><span class="p">]</span><span class="o">=</span><span class="s2">"outerCounterValue"</span><span class="o">&gt;&lt;</span><span class="sr">/counter-input</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/form</span><span class="err">&gt;
+</span>
+    <span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;</span><span class="p">{{</span> <span class="nx">form</span><span class="p">.</span><span class="nx">value</span> <span class="o">|</span> <span class="nx">json</span> <span class="p">}}</span><span class="o">&lt;</span><span class="sr">/pre</span><span class="err">&gt;
+</span>  <span class="err">`</span>
 <span class="p">})</span>
 <span class="kr">class</span> <span class="nx">AppComponent</span> <span class="p">{</span>
   <span class="nx">outerCounterValue</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>  
@@ -456,19 +456,19 @@
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="na">selector</span><span class="p">:</span> <span class="s1">'app-component'</span><span class="p">,</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;form [formGroup]="form"&gt;
-      &lt;counter-input formControlName="counter"&gt;&lt;/counter-input&gt;
-    &lt;/form&gt;
-
-    &lt;pre&gt;{{ form.value | json }}&lt;/pre&gt;
-  `</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">form</span> <span class="p">[</span><span class="nx">formGroup</span><span class="p">]</span><span class="o">=</span><span class="s2">"form"</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">counter</span><span class="o">-</span><span class="nx">input</span> <span class="nx">formControlName</span><span class="o">=</span><span class="s2">"counter"</span><span class="o">&gt;&lt;</span><span class="sr">/counter-input</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/form</span><span class="err">&gt;
+</span>
+    <span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;</span><span class="p">{{</span> <span class="nx">form</span><span class="p">.</span><span class="nx">value</span> <span class="o">|</span> <span class="nx">json</span> <span class="p">}}</span><span class="o">&lt;</span><span class="sr">/pre</span><span class="err">&gt;
+</span>  <span class="err">`</span>
 <span class="p">})</span>
 <span class="kr">class</span> <span class="nx">AppComponent</span> <span class="kr">implements</span> <span class="nx">OnInit</span> <span class="p">{</span>
 
   <span class="nl">form</span><span class="p">:</span> <span class="nx">FormGroup</span><span class="p">;</span>
 
-  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">fb</span><span class="p">:</span> <span class="nx">FormBuilder</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">fb</span><span class="err">:</span> <span class="nx">FormBuilder</span><span class="p">)</span> <span class="p">{}</span>
 
   <span class="nx">ngOnInit</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">form</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">fb</span><span class="p">.</span><span class="nx">group</span><span class="p">({</span>
@@ -526,7 +526,7 @@
 
 <p>Let’s change our code to this:</p>
 
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">export</span> <span class="kd">function</span> <span class="nx">validateCounterRange</span><span class="p">(</span><span class="nx">c</span><span class="p">:</span> <span class="nx">FormControl</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">export</span> <span class="kd">function</span> <span class="nx">validateCounterRange</span><span class="p">(</span><span class="nx">c</span><span class="err">:</span> <span class="nx">FormControl</span><span class="p">)</span> <span class="p">{</span>
   <span class="kd">let</span> <span class="nx">err</span> <span class="o">=</span> <span class="p">{</span>
     <span class="na">rangeError</span><span class="p">:</span> <span class="p">{</span>
       <span class="na">given</span><span class="p">:</span> <span class="nx">c</span><span class="p">.</span><span class="nx">value</span><span class="p">,</span>
@@ -605,7 +605,7 @@
 <p>Next, we somehow have to pass these values to our <code>validateCounterRange(c: FormControl)</code>, but per API it only asks for a <code>FormControl</code>. That means we need to create that validator function using a factory that creates a closure like this:</p>
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">export</span> <span class="kd">function</span> <span class="nx">createCounterRangeValidator</span><span class="p">(</span><span class="nx">maxValue</span><span class="p">,</span> <span class="nx">minValue</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">return</span> <span class="kd">function</span> <span class="nx">validateCounterRange</span><span class="p">(</span><span class="nx">c</span><span class="p">:</span> <span class="nx">FormControl</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="kd">function</span> <span class="nx">validateCounterRange</span><span class="p">(</span><span class="nx">c</span><span class="err">:</span> <span class="nx">FormControl</span><span class="p">)</span> <span class="p">{</span>
     <span class="kd">let</span> <span class="nx">err</span> <span class="o">=</span> <span class="p">{</span>
       <span class="na">rangeError</span><span class="p">:</span> <span class="p">{</span>
         <span class="na">given</span><span class="p">:</span> <span class="nx">c</span><span class="p">.</span><span class="nx">value</span><span class="p">,</span>
@@ -633,7 +633,7 @@
     <span class="k">this</span><span class="p">.</span><span class="nx">validateFn</span> <span class="o">=</span> <span class="nx">createCounterRangeValidator</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">counterRangeMax</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">counterRangeMin</span><span class="p">);</span>
   <span class="p">}</span>
 
-  <span class="nx">validate</span><span class="p">(</span><span class="nx">c</span><span class="p">:</span> <span class="nx">FormControl</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">validate</span><span class="p">(</span><span class="nx">c</span><span class="err">:</span> <span class="nx">FormControl</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">validateFn</span><span class="p">(</span><span class="nx">c</span><span class="p">);</span>
   <span class="p">}</span>
 <span class="p">}</span></code></pre></div>
@@ -664,7 +664,7 @@
   <span class="na">providers</span><span class="p">:</span> <span class="p">[</span>
     <span class="p">...</span>
     <span class="p">{</span> 
-      <span class="na">provide</span><span class="p">:</span> <span class="nx">NG_VALIDATORS</span><span class="p">,</span>
+      <span class="nl">provide</span><span class="p">:</span> <span class="nx">NG_VALIDATORS</span><span class="p">,</span>
       <span class="na">useExisting</span><span class="p">:</span> <span class="nx">forwardRef</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="nx">CounterInputComponent</span><span class="p">),</span>
       <span class="na">multi</span><span class="p">:</span> <span class="kc">true</span>
     <span class="p">}</span>

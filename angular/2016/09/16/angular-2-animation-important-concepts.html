@@ -74,7 +74,7 @@
         <hgroup class="thtrm-banner-container">
           <div class="thtrm-constraint thtrm-constraint--slim">
             <h2 class="thtrm-banner-text">Angular Animations - Foundation Concepts</h2>
-            <span>by <a href="http://twitter.com/" title="Thomas Burleson on Twitter">Thomas Burleson</a> on Sep 16, 2016, last updated on Dec 18, 2016<br>11 minute read</span>
+            <span>by <a href="http://twitter.com/" title="Thomas Burleson on Twitter">Thomas Burleson</a> on Sep 16, 2016, last updated on Dec 18, 2016<br>12 minute read</span>
 
           </div>
         </hgroup>
@@ -110,12 +110,12 @@
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="na">selector</span><span class="p">:</span> <span class="s1">'my-fader'</span><span class="p">,</span>
-    <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;div *ngIf="visibility == 'shown'" &gt;
-      &lt;ng-content&gt;&lt;/ng-content&gt;
-      Can you see me? 
-    &lt;/div&gt;
-  `</span>
+    <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">div</span> <span class="o">*</span><span class="nx">ngIf</span><span class="o">=</span><span class="s2">"visibility == 'shown'"</span> <span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">ng</span><span class="o">-</span><span class="nx">content</span><span class="o">&gt;&lt;</span><span class="sr">/ng-content</span><span class="err">&gt;
+</span>      <span class="nx">Can</span> <span class="nx">you</span> <span class="nx">see</span> <span class="nx">me</span><span class="p">?</span> 
+    <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>  <span class="err">`</span>
 <span class="p">})</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">MyComponent</span> <span class="kr">implements</span> <span class="nx">OnChanges</span> <span class="p">{</span>
   <span class="nx">visibility</span> <span class="o">=</span> <span class="s1">'shown'</span><span class="p">;</span>
@@ -139,7 +139,7 @@
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="p">...,</span>
-  <span class="na">template</span> <span class="p">:</span> <span class="s2">``</span><span class="p">,</span>
+  <span class="na">template</span> <span class="p">:</span> <span class="err">``</span><span class="p">,</span>
   <span class="na">animations</span><span class="p">:</span> <span class="p">[</span>
     <span class="p">...</span>
   <span class="p">]</span>
@@ -150,7 +150,7 @@
 
 <p>Since our component has a <code>visibility</code> property whose state can change between <code>shown</code> and <code>hidden</code>, let’s configure animations to trigger and animate during each value change.</p>
 
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">animations</span><span class="p">:</span> <span class="p">[</span>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">animations</span><span class="err">:</span> <span class="p">[</span>
   <span class="nx">trigger</span><span class="p">(</span><span class="s1">'visibilityChanged'</span><span class="p">,</span> <span class="p">[</span>
   <span class="nx">state</span><span class="p">(</span><span class="s1">'shown'</span> <span class="p">,</span> <span class="nx">style</span><span class="p">({</span> <span class="na">opacity</span><span class="p">:</span> <span class="mi">1</span> <span class="p">})),</span> 
   <span class="nx">state</span><span class="p">(</span><span class="s1">'hidden'</span><span class="p">,</span> <span class="nx">style</span><span class="p">({</span> <span class="na">opacity</span><span class="p">:</span> <span class="mi">0</span> <span class="p">}))</span>
@@ -169,7 +169,7 @@
 
 <p>We want to animate these changes over a time duration instead of instantly hiding/showing the content. We need to configure a <em>transition</em> to specify animation durations. With Angular this is also suprisingly easy:</p>
 
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">animations</span><span class="p">:</span> <span class="p">[</span>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">animations</span><span class="err">:</span> <span class="p">[</span>
   <span class="nx">trigger</span><span class="p">(</span><span class="err">’</span><span class="nx">visibilityChanged</span><span class="s1">', [
     state('</span><span class="nx">shown</span><span class="s1">' , style({ opacity: 1 })), 
     state('</span><span class="nx">hidden</span><span class="s1">', style({ opacity: 0 })),
@@ -183,7 +183,7 @@
 
 <p>And what does the <code>transition('* =&gt; *', ...)</code> mean? Think of <code>* =&gt; *</code> as a transition from one state to another state; where <code>*</code> is a wildcard to mean <strong>any</strong> state value. If we wanted the <em>fade-out</em> to be slower than the <em>fade-in</em>, here is how we would configure the animation metadata:</p>
 
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">animations</span><span class="p">:</span> <span class="p">[</span>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">animations</span><span class="err">:</span> <span class="p">[</span>
   <span class="nx">trigger</span><span class="p">(</span><span class="err">’</span><span class="nx">visibilityChanged</span><span class="s1">', [
     state('</span><span class="nx">shown</span><span class="s1">' , style({ opacity: 1 })),
     state('</span><span class="nx">hidden</span><span class="s1">', style({ opacity: 0 })),
@@ -234,12 +234,12 @@ While we configured the Animation metadata,  I am sure you are wondering:</p>
     <span class="nx">transition</span><span class="p">(</span><span class="s1">'* =&gt; *'</span><span class="p">,</span> <span class="nx">animate</span><span class="p">(</span><span class="s1">'.5s'</span><span class="p">))</span>
   <span class="p">])</span>
   <span class="p">],</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-  &lt;div [@visibilityChanged]="visibility" &gt;
-    &lt;ng-content&gt;&lt;/ng-content&gt;  
-    &lt;p&gt;Can you see me? I should fade in or out...&lt;/p&gt;
-  &lt;/div&gt;
-  `</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+  <span class="o">&lt;</span><span class="nx">div</span> <span class="p">[</span><span class="err">@</span><span class="nx">visibilityChanged</span><span class="p">]</span><span class="o">=</span><span class="s2">"visibility"</span> <span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="nx">ng</span><span class="o">-</span><span class="nx">content</span><span class="o">&gt;&lt;</span><span class="sr">/ng-content&gt; </span><span class="err"> 
+</span>    <span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">Can</span> <span class="nx">you</span> <span class="nx">see</span> <span class="nx">me</span><span class="p">?</span> <span class="nx">I</span> <span class="nx">should</span> <span class="nx">fade</span> <span class="k">in</span> <span class="nx">or</span> <span class="nx">out</span><span class="p">...</span><span class="o">&lt;</span><span class="sr">/p</span><span class="err">&gt;
+</span>  <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>  <span class="err">`</span>
 <span class="p">})</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">FaderComponent</span> <span class="kr">implements</span> <span class="nx">OnChanges</span> <span class="p">{</span>
   <span class="err">@</span><span class="nx">Input</span><span class="p">()</span> <span class="nx">isVisible</span> <span class="p">:</span> <span class="kr">boolean</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
@@ -264,14 +264,14 @@ While we configured the Animation metadata,  I am sure you are wondering:</p>
        <span class="nx">transition</span><span class="p">(</span><span class="s1">'* =&gt; *'</span><span class="p">,</span> <span class="nx">animate</span><span class="p">(</span><span class="s1">'.5s'</span><span class="p">))</span>
      <span class="p">])</span>
    <span class="p">],</span>
-   <span class="na">template</span><span class="p">:</span> <span class="s2">`
-   &lt;div [@visibilityChanged]="isVisible" &gt;
-        ...
-   &lt;/div&gt;
-   `</span>
+   <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+   <span class="o">&lt;</span><span class="nx">div</span> <span class="p">[</span><span class="err">@</span><span class="nx">visibilityChanged</span><span class="p">]</span><span class="o">=</span><span class="s2">"isVisible"</span> <span class="o">&gt;</span>
+        <span class="p">...</span>
+   <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>   <span class="err">`</span>
  <span class="p">})</span>
  <span class="kr">export</span> <span class="kr">class</span> <span class="nx">FaderComponent</span> <span class="p">{</span>
-   <span class="err">@</span><span class="nx">Input</span><span class="p">()</span> <span class="nx">isVisible</span> <span class="p">:</span> <span class="kr">boolean</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+   <span class="err">@</span><span class="nx">Input</span><span class="p">()</span> <span class="nx">isVisible</span> <span class="err">:</span> <span class="kr">boolean</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
  <span class="p">}</span></code></pre></div>
 
 <p>I love the tersity of this code. But this will not work without another <strong>important</strong> change to the animation metadata!</p>
@@ -297,12 +297,12 @@ While we configured the Animation metadata,  I am sure you are wondering:</p>
       <span class="nx">transition</span><span class="p">(</span><span class="s1">'0 =&gt; 1'</span><span class="p">,</span> <span class="nx">animate</span><span class="p">(</span><span class="s1">'900ms'</span><span class="p">))</span>
     <span class="p">])</span>
   <span class="p">],</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-  &lt;div [@visibilityChanged]="isVisible" &gt;
-    &lt;ng-content&gt;&lt;/ng-content&gt;
-    &lt;p&gt;Can you see me? I should fade in or out...&lt;/p&gt;
-  &lt;/div&gt;
-  `</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+  <span class="o">&lt;</span><span class="nx">div</span> <span class="p">[</span><span class="err">@</span><span class="nx">visibilityChanged</span><span class="p">]</span><span class="o">=</span><span class="s2">"isVisible"</span> <span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="nx">ng</span><span class="o">-</span><span class="nx">content</span><span class="o">&gt;&lt;</span><span class="sr">/ng-content</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">Can</span> <span class="nx">you</span> <span class="nx">see</span> <span class="nx">me</span><span class="p">?</span> <span class="nx">I</span> <span class="nx">should</span> <span class="nx">fade</span> <span class="k">in</span> <span class="nx">or</span> <span class="nx">out</span><span class="p">...</span><span class="o">&lt;</span><span class="sr">/p</span><span class="err">&gt;
+</span>  <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>  <span class="err">`</span>
 <span class="p">})</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">FaderComponent</span> <span class="kr">implements</span> <span class="nx">OnChanges</span> <span class="p">{</span>
   <span class="err">@</span><span class="nx">Input</span><span class="p">()</span> <span class="nx">isVisible</span> <span class="p">:</span> <span class="kr">boolean</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
@@ -356,14 +356,14 @@ While we configured the Animation metadata,  I am sure you are wondering:</p>
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="na">selector</span> <span class="p">:</span> <span class="s1">'my-app'</span><span class="p">,</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
 
-  &lt;my-fader [isVisible]="showFader"&gt;
-    Am I visible ?
-  &lt;/my-fader&gt;
-
-  &lt;button (click)="showFader = !showFader"&gt; Toggle &lt;/button&gt;
-  `</span>
+  <span class="o">&lt;</span><span class="nx">my</span><span class="o">-</span><span class="nx">fader</span> <span class="p">[</span><span class="nx">isVisible</span><span class="p">]</span><span class="o">=</span><span class="s2">"showFader"</span><span class="o">&gt;</span>
+    <span class="nx">Am</span> <span class="nx">I</span> <span class="nx">visible</span> <span class="p">?</span>
+  <span class="o">&lt;</span><span class="sr">/my-fader</span><span class="err">&gt;
+</span>
+  <span class="o">&lt;</span><span class="nx">button</span> <span class="p">(</span><span class="nx">click</span><span class="p">)</span><span class="o">=</span><span class="s2">"showFader = !showFader"</span><span class="o">&gt;</span> <span class="nx">Toggle</span> <span class="o">&lt;</span><span class="sr">/button</span><span class="err">&gt;
+</span>  <span class="err">`</span>
 <span class="p">})</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">MyAppComponent</span> <span class="p">{</span>  
   <span class="nl">showFader</span> <span class="p">:</span> <span class="kr">boolean</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>

@@ -74,7 +74,7 @@
         <hgroup class="thtrm-banner-container">
           <div class="thtrm-constraint thtrm-constraint--slim">
             <h2 class="thtrm-banner-text">Three things you didn't know about the AsyncPipe</h2>
-            <span>by <a href="http://twitter.com/" title="Christoph Burgdorf on Twitter">Christoph Burgdorf</a> on Feb 27, 2017<br>12 minute read</span>
+            <span>by <a href="http://twitter.com/" title="Christoph Burgdorf on Twitter">Christoph Burgdorf</a> on Feb 27, 2017<br>13 minute read</span>
 
           </div>
         </hgroup>
@@ -114,21 +114,21 @@
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="p">...</span>
 <span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="p">...</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;md-list&gt;
-      &lt;a md-list-item
-        *ngFor="let contact of contacts | async"
-        title="View {{contact.name}} details"&gt;
-        &lt;img md-list-avatar [src]="contact.image" alt="Picture of {{contact.name}}"&gt;
-        &lt;h3 md-line&gt;{{contact.name}}&lt;/h3&gt;
-      &lt;/a&gt;
-    &lt;/md-list&gt;`</span><span class="p">,</span>
-<span class="p">})</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">md</span><span class="o">-</span><span class="nx">list</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">a</span> <span class="nx">md</span><span class="o">-</span><span class="nx">list</span><span class="o">-</span><span class="nx">item</span>
+        <span class="o">*</span><span class="nx">ngFor</span><span class="o">=</span><span class="s2">"let contact of contacts | async"</span>
+        <span class="nx">title</span><span class="o">=</span><span class="s2">"View {{contact.name}} details"</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">img</span> <span class="nx">md</span><span class="o">-</span><span class="nx">list</span><span class="o">-</span><span class="nx">avatar</span> <span class="p">[</span><span class="nx">src</span><span class="p">]</span><span class="o">=</span><span class="s2">"contact.image"</span> <span class="nx">alt</span><span class="o">=</span><span class="s2">"Picture of {{contact.name}}"</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">h3</span> <span class="nx">md</span><span class="o">-</span><span class="nx">line</span><span class="o">&gt;</span><span class="p">{{</span><span class="nx">contact</span><span class="p">.</span><span class="nx">name</span><span class="p">}}</span><span class="o">&lt;</span><span class="sr">/h3</span><span class="err">&gt;
+</span>      <span class="o">&lt;</span><span class="sr">/a</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/md-list&gt;`</span><span class="err">,
+</span><span class="p">})</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">ContactsListComponent</span> <span class="kr">implements</span> <span class="nx">OnInit</span> <span class="p">{</span>
 
   <span class="nl">contacts</span><span class="p">:</span> <span class="nx">Observable</span><span class="o">&lt;</span><span class="nb">Array</span><span class="o">&lt;</span><span class="nx">Contact</span><span class="o">&gt;&gt;</span><span class="p">;</span>
 
-  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">contactsService</span><span class="p">:</span> <span class="nx">ContactsService</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">contactsService</span><span class="err">:</span> <span class="nx">ContactsService</span><span class="p">)</span> <span class="p">{}</span>
 
   <span class="nx">ngOnInit</span> <span class="p">()</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">contacts</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">contactsService</span><span class="p">.</span><span class="nx">getContacts</span><span class="p">();</span>
@@ -142,11 +142,11 @@
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="p">...</span>
 <span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="na">selector</span><span class="p">:</span> <span class="s1">'my-app'</span><span class="p">,</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;ul&gt;
-      &lt;li *ngFor="let item of items | async"&gt;{{item}}&lt;/li&gt;
-    &lt;/ul&gt;`</span>
-<span class="p">})</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">ul</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">li</span> <span class="o">*</span><span class="nx">ngFor</span><span class="o">=</span><span class="s2">"let item of items | async"</span><span class="o">&gt;</span><span class="p">{{</span><span class="nx">item</span><span class="p">}}</span><span class="o">&lt;</span><span class="sr">/li</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/ul&gt;</span><span class="err">`
+</span><span class="p">})</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">AppComponent</span> <span class="p">{</span>
   <span class="nx">items</span> <span class="o">=</span> <span class="nx">Observable</span><span class="p">.</span><span class="nx">interval</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
                     <span class="p">.</span><span class="nx">scan</span><span class="p">((</span><span class="nx">acc</span><span class="p">,</span> <span class="nx">cur</span><span class="p">)</span><span class="o">=&gt;</span><span class="p">[</span><span class="nx">cur</span><span class="p">,</span> <span class="p">...</span><span class="nx">acc</span><span class="p">].</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="p">[]);</span>             
@@ -163,13 +163,13 @@
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="p">...</span>
 <span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="na">selector</span><span class="p">:</span> <span class="s1">'my-app'</span><span class="p">,</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;button (click)="newSeq()"&gt;New random sequence&lt;/button&gt;
-    &lt;ul&gt;
-      &lt;li [style.background-color]="item.color"
-          *ngFor="let item of items"&gt;{{item.num}}&lt;/li&gt;
-    &lt;/ul&gt;`</span>
-<span class="p">})</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">button</span> <span class="p">(</span><span class="nx">click</span><span class="p">)</span><span class="o">=</span><span class="s2">"newSeq()"</span><span class="o">&gt;</span><span class="nx">New</span> <span class="nx">random</span> <span class="nx">sequence</span><span class="o">&lt;</span><span class="sr">/button</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">ul</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">li</span> <span class="p">[</span><span class="nx">style</span><span class="p">.</span><span class="nx">background</span><span class="o">-</span><span class="nx">color</span><span class="p">]</span><span class="o">=</span><span class="s2">"item.color"</span>
+          <span class="o">*</span><span class="nx">ngFor</span><span class="o">=</span><span class="s2">"let item of items"</span><span class="o">&gt;</span><span class="p">{{</span><span class="nx">item</span><span class="p">.</span><span class="nx">num</span><span class="p">}}</span><span class="o">&lt;</span><span class="sr">/li</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/ul&gt;</span><span class="err">`
+</span><span class="p">})</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">AppComponent</span> <span class="p">{</span>
   <span class="nx">items</span> <span class="o">=</span> <span class="p">[];</span>
 
@@ -222,13 +222,13 @@
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="na">selector</span><span class="p">:</span> <span class="s1">'my-app'</span><span class="p">,</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;button (click)="newSeq()"&gt;New random sequence&lt;/button&gt;
-    &lt;ul&gt;
-      &lt;li [style.background-color]="item.color"
-          *ngFor="let item of items | async"&gt;{{item.num}}&lt;/li&gt;
-    &lt;/ul&gt;`</span>
-<span class="p">})</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">button</span> <span class="p">(</span><span class="nx">click</span><span class="p">)</span><span class="o">=</span><span class="s2">"newSeq()"</span><span class="o">&gt;</span><span class="nx">New</span> <span class="nx">random</span> <span class="nx">sequence</span><span class="o">&lt;</span><span class="sr">/button</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">ul</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">li</span> <span class="p">[</span><span class="nx">style</span><span class="p">.</span><span class="nx">background</span><span class="o">-</span><span class="nx">color</span><span class="p">]</span><span class="o">=</span><span class="s2">"item.color"</span>
+          <span class="o">*</span><span class="nx">ngFor</span><span class="o">=</span><span class="s2">"let item of items | async"</span><span class="o">&gt;</span><span class="p">{{</span><span class="nx">item</span><span class="p">.</span><span class="nx">num</span><span class="p">}}</span><span class="o">&lt;</span><span class="sr">/li</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/ul&gt;</span><span class="err">`
+</span><span class="p">})</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">AppComponent</span> <span class="p">{</span>
   <span class="nl">items</span><span class="p">:</span> <span class="nx">Observable</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span><span class="p">;</span>
 
@@ -258,12 +258,12 @@
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="na">selector</span><span class="p">:</span> <span class="s1">'my-seq'</span><span class="p">,</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;ul&gt;
-      &lt;li [style.background-color]="item.color" 
-          *ngFor="let item of items"&gt;{{item.num}}&lt;/li&gt;
-    &lt;/ul&gt;`</span>
-<span class="p">})</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">ul</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">li</span> <span class="p">[</span><span class="nx">style</span><span class="p">.</span><span class="nx">background</span><span class="o">-</span><span class="nx">color</span><span class="p">]</span><span class="o">=</span><span class="s2">"item.color"</span> 
+          <span class="o">*</span><span class="nx">ngFor</span><span class="o">=</span><span class="s2">"let item of items"</span><span class="o">&gt;</span><span class="p">{{</span><span class="nx">item</span><span class="p">.</span><span class="nx">num</span><span class="p">}}</span><span class="o">&lt;</span><span class="sr">/li</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/ul&gt;</span><span class="err">`
+</span><span class="p">})</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">SeqComponent</span> <span class="p">{</span>
   <span class="err">@</span><span class="nx">Input</span><span class="p">()</span>
   <span class="nl">items</span><span class="p">:</span> <span class="nb">Array</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span><span class="p">;</span>
@@ -274,12 +274,12 @@ Our root component maintains an array <code>seqs</code> and pushes new long-live
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="na">selector</span><span class="p">:</span> <span class="s1">'my-app'</span><span class="p">,</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;button (click)="newSeq()"&gt;New random sequence&lt;/button&gt;
-    &lt;ul&gt;
-      &lt;my-seq *ngFor="let seq of seqs" [items]="seq | async"&gt;&lt;/my-seq&gt;
-    &lt;/ul&gt;`</span>
-<span class="p">})</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">button</span> <span class="p">(</span><span class="nx">click</span><span class="p">)</span><span class="o">=</span><span class="s2">"newSeq()"</span><span class="o">&gt;</span><span class="nx">New</span> <span class="nx">random</span> <span class="nx">sequence</span><span class="o">&lt;</span><span class="sr">/button</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">ul</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">my</span><span class="o">-</span><span class="nx">seq</span> <span class="o">*</span><span class="nx">ngFor</span><span class="o">=</span><span class="s2">"let seq of seqs"</span> <span class="p">[</span><span class="nx">items</span><span class="p">]</span><span class="o">=</span><span class="s2">"seq | async"</span><span class="o">&gt;&lt;</span><span class="sr">/my-seq</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/ul&gt;</span><span class="err">`
+</span><span class="p">})</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">AppComponent</span> <span class="p">{</span>
   <span class="nx">seqs</span> <span class="o">=</span> <span class="p">[];</span>
   
@@ -329,12 +329,12 @@ Our root component maintains an array <code>seqs</code> and pushes new long-live
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="na">changeDetection</span><span class="p">:</span> <span class="nx">ChangeDetectionStrategy</span><span class="p">.</span><span class="nx">OnPush</span><span class="p">,</span>
   <span class="na">selector</span><span class="p">:</span> <span class="s1">'my-seq'</span><span class="p">,</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;ul&gt;
-      &lt;li [style.background-color]="item.color" 
-          *ngFor="let item of items | async"&gt;{{item.num}}&lt;/li&gt;
-    &lt;/ul&gt;`</span>
-<span class="p">})</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">ul</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">li</span> <span class="p">[</span><span class="nx">style</span><span class="p">.</span><span class="nx">background</span><span class="o">-</span><span class="nx">color</span><span class="p">]</span><span class="o">=</span><span class="s2">"item.color"</span> 
+          <span class="o">*</span><span class="nx">ngFor</span><span class="o">=</span><span class="s2">"let item of items | async"</span><span class="o">&gt;</span><span class="p">{{</span><span class="nx">item</span><span class="p">.</span><span class="nx">num</span><span class="p">}}</span><span class="o">&lt;</span><span class="sr">/li</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/ul&gt;</span><span class="err">`
+</span><span class="p">})</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">SeqComponent</span> <span class="p">{</span>
   <span class="err">@</span><span class="nx">Input</span><span class="p">()</span>
   <span class="nl">items</span><span class="p">:</span> <span class="nx">Observable</span><span class="o">&lt;</span><span class="nb">Array</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;&gt;</span><span class="p">;</span>
@@ -352,7 +352,7 @@ Our root component maintains an array <code>seqs</code> and pushes new long-live
 
 <p>Let’s recap, our array instance doesn’t change nor does the instance of our Observable ever change. So why would <code>OnPush</code> work in this case? The reason can be found in the source code of the <code>AsyncPipe</code> itself</p>
 
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">private</span> <span class="nx">_updateLatestValue</span><span class="p">(</span><span class="nx">async</span><span class="p">:</span> <span class="nx">any</span><span class="p">,</span> <span class="nx">value</span><span class="p">:</span> <span class="nb">Object</span><span class="p">):</span> <span class="k">void</span> <span class="p">{</span>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">private</span> <span class="nx">_updateLatestValue</span><span class="p">(</span><span class="nx">async</span><span class="err">:</span> <span class="nx">any</span><span class="p">,</span> <span class="nx">value</span><span class="err">:</span> <span class="nb">Object</span><span class="p">)</span><span class="err">:</span> <span class="k">void</span> <span class="p">{</span>
   <span class="k">if</span> <span class="p">(</span><span class="nx">async</span> <span class="o">===</span> <span class="k">this</span><span class="p">.</span><span class="nx">_obj</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">_latestValue</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">_ref</span><span class="p">.</span><span class="nx">markForCheck</span><span class="p">();</span>

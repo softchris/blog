@@ -139,12 +139,12 @@
 <span class="p">})</span>
 <span class="kr">class</span> <span class="nx">MyComponent</span> <span class="p">{</span>
 
-  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">dataService</span><span class="p">:</span> <span class="nx">DataService</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">dataService</span><span class="err">:</span> <span class="nx">DataService</span><span class="p">)</span> <span class="p">{}</span>
 <span class="p">}</span></code></pre></div>
 
 <p>Since the token matches the dependency instance-type and the provider strategy is <code>useClass</code>, we can also use the <strong>shorthand</strong> version, as:</p>
 
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">providers</span><span class="p">:</span> <span class="p">[</span><span class="nx">DataService</span><span class="p">]</span></code></pre></div>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">providers</span><span class="err">:</span> <span class="p">[</span><span class="nx">DataService</span><span class="p">]</span></code></pre></div>
 
 <p>Angular has many shorthand versions (DI, annotations, etc); and the above code is just one example of those.</p>
 
@@ -258,9 +258,9 @@
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">export</span> <span class="kr">class</span> <span class="nx">OpaqueToken</span> <span class="p">{</span>
 
-  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">_desc</span><span class="p">:</span> <span class="nx">string</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">_desc</span><span class="err">:</span> <span class="nx">string</span><span class="p">)</span> <span class="p">{}</span>
 
-  <span class="nx">toString</span><span class="p">():</span> <span class="nx">string</span> <span class="p">{</span> <span class="k">return</span> <span class="s2">`Token </span><span class="p">${</span><span class="k">this</span><span class="p">.</span><span class="nx">_desc</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span> <span class="p">}</span>
+  <span class="nx">toString</span><span class="p">()</span><span class="err">:</span> <span class="nx">string</span> <span class="p">{</span> <span class="k">return</span> <span class="err">`</span><span class="nx">Token</span> <span class="nx">$</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">_desc</span><span class="p">}</span><span class="err">`</span><span class="p">;</span> <span class="p">}</span>
 <span class="p">}</span></code></pre></div>
 
 <p><code>toString()</code> gets called when an error is thrown in case we’re asking for a dependency that doesn’t have a provider. All it does is add a tiny bit more information to the error message.</p>

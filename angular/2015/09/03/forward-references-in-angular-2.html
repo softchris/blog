@@ -74,7 +74,7 @@
         <hgroup class="thtrm-banner-container">
           <div class="thtrm-constraint thtrm-constraint--slim">
             <h2 class="thtrm-banner-text">Forward references in Angular</h2>
-            <span>by <a href="http://twitter.com/" title="Christoph Burgdorf on Twitter">Christoph Burgdorf</a> on Sep 3, 2015, last updated on Dec 16, 2016<br>9 minute read</span>
+            <span>by <a href="http://twitter.com/" title="Christoph Burgdorf on Twitter">Christoph Burgdorf</a> on Sep 3, 2015, last updated on Dec 16, 2016<br>8 minute read</span>
 
           </div>
         </hgroup>
@@ -115,50 +115,50 @@
 
 <p><strong>app.ts</strong></p>
 
-<div class="highlight"><pre><code class="language-ts" data-lang="ts"><span class="k">import</span> <span class="p">{</span> <span class="nx">Component</span> <span class="p">}</span> <span class="k">from</span> <span class="s1">'@angular/core'</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">NameService</span> <span class="p">}</span> <span class="k">from</span> <span class="s1">'./name.service'</span><span class="p">;</span>
+<div class="highlight"><pre><code class="language-ts" data-lang="ts">import { Component } from '@angular/core';
+import { NameService } from './name.service';
 
-<span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
-  <span class="na">selector</span><span class="p">:</span> <span class="s1">'my-app'</span><span class="p">,</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s1">'&lt;h1&gt;Favourite framework: {{ name }}&lt;/h1&gt;'</span>
-<span class="p">})</span>
-<span class="kr">class</span> <span class="nx">AppComponent</span> <span class="p">{</span>
-  <span class="nl">name</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+@Component({
+  selector: 'my-app',
+  template: '&lt;h1&gt;Favourite framework: {{ name }}&lt;/h1&gt;'
+})
+class AppComponent {
+  name: string;
 
-  <span class="kd">constructor</span><span class="p">(</span><span class="nx">nameService</span><span class="p">:</span> <span class="nx">NameService</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">nameService</span><span class="p">.</span><span class="nx">getName</span><span class="p">();</span>
-  <span class="p">}</span>
-<span class="p">}</span></code></pre></div>
+  constructor(nameService: NameService) {
+    this.name = nameService.getName();
+  }
+}</code></pre></div>
 
 <p><strong>nameService.ts</strong></p>
 
-<div class="highlight"><pre><code class="language-ts" data-lang="ts"><span class="k">export</span> <span class="kr">class</span> <span class="nx">NameService</span> <span class="p">{</span>
-  <span class="nx">getName</span> <span class="p">()</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="s2">"Angular"</span><span class="p">;</span>
-  <span class="p">}</span>
-<span class="p">}</span></code></pre></div>
+<div class="highlight"><pre><code class="language-ts" data-lang="ts">export class NameService {
+  getName () {
+    return "Angular";
+  }
+}</code></pre></div>
 
 <p>This works well, but let’s see what happens when we inline the contents of <code>nameService.ts</code> directly in <code>app.ts</code>. In this case, you probably wouldn’t want to do that but bear with me as I’m trying to make my point.</p>
 
-<div class="highlight"><pre><code class="language-ts" data-lang="ts"><span class="k">import</span> <span class="p">{</span> <span class="nx">Component</span> <span class="p">}</span> <span class="k">from</span> <span class="s1">'@angular/core'</span><span class="p">;</span>
+<div class="highlight"><pre><code class="language-ts" data-lang="ts">import { Component } from '@angular/core';
 
-<span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
-  <span class="na">selector</span><span class="p">:</span> <span class="s1">'my-app'</span><span class="p">,</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s1">'&lt;h1&gt;Favourite framework: {{ name }}&lt;/h1&gt;'</span>
-<span class="p">})</span>
-<span class="kr">class</span> <span class="nx">AppComponent</span> <span class="p">{</span>
-  <span class="nl">name</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+@Component({
+  selector: 'my-app',
+  template: '&lt;h1&gt;Favourite framework: {{ name }}&lt;/h1&gt;'
+})
+class AppComponent {
+  name: string;
 
-  <span class="kd">constructor</span><span class="p">(</span><span class="nx">nameService</span><span class="p">:</span> <span class="nx">NameService</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">nameService</span><span class="p">.</span><span class="nx">getName</span><span class="p">();</span>
-  <span class="p">}</span>
-<span class="p">}</span>
+  constructor(nameService: NameService) {
+    this.name = nameService.getName();
+  }
+}
 
-<span class="kr">class</span> <span class="nx">NameService</span> <span class="p">{</span>
-  <span class="nx">getName</span> <span class="p">()</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="s2">"Angular"</span><span class="p">;</span>
-  <span class="p">}</span>
-<span class="p">}</span></code></pre></div>
+class NameService {
+  getName () {
+    return "Angular";
+  }
+}</code></pre></div>
 
 <p>When we try to run this code we notice that it stopped working. In my case, I wasn’t even able to get an error reported to the console which I assume boils down to some glitch with debugging TypeScript code with source maps. Anyways, when we use the debuggers “Pause on exceptions” feature we can follow the rabbit into it’s hole somewhere deep down inside the Angular framework.</p>
 
@@ -168,25 +168,25 @@
 
 <p>Let’s see what happens when we move <code>NameService</code> to the top so that it’s declared before it’s first usage.</p>
 
-<div class="highlight"><pre><code class="language-ts" data-lang="ts"><span class="k">import</span> <span class="p">{</span> <span class="nx">Component</span> <span class="p">}</span> <span class="k">from</span> <span class="s1">'@angular/core'</span><span class="p">;</span>
+<div class="highlight"><pre><code class="language-ts" data-lang="ts">import { Component } from '@angular/core';
 
-<span class="kr">class</span> <span class="nx">NameService</span> <span class="p">{</span>
-  <span class="nx">getName</span> <span class="p">()</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="s2">"Angular"</span><span class="p">;</span>
-  <span class="p">}</span>
-<span class="p">}</span>
+class NameService {
+  getName () {
+    return "Angular";
+  }
+}
 
-<span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
-  <span class="na">selector</span><span class="p">:</span> <span class="s1">'my-app'</span><span class="p">,</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s1">'&lt;h1&gt;Favourite framework: {{ name }}&lt;/h1&gt;'</span>
-<span class="p">})</span>
-<span class="kr">class</span> <span class="nx">AppComponent</span> <span class="p">{</span>
-  <span class="nl">name</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+@Component({
+  selector: 'my-app',
+  template: '&lt;h1&gt;Favourite framework: {{ name }}&lt;/h1&gt;'
+})
+class AppComponent {
+  name: string;
 
-  <span class="kd">constructor</span><span class="p">(</span><span class="nx">nameService</span><span class="p">:</span> <span class="nx">NameService</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">nameService</span><span class="p">.</span><span class="nx">getName</span><span class="p">();</span>
-  <span class="p">}</span>
-<span class="p">}</span></code></pre></div>
+  constructor(nameService: NameService) {
+    this.name = nameService.getName();
+  }
+}</code></pre></div>
 
 <p>Ok, this seems to work just fine. But why doesn’t the JavaScript interpreter do that for us in the first place as it does for regular ES5 constructor functions?</p>
 
@@ -313,25 +313,25 @@
 
 <p>Turns out there is a solution we can reach for. Instead of annotating our <code>nameService</code> parameter with the <code>NameService</code> type which we learned evaluates to <code>undefined</code> at this point in time, we can use the <code>@Inject</code> annotation in conjunction with the <code>forwardRef</code> function as demonstrated here.</p>
 
-<div class="highlight"><pre><code class="language-ts" data-lang="ts"><span class="k">import</span> <span class="p">{</span><span class="nx">Component</span><span class="p">,</span> <span class="nx">Inject</span><span class="p">,</span> <span class="nx">forwardRef</span><span class="p">}</span> <span class="k">from</span> <span class="s1">'@angular/core'</span><span class="p">;</span>
+<div class="highlight"><pre><code class="language-ts" data-lang="ts">import {Component, Inject, forwardRef} from '@angular/core';
 
-<span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
-  <span class="na">selector</span><span class="p">:</span> <span class="s1">'my-app'</span><span class="p">,</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s1">'&lt;h1&gt;Favourite framework: {{ name }}&lt;/h1&gt;'</span>
-<span class="p">})</span>
-<span class="kr">class</span> <span class="nx">AppComponent</span> <span class="p">{</span>
-  <span class="nl">name</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+@Component({
+  selector: 'my-app',
+  template: '&lt;h1&gt;Favourite framework: {{ name }}&lt;/h1&gt;'
+})
+class AppComponent {
+  name: string;
 
-  <span class="kd">constructor</span><span class="p">(</span><span class="err">@</span><span class="nx">Inject</span><span class="p">(</span><span class="nx">forwardRef</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="nx">NameService</span><span class="p">))</span> <span class="nx">nameService</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">nameService</span><span class="p">.</span><span class="nx">getName</span><span class="p">();</span>
-  <span class="p">}</span>
-<span class="p">}</span>
+  constructor(@Inject(forwardRef(() =&gt; NameService)) nameService) {
+    this.name = nameService.getName();
+  }
+}
 
-<span class="kr">class</span> <span class="nx">NameService</span> <span class="p">{</span>
-  <span class="nx">getName</span> <span class="p">()</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="s2">"Angular"</span><span class="p">;</span>
-  <span class="p">}</span>
-<span class="p">}</span></code></pre></div>
+class NameService {
+  getName () {
+    return "Angular";
+  }
+}</code></pre></div>
 
 <p>What <code>forwardRef</code> does is, it takes a function as a parameter that returns a class. And because this functions isn’t immediately called but instead is called <em>after</em> <code>NameService</code> is declared it is safe to return <code>NameService</code> from it. In other words: At the point where <code>() =&gt; NameService</code> runs <code>NameService</code> isn’t undefined anymore.</p>
 

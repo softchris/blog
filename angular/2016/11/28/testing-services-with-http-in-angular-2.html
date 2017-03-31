@@ -131,11 +131,11 @@
 <span class="err">@</span><span class="nx">Injectable</span><span class="p">()</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">VideoService</span> <span class="p">{</span>
 
-  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">http</span><span class="p">:</span> <span class="nx">Http</span><span class="p">,</span> <span class="err">@</span><span class="nx">Inject</span><span class="p">(</span><span class="nx">VIMEO_API_URL</span><span class="p">)</span> <span class="kr">private</span> <span class="nx">apiUrl</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">http</span><span class="err">:</span> <span class="nx">Http</span><span class="p">,</span> <span class="err">@</span><span class="nx">Inject</span><span class="p">(</span><span class="nx">VIMEO_API_URL</span><span class="p">)</span> <span class="kr">private</span> <span class="nx">apiUrl</span><span class="p">)</span> <span class="p">{}</span>
 
   <span class="nx">getVideos</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">http</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">`</span><span class="p">${</span><span class="k">this</span><span class="p">.</span><span class="nx">apiUrl</span><span class="p">}</span><span class="s2">/videos`</span><span class="p">)</span>
-                    <span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">res</span> <span class="o">=&gt;</span> <span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">().</span><span class="nx">data</span><span class="p">);</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">http</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="err">`</span><span class="nx">$</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">apiUrl</span><span class="p">}</span><span class="sr">/videos`</span><span class="err">)
+</span>                    <span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">res</span> <span class="o">=&gt;</span> <span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">().</span><span class="nx">data</span><span class="p">);</span>
   <span class="p">}</span>
 <span class="p">}</span></code></pre></div>
 
@@ -161,7 +161,7 @@
   
   <span class="kr">private</span> <span class="nx">videos</span> <span class="o">=</span> <span class="p">[];</span>
 
-  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">videoService</span><span class="p">:</span> <span class="nx">VideoService</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">videoService</span><span class="err">:</span> <span class="nx">VideoService</span><span class="p">)</span> <span class="p">{}</span>
 
   <span class="nx">ngOnInit</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">videoService</span><span class="p">.</span><span class="nx">getVideos</span><span class="p">()</span>
@@ -229,8 +229,8 @@
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">Http</span> <span class="p">{</span>
 
   <span class="nx">constructor</span><span class="p">(</span>
-    <span class="kr">protected</span> <span class="nx">_backend</span><span class="p">:</span> <span class="nx">ConnectionBackend</span><span class="p">,</span>
-    <span class="kr">protected</span> <span class="nx">_defaultOptions</span><span class="p">:</span> <span class="nx">RequestOptions</span>
+    <span class="kr">protected</span> <span class="nx">_backend</span><span class="err">:</span> <span class="nx">ConnectionBackend</span><span class="p">,</span>
+    <span class="kr">protected</span> <span class="nx">_defaultOptions</span><span class="err">:</span> <span class="nx">RequestOptions</span>
   <span class="p">)</span> <span class="p">{}</span>
 
   <span class="p">...</span>
@@ -249,7 +249,7 @@
   <span class="p">...</span>
   <span class="na">providers</span><span class="p">:</span> <span class="p">[</span>
     <span class="p">...</span>
-    <span class="p">{</span> <span class="na">provide</span><span class="p">:</span> <span class="nx">XHRBackend</span><span class="p">,</span> <span class="na">useClass</span><span class="p">:</span> <span class="nx">MockBackend</span> <span class="p">}</span>
+    <span class="p">{</span> <span class="nl">provide</span><span class="p">:</span> <span class="nx">XHRBackend</span><span class="p">,</span> <span class="na">useClass</span><span class="p">:</span> <span class="nx">MockBackend</span> <span class="p">}</span>
   <span class="p">]</span>
 <span class="p">});</span>
 <span class="p">...</span></code></pre></div>

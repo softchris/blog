@@ -74,7 +74,7 @@
         <hgroup class="thtrm-banner-container">
           <div class="thtrm-constraint thtrm-constraint--slim">
             <h2 class="thtrm-banner-text">Cold vs Hot Observables</h2>
-            <span>by <a href="http://twitter.com/" title="Christoph Burgdorf on Twitter">Christoph Burgdorf</a> on Jun 16, 2016, last updated on Dec 18, 2016<br>16 minute read</span>
+            <span>by <a href="http://twitter.com/" title="Christoph Burgdorf on Twitter">Christoph Burgdorf</a> on Jun 16, 2016, last updated on Dec 18, 2016<br>17 minute read</span>
 
           </div>
         </hgroup>
@@ -142,8 +142,8 @@
 
 <p>When we <a href="http://jsbin.com/mihoyifiku/1/edit?js,console">run this code</a> we’ll see the following output in the console.</p>
 
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="mi">1</span><span class="nx">st</span> <span class="nx">subscriber</span><span class="p">:</span> <span class="mi">1</span>
-<span class="mi">2</span><span class="nx">nd</span> <span class="nx">subscriber</span><span class="p">:</span> <span class="mi">1</span></code></pre></div>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="mi">1</span><span class="nx">st</span> <span class="nx">subscriber</span><span class="err">:</span> <span class="mi">1</span>
+<span class="mi">2</span><span class="nx">nd</span> <span class="nx">subscriber</span><span class="err">:</span> <span class="mi">1</span></code></pre></div>
 
 <p>Ok, cool. But the interesting question remains: is <code>obs</code> cold or hot? Let’s forget for a moment that we know how <code>obs</code> was created and imagine we would have obtained a reference to <code>obs</code> by calling <code>getObservableFromSomewhere()</code> instead. If that was the case, we wouldn’t be able to tell whether it’s cold or hot. And that’s one important thing to understand. It’s not always possible from the subscriber side to know whether you are dealing with a cold or hot Observable.</p>
 
@@ -151,8 +151,8 @@
 
 <p>If we <a href="http://jsbin.com/xosipocoza/1/edit?js,console">run that code</a> again we’ll notice that we actually get different output per subscription. Notice the change in the last digit.</p>
 
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="mi">1</span><span class="nx">st</span> <span class="nx">subscriber</span><span class="p">:</span> <span class="mi">1465990942935</span>
-<span class="mi">2</span><span class="nx">nd</span> <span class="nx">subscriber</span><span class="p">:</span> <span class="mi">1465990942936</span></code></pre></div>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="mi">1</span><span class="nx">st</span> <span class="nx">subscriber</span><span class="err">:</span> <span class="mi">1465990942935</span>
+<span class="mi">2</span><span class="nx">nd</span> <span class="nx">subscriber</span><span class="err">:</span> <span class="mi">1465990942936</span></code></pre></div>
 
 <p>With this output it is clear that there must have been two calls to <code>observer.next(Date.now())</code>. In other words, the Observable <em>started producing</em> the values upon each subscription which makes it cold by definition.</p>
 
@@ -171,8 +171,8 @@
 
 <p>Let’s ignore the <code>publish</code> and <code>connect</code> operators for a moment and solely focus on the <a href="http://jsbin.com/pupoledehi/1/edit?js,console">output</a>.</p>
 
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="mi">1</span><span class="nx">st</span> <span class="nx">subscriber</span><span class="p">:</span> <span class="mi">1465994477014</span>
-<span class="mi">2</span><span class="nx">nd</span> <span class="nx">subscriber</span><span class="p">:</span> <span class="mi">1465994477014</span></code></pre></div>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="mi">1</span><span class="nx">st</span> <span class="nx">subscriber</span><span class="err">:</span> <span class="mi">1465994477014</span>
+<span class="mi">2</span><span class="nx">nd</span> <span class="nx">subscriber</span><span class="err">:</span> <span class="mi">1465994477014</span></code></pre></div>
 
 <p>Clearly we can see that there must have been only one call to <code>observer.next(Date.now())</code> with this setup as the numbers are identical. So, is it hot now? Well, kind of. Let’s put it that way: it’s warmer than a cold one but colder than a really hot one. It’s hot in the sense that there’s no new <em>value producer/source</em> (the thing calling <code>observer.next(val)</code>) created upon subscription. But it’s cold in the sense that it doesn’t start producing values <em>before</em> the subscriptions exist.</p>
 
@@ -218,11 +218,11 @@
 
 <p>We see the following output as we <a href="http://jsbin.com/kosavihiru/edit?js,console">run the script</a>.</p>
 
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="mi">1</span><span class="nx">st</span> <span class="nx">subscriber</span><span class="p">:</span><span class="mi">0</span>
-<span class="mi">1</span><span class="nx">st</span> <span class="nx">subscriber</span><span class="p">:</span><span class="mi">1</span>
-<span class="mi">2</span><span class="nx">nd</span> <span class="nx">subscriber</span><span class="p">:</span><span class="mi">1</span>
-<span class="mi">1</span><span class="nx">st</span> <span class="nx">subscriber</span><span class="p">:</span><span class="mi">2</span>
-<span class="mi">2</span><span class="nx">nd</span> <span class="nx">subscriber</span><span class="p">:</span><span class="mi">2</span>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="mi">1</span><span class="nx">st</span> <span class="nx">subscriber</span><span class="err">:</span><span class="mi">0</span>
+<span class="mi">1</span><span class="nx">st</span> <span class="nx">subscriber</span><span class="err">:</span><span class="mi">1</span>
+<span class="mi">2</span><span class="nx">nd</span> <span class="nx">subscriber</span><span class="err">:</span><span class="mi">1</span>
+<span class="mi">1</span><span class="nx">st</span> <span class="nx">subscriber</span><span class="err">:</span><span class="mi">2</span>
+<span class="mi">2</span><span class="nx">nd</span> <span class="nx">subscriber</span><span class="err">:</span><span class="mi">2</span>
 <span class="p">...</span></code></pre></div>
 
 <p>Clearly, we can see that the second subscriber is not starting over at <code>0</code>. But that would have been the case if we didn’t use <code>publish</code> to share the value producing source across subscribers.</p>
@@ -270,9 +270,9 @@
 
 <p>Notice how we get values starting from <code>2</code> when we <a href="http://jsbin.com/cumukoyana/1/edit?js,console">run this code</a>.</p>
 
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="mi">1</span><span class="nx">st</span> <span class="nx">subscriber</span><span class="p">:</span><span class="mi">2</span>
-<span class="mi">1</span><span class="nx">st</span> <span class="nx">subscriber</span><span class="p">:</span><span class="mi">3</span>
-<span class="mi">2</span><span class="nx">nd</span> <span class="nx">subscriber</span><span class="p">:</span><span class="mi">3</span></code></pre></div>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="mi">1</span><span class="nx">st</span> <span class="nx">subscriber</span><span class="err">:</span><span class="mi">2</span>
+<span class="mi">1</span><span class="nx">st</span> <span class="nx">subscriber</span><span class="err">:</span><span class="mi">3</span>
+<span class="mi">2</span><span class="nx">nd</span> <span class="nx">subscriber</span><span class="err">:</span><span class="mi">3</span></code></pre></div>
 
 <p>This means we now have a truly hot Observable that produces values no matter if someone listens or not.</p>
 
@@ -295,16 +295,16 @@
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="p">...</span>
 <span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="p">...</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;ul&gt;
-      &lt;li *ngFor="let contact of contacts | async"&gt;{{contact.name}}&lt;/li&gt;
-    &lt;/ul&gt;
-    `</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">ul</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">li</span> <span class="o">*</span><span class="nx">ngFor</span><span class="o">=</span><span class="s2">"let contact of contacts | async"</span><span class="o">&gt;</span><span class="p">{{</span><span class="nx">contact</span><span class="p">.</span><span class="nx">name</span><span class="p">}}</span><span class="o">&lt;</span><span class="sr">/li</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/ul</span><span class="err">&gt;
+</span>    <span class="err">`</span>
   <span class="p">...</span>
 <span class="p">})</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">AppComponent</span> <span class="p">{</span>
   <span class="nl">contacts</span><span class="p">:</span> <span class="nx">Observable</span><span class="o">&lt;</span><span class="nb">Array</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;&gt;</span><span class="p">;</span>
-  <span class="nx">constructor</span> <span class="p">(</span><span class="nx">http</span><span class="p">:</span> <span class="nx">Http</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">constructor</span> <span class="p">(</span><span class="nx">http</span><span class="err">:</span> <span class="nx">Http</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">contacts</span> <span class="o">=</span> <span class="nx">http</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'contacts.json'</span><span class="p">)</span>
                         <span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">response</span> <span class="o">=&gt;</span> <span class="nx">response</span><span class="p">.</span><span class="nx">json</span><span class="p">().</span><span class="nx">items</span><span class="p">);</span>
   <span class="p">}</span>
@@ -315,7 +315,7 @@
 <p>The <code>contacts.json</code> contains a simple object with an <code>items</code> property holding the collection of contacts.</p>
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="p">{</span>
-  <span class="s2">"items"</span><span class="p">:</span> <span class="p">[</span>
+  <span class="s2">"items"</span><span class="err">:</span> <span class="p">[</span>
     <span class="p">{</span> <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"John Conner"</span> <span class="p">},</span>
     <span class="p">{</span> <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Arnold Schwarzenegger"</span> <span class="p">}</span>
   <span class="p">]</span>
@@ -347,22 +347,22 @@
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="p">...</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    1st List
-    &lt;ul&gt;
-      &lt;li *ngFor="let contact of contacts | async"&gt;{{contact.name}}&lt;/li&gt;
-    &lt;/ul&gt;
-    2st List
-    &lt;ul&gt;
-      &lt;li *ngFor="let contact of contacts2 | async"&gt;{{contact.name}}&lt;/li&gt;
-    &lt;/ul&gt;
-    `</span><span class="p">,</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="mi">1</span><span class="nx">st</span> <span class="nx">List</span>
+    <span class="o">&lt;</span><span class="nx">ul</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">li</span> <span class="o">*</span><span class="nx">ngFor</span><span class="o">=</span><span class="s2">"let contact of contacts | async"</span><span class="o">&gt;</span><span class="p">{{</span><span class="nx">contact</span><span class="p">.</span><span class="nx">name</span><span class="p">}}</span><span class="o">&lt;</span><span class="sr">/li</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/ul</span><span class="err">&gt;
+</span>    <span class="mi">2</span><span class="nx">st</span> <span class="nx">List</span>
+    <span class="o">&lt;</span><span class="nx">ul</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">li</span> <span class="o">*</span><span class="nx">ngFor</span><span class="o">=</span><span class="s2">"let contact of contacts2 | async"</span><span class="o">&gt;</span><span class="p">{{</span><span class="nx">contact</span><span class="p">.</span><span class="nx">name</span><span class="p">}}</span><span class="o">&lt;</span><span class="sr">/li</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/ul</span><span class="err">&gt;
+</span>    <span class="err">`</span><span class="p">,</span>
   <span class="p">...</span>
 <span class="p">})</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">AppComponent</span> <span class="p">{</span>
   <span class="nl">contacts</span><span class="p">:</span> <span class="nx">Observable</span><span class="o">&lt;</span><span class="nb">Array</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;&gt;</span><span class="p">;</span>
   <span class="nl">contacts2</span><span class="p">:</span> <span class="nx">Observable</span><span class="o">&lt;</span><span class="nb">Array</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;&gt;</span><span class="p">;</span>
-  <span class="nx">constructor</span> <span class="p">(</span><span class="nx">http</span><span class="p">:</span> <span class="nx">Http</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">constructor</span> <span class="p">(</span><span class="nx">http</span><span class="err">:</span> <span class="nx">Http</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">contacts</span> <span class="o">=</span> <span class="nx">http</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'contacts.json'</span><span class="p">)</span>
                         <span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">response</span> <span class="o">=&gt;</span> <span class="nx">response</span><span class="p">.</span><span class="nx">json</span><span class="p">().</span><span class="nx">items</span><span class="p">)</span>
                         <span class="p">.</span><span class="nx">publish</span><span class="p">()</span>

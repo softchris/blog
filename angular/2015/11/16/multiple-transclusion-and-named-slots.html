@@ -74,7 +74,7 @@
         <hgroup class="thtrm-banner-container">
           <div class="thtrm-constraint thtrm-constraint--slim">
             <h2 class="thtrm-banner-text">Multiple Transclusion and named Slots</h2>
-            <span>by <a href="http://twitter.com/" title="Pascal Precht on Twitter">Pascal Precht</a> on Nov 16, 2015, last updated on Nov 8, 2016<br>7 minute read</span>
+            <span>by <a href="http://twitter.com/" title="Pascal Precht on Twitter">Pascal Precht</a> on Nov 16, 2015, last updated on Nov 8, 2016<br>8 minute read</span>
 
           </div>
         </hgroup>
@@ -135,12 +135,12 @@
     <span class="na">restrict</span><span class="p">:</span> <span class="s1">'E'</span><span class="p">,</span>
     <span class="na">scope</span><span class="p">:</span> <span class="p">{},</span>
     <span class="na">transclude</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-    <span class="na">template</span><span class="p">:</span> <span class="s2">`
-      &lt;div class="summary" ng-click="open = !open"&gt;
-        {{ open ? '&amp;blacktriangledown;' : '&amp;blacktriangleright;' }} Details
-      &lt;/div&gt;
-      &lt;div class="content" ng-show="open" ng-transclude&gt;&lt;/div&gt;
-    `</span>
+    <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+      <span class="o">&lt;</span><span class="nx">div</span> <span class="kr">class</span><span class="o">=</span><span class="s2">"summary"</span> <span class="nx">ng</span><span class="o">-</span><span class="nx">click</span><span class="o">=</span><span class="s2">"open = !open"</span><span class="o">&gt;</span>
+        <span class="p">{{</span> <span class="nx">open</span> <span class="p">?</span> <span class="s1">'&amp;blacktriangledown;'</span> <span class="p">:</span> <span class="s1">'&amp;blacktriangleright;'</span> <span class="p">}}</span> <span class="nx">Details</span>
+      <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>      <span class="o">&lt;</span><span class="nx">div</span> <span class="kr">class</span><span class="o">=</span><span class="s2">"content"</span> <span class="nx">ng</span><span class="o">-</span><span class="nx">show</span><span class="o">=</span><span class="s2">"open"</span> <span class="nx">ng</span><span class="o">-</span><span class="nx">transclude</span><span class="o">&gt;&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>    <span class="err">`</span>
   <span class="p">};</span>
 <span class="p">});</span></code></pre></div>
 
@@ -198,12 +198,12 @@
     <span class="na">transclude</span><span class="p">:</span> <span class="p">{</span>
       <span class="s1">'summarySlot'</span><span class="p">:</span> <span class="s1">'span'</span><span class="p">,</span>
     <span class="p">},</span>
-    <span class="na">template</span><span class="p">:</span> <span class="s2">`
-      &lt;div class="summary" ng-click="open = !open"&gt;
-        {{ open ? '&amp;blacktriangledown;' : '&amp;blacktriangleright;' }} &lt;span ng-transclude="summarySlot"&gt;&lt;/span&gt;
-      &lt;/div&gt;
-      &lt;div class="content" ng-show="open" ng-transclude&gt;&lt;/div&gt;
-    `</span>
+    <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+      <span class="o">&lt;</span><span class="nx">div</span> <span class="kr">class</span><span class="o">=</span><span class="s2">"summary"</span> <span class="nx">ng</span><span class="o">-</span><span class="nx">click</span><span class="o">=</span><span class="s2">"open = !open"</span><span class="o">&gt;</span>
+        <span class="p">{{</span> <span class="nx">open</span> <span class="p">?</span> <span class="s1">'&amp;blacktriangledown;'</span> <span class="p">:</span> <span class="s1">'&amp;blacktriangleright;'</span> <span class="p">}}</span> <span class="o">&lt;</span><span class="nx">span</span> <span class="nx">ng</span><span class="o">-</span><span class="nx">transclude</span><span class="o">=</span><span class="s2">"summarySlot"</span><span class="o">&gt;&lt;</span><span class="sr">/span</span><span class="err">&gt;
+</span>      <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>      <span class="o">&lt;</span><span class="nx">div</span> <span class="kr">class</span><span class="o">=</span><span class="s2">"content"</span> <span class="nx">ng</span><span class="o">-</span><span class="nx">show</span><span class="o">=</span><span class="s2">"open"</span> <span class="nx">ng</span><span class="o">-</span><span class="nx">transclude</span><span class="o">&gt;&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>    <span class="err">`</span>
   <span class="p">};</span>
 <span class="p">});</span></code></pre></div>
 

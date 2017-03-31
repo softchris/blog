@@ -74,7 +74,7 @@
         <hgroup class="thtrm-banner-container">
           <div class="thtrm-constraint thtrm-constraint--slim">
             <h2 class="thtrm-banner-text">Upgrading Angular apps using ngUpgrade</h2>
-            <span>by <a href="http://twitter.com/" title="Pascal Precht on Twitter">Pascal Precht</a> on Oct 24, 2015, last updated on Dec 18, 2016<br>19 minute read</span>
+            <span>by <a href="http://twitter.com/" title="Pascal Precht on Twitter">Pascal Precht</a> on Oct 24, 2015, last updated on Dec 18, 2016<br>20 minute read</span>
 
           </div>
         </hgroup>
@@ -296,23 +296,23 @@
     <span class="na">product</span><span class="p">:</span> <span class="s1">'='</span>
   <span class="p">},</span>
   <span class="na">controller</span><span class="p">:</span> <span class="s1">'ProductDetailController'</span><span class="p">,</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;h2&gt;{{$ctrl.product.name}}&lt;/h2&gt;
-    &lt;p&gt;{{$ctrl.product.description}}&lt;/p&gt;
-  `</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">h2</span><span class="o">&gt;</span><span class="p">{{</span><span class="nx">$ctrl</span><span class="p">.</span><span class="nx">product</span><span class="p">.</span><span class="nx">name</span><span class="p">}}</span><span class="o">&lt;</span><span class="sr">/h2</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="p">{{</span><span class="nx">$ctrl</span><span class="p">.</span><span class="nx">product</span><span class="p">.</span><span class="nx">description</span><span class="p">}}</span><span class="o">&lt;</span><span class="sr">/p</span><span class="err">&gt;
+</span>  <span class="err">`</span>
 <span class="p">});</span></code></pre></div>
 
 <p>Upgrading this to Angular 2.x looks something like this:</p>
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="na">selector</span><span class="p">:</span> <span class="s1">'product-detail'</span><span class="p">,</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;h2&gt;{{product.name}}&lt;/h2&gt;
-    &lt;p&gt;{{product.description}}&lt;/p&gt;
-  `</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">h2</span><span class="o">&gt;</span><span class="p">{{</span><span class="nx">product</span><span class="p">.</span><span class="nx">name</span><span class="p">}}</span><span class="o">&lt;</span><span class="sr">/h2</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="p">{{</span><span class="nx">product</span><span class="p">.</span><span class="nx">description</span><span class="p">}}</span><span class="o">&lt;</span><span class="sr">/p</span><span class="err">&gt;
+</span>  <span class="err">`</span>
 <span class="p">})</span>
 <span class="kr">class</span> <span class="nx">ProductDetail</span> <span class="p">{</span>
-  <span class="err">@</span><span class="nx">Input</span><span class="p">()</span> <span class="nx">product</span><span class="p">:</span> <span class="nx">Product</span><span class="p">;</span>
+  <span class="err">@</span><span class="nx">Input</span><span class="p">()</span> <span class="nx">product</span><span class="err">:</span> <span class="nx">Product</span><span class="p">;</span>
 <span class="p">}</span></code></pre></div>
 
 <p><strong>Note</strong>: You might want to define this component in a separate file, for simplicity sake we defined it in place.</p>
@@ -334,18 +334,18 @@
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="na">selector</span><span class="p">:</span> <span class="s1">'product-list'</span><span class="p">,</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;h2&gt;Product List&lt;/h2&gt;
-    &lt;ol&gt;
-      &lt;li *ngFor="let product of products"&gt;
-        &lt;product-list-item [product]="product"&gt;
-        &lt;/product-list-item&gt;
-      &lt;/li&gt;
-    &lt;/ol&gt;
-  `</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">h2</span><span class="o">&gt;</span><span class="nx">Product</span> <span class="nx">List</span><span class="o">&lt;</span><span class="sr">/h2</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">ol</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">li</span> <span class="o">*</span><span class="nx">ngFor</span><span class="o">=</span><span class="s2">"let product of products"</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">product</span><span class="o">-</span><span class="nx">list</span><span class="o">-</span><span class="nx">item</span> <span class="p">[</span><span class="nx">product</span><span class="p">]</span><span class="o">=</span><span class="s2">"product"</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="sr">/product-list-item</span><span class="err">&gt;
+</span>      <span class="o">&lt;</span><span class="sr">/li</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/ol</span><span class="err">&gt;
+</span>  <span class="err">`</span>
 <span class="p">})</span>
 <span class="kr">class</span> <span class="nx">ProductList</span> <span class="p">{</span>
-  <span class="err">@</span><span class="nx">Input</span><span class="p">()</span> <span class="nx">products</span><span class="p">:</span> <span class="nx">Product</span><span class="p">[];</span>
+  <span class="err">@</span><span class="nx">Input</span><span class="p">()</span> <span class="nx">products</span><span class="err">:</span> <span class="nx">Product</span><span class="p">[];</span>
   <span class="p">...</span>
 <span class="p">}</span></code></pre></div>
 
@@ -378,7 +378,7 @@
 
 <span class="err">@</span><span class="nx">Component</span><span class="p">()</span>
 <span class="kr">class</span> <span class="nx">ProductDetail</span> <span class="p">{</span>
-  <span class="nx">constructor</span><span class="p">(</span><span class="nx">productService</span><span class="p">:</span> <span class="nx">ProductService</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">constructor</span><span class="p">(</span><span class="nx">productService</span><span class="err">:</span> <span class="nx">ProductService</span><span class="p">)</span> <span class="p">{</span>
 
   <span class="p">}</span>
 <span class="p">}</span></code></pre></div>
@@ -427,7 +427,7 @@
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Injectable</span><span class="p">()</span>
 <span class="kr">class</span> <span class="nx">ProductService</span> <span class="p">{</span>
 
-  <span class="nx">constructor</span><span class="p">(</span><span class="nx">dataService</span><span class="p">:</span> <span class="nx">DataService</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">constructor</span><span class="p">(</span><span class="nx">dataService</span><span class="err">:</span> <span class="nx">DataService</span><span class="p">)</span> <span class="p">{</span>
     <span class="p">...</span>
   <span class="p">}</span>
 <span class="p">}</span></code></pre></div>

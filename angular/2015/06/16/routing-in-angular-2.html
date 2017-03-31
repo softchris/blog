@@ -125,7 +125,7 @@
 
 <p>To avoid additional typing, and also to hide some boilerplate logic, the router module exports a variable <code>routerInjectables</code> which contains all injector bindings to get going. To give you an idea of what that looks like, here’s a small snippet from the router’s source:</p>
 
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">export</span> <span class="kd">var</span> <span class="nx">routerInjectables</span><span class="p">:</span> <span class="nx">List</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span> <span class="o">=</span> <span class="p">[</span>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">export</span> <span class="kd">var</span> <span class="nx">routerInjectables</span><span class="err">:</span> <span class="nx">List</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span> <span class="o">=</span> <span class="p">[</span>
   <span class="nx">RouteRegistry</span><span class="p">,</span>
   <span class="nx">Pipeline</span><span class="p">,</span>
   <span class="nx">BrowserLocation</span><span class="p">,</span>
@@ -175,18 +175,18 @@
   <span class="na">selector</span><span class="p">:</span> <span class="s1">'app'</span>
 <span class="p">})</span>
 <span class="err">@</span><span class="nx">View</span><span class="p">({</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;nav&gt;
-      &lt;ul&gt;
-        &lt;li&gt;Start&lt;/li&gt;
-        &lt;li&gt;About&lt;/li&gt;
-        &lt;li&gt;Contact&lt;/li&gt;
-      &lt;/ul&gt;
-    &lt;/nav&gt;
-    &lt;main&gt;
-      // components go here
-    &lt;/main&gt;
-  `</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">nav</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">ul</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">li</span><span class="o">&gt;</span><span class="nx">Start</span><span class="o">&lt;</span><span class="sr">/li</span><span class="err">&gt;
+</span>        <span class="o">&lt;</span><span class="nx">li</span><span class="o">&gt;</span><span class="nx">About</span><span class="o">&lt;</span><span class="sr">/li</span><span class="err">&gt;
+</span>        <span class="o">&lt;</span><span class="nx">li</span><span class="o">&gt;</span><span class="nx">Contact</span><span class="o">&lt;</span><span class="sr">/li</span><span class="err">&gt;
+</span>      <span class="o">&lt;</span><span class="sr">/ul</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/nav</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">main</span><span class="o">&gt;</span>
+      <span class="c1">// components go here</span>
+    <span class="o">&lt;</span><span class="sr">/main</span><span class="err">&gt;
+</span>  <span class="err">`</span>
 <span class="p">})</span>
 <span class="kr">class</span> <span class="nx">App</span> <span class="p">{</span>
 
@@ -241,18 +241,18 @@
 <span class="p">})</span>
 <span class="err">@</span><span class="nx">View</span><span class="p">({</span>
   <span class="na">directives</span><span class="p">:</span> <span class="p">[</span><span class="nx">RouterOutlet</span><span class="p">],</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;nav&gt;
-      &lt;ul&gt;
-        &lt;li&gt;Start&lt;/li&gt;
-        &lt;li&gt;About&lt;/li&gt;
-        &lt;li&gt;Contact&lt;/li&gt;
-      &lt;/ul&gt;
-    &lt;/nav&gt;
-    &lt;main&gt;
-      &lt;router-outlet&gt;&lt;/router-outlet&gt;
-    &lt;/main&gt;
-  `</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">nav</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">ul</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">li</span><span class="o">&gt;</span><span class="nx">Start</span><span class="o">&lt;</span><span class="sr">/li</span><span class="err">&gt;
+</span>        <span class="o">&lt;</span><span class="nx">li</span><span class="o">&gt;</span><span class="nx">About</span><span class="o">&lt;</span><span class="sr">/li</span><span class="err">&gt;
+</span>        <span class="o">&lt;</span><span class="nx">li</span><span class="o">&gt;</span><span class="nx">Contact</span><span class="o">&lt;</span><span class="sr">/li</span><span class="err">&gt;
+</span>      <span class="o">&lt;</span><span class="sr">/ul</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/nav</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">main</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">router</span><span class="o">-</span><span class="nx">outlet</span><span class="o">&gt;&lt;</span><span class="sr">/router-outlet</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/main</span><span class="err">&gt;
+</span>  <span class="err">`</span>
 <span class="p">})</span>
 <span class="kr">class</span> <span class="nx">App</span> <span class="p">{</span>
 

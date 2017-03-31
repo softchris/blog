@@ -147,7 +147,7 @@
 
 <p>Once a guard is registered with a token, we can use it in our route configuration. The following route configuration has the <code>CanAlwaysActivateGuard</code> attached, which gets executed when routing to that specific route.</p>
 
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">export</span> <span class="kr">const</span> <span class="nx">AppRoutes</span><span class="p">:</span><span class="nx">RouterConfig</span> <span class="o">=</span> <span class="p">[</span>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">export</span> <span class="kr">const</span> <span class="nx">AppRoutes</span><span class="err">:</span><span class="nx">RouterConfig</span> <span class="o">=</span> <span class="p">[</span>
   <span class="p">{</span> 
     <span class="na">path</span><span class="p">:</span> <span class="s1">''</span><span class="p">,</span>
     <span class="na">component</span><span class="p">:</span> <span class="nx">SomeComponent</span><span class="p">,</span>
@@ -170,7 +170,7 @@
 <span class="err">@</span><span class="nx">Injectable</span><span class="p">()</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">CanActivateViaAuthGuard</span> <span class="kr">implements</span> <span class="nx">CanActivate</span> <span class="p">{</span>
 
-  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">authService</span><span class="p">:</span> <span class="nx">AuthService</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">authService</span><span class="err">:</span> <span class="nx">AuthService</span><span class="p">)</span> <span class="p">{}</span>
 
   <span class="nx">canActivate</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">authService</span><span class="p">.</span><span class="nx">isLoggedIn</span><span class="p">();</span>
@@ -192,8 +192,8 @@
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="p">{</span> 
   <span class="nl">path</span><span class="p">:</span> <span class="s1">''</span><span class="p">,</span>
-  <span class="nx">component</span><span class="p">:</span> <span class="nx">SomeComponent</span><span class="p">,</span>
-  <span class="nx">canActivate</span><span class="p">:</span> <span class="p">[</span>
+  <span class="nx">component</span><span class="err">:</span> <span class="nx">SomeComponent</span><span class="p">,</span>
+  <span class="nx">canActivate</span><span class="err">:</span> <span class="p">[</span>
     <span class="s1">'CanAlwaysActivateGuard'</span><span class="p">,</span>
     <span class="nx">CanActivateViaAuthGuard</span>
   <span class="p">]</span>

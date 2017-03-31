@@ -285,7 +285,7 @@
 <p><strong>Request Object</strong></p>
 
 <div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="p">{</span>
-    <span class="s2">"respository"</span><span class="p">:</span> <span class="s2">"https://github.com/angular/angular"</span>
+    <span class="s2">"respository"</span><span class="err">:</span> <span class="s2">"https://github.com/angular/angular"</span>
 <span class="p">}</span></code></pre></div>
 
 <p>We don’t need anything apart from the <code>repository</code> itself so far. However, we may add things like <code>version_name</code> or <code>subtitle</code> later on to expose other Clog features to the frontend.</p>
@@ -293,8 +293,8 @@
 <p><strong>Response Object</strong></p>
 
 <div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="p">{</span>
-    <span class="s2">"changelog"</span><span class="p">:</span> <span class="s2">"the formatted markdown string"</span><span class="p">,</span>
-    <span class="s2">"error"</span><span class="p">:</span> <span class="s2">"foo"</span>
+    <span class="s2">"changelog"</span><span class="err">:</span> <span class="s2">"the formatted markdown string"</span><span class="p">,</span>
+    <span class="s2">"error"</span><span class="err">:</span> <span class="s2">"foo"</span>
 <span class="p">}</span></code></pre></div>
 
 <p>Let’s keep the response simple as well. There is nothing much we need apart from the changelog itself and an optional error message in case something didn’t play out well.</p>
@@ -373,7 +373,7 @@
 
 <p>Great! We are almost there. We can already use <code>curl</code> to try out our API.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">curl <span class="s1">'http://127.0.0.1:6767/generate'</span> -H <span class="s1">'Cache-Control: no-cache'</span> -H <span class="s1">'Content-Type: application/json;charset=UTF-8'</span> --data-binary <span class="s1">$'{</span><span class="se">\n</span><span class="s1">  "repository": "https://github.com/thoughtram/clog"</span><span class="se">\n</span><span class="s1">}'</span> --compressed</code></pre></div>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">curl <span class="s1">'http://127.0.0.1:6767/generate'</span> -H <span class="s1">'Cache-Control: no-cache'</span> -H <span class="s1">'Content-Type: application/json;charset=UTF-8'</span> --data-binary <span class="nv">$'</span><span class="o">{</span><span class="se">\n</span>  <span class="s2">"repository"</span>: <span class="s2">"https://github.com/thoughtram/clog"</span><span class="se">\n</span><span class="o">}</span><span class="s1">' --compressed</span></code></pre></div>
 
 <p>There’s still one big flaw though. We are still cloning into a directory called <code>some-unique-id</code>. For every request. This will break apart as soon as we have two simultanous requests to our API. Let’s change the code to actually use real unique names for the directories that we clone into. And again, there’s a crate for that. It’s name is <code>uuid</code>.</p>
 

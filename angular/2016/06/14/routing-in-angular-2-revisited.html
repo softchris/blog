@@ -74,7 +74,7 @@
         <hgroup class="thtrm-banner-container">
           <div class="thtrm-constraint thtrm-constraint--slim">
             <h2 class="thtrm-banner-text">Routing in Angular revisited</h2>
-            <span>by <a href="http://twitter.com/" title="Pascal Precht on Twitter">Pascal Precht</a> on Jun 14, 2016, last updated on Dec 18, 2016<br>12 minute read</span>
+            <span>by <a href="http://twitter.com/" title="Pascal Precht on Twitter">Pascal Precht</a> on Jun 14, 2016, last updated on Dec 18, 2016<br>14 minute read</span>
 
           </div>
         </hgroup>
@@ -120,6 +120,7 @@
   <li><a href="#linking-to-other-routes" id="markdown-toc-linking-to-other-routes">Linking to other routes</a></li>
   <li><a href="#access-route-parameters" id="markdown-toc-access-route-parameters">Access Route Parameters</a></li>
   <li><a href="#using-router-snapshots" id="markdown-toc-using-router-snapshots">Using Router Snapshots</a></li>
+  <li><a href="#parammap-since-angular-version-4x" id="markdown-toc-parammap-since-angular-version-4x">ParamMap since Angular version 4.x</a></li>
 </ul>
 
 </div>
@@ -132,14 +133,14 @@
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="na">selector</span><span class="p">:</span> <span class="s1">'contacts-list'</span><span class="p">,</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;h2&gt;Contacts&lt;/h2&gt;
-    &lt;ul&gt;
-      &lt;li *ngFor="let contact of contacts | async"&gt;
-        {{contact.name}}
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  `</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">h2</span><span class="o">&gt;</span><span class="nx">Contacts</span><span class="o">&lt;</span><span class="sr">/h2</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">ul</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">li</span> <span class="o">*</span><span class="nx">ngFor</span><span class="o">=</span><span class="s2">"let contact of contacts | async"</span><span class="o">&gt;</span>
+        <span class="p">{{</span><span class="nx">contact</span><span class="p">.</span><span class="nx">name</span><span class="p">}}</span>
+      <span class="o">&lt;</span><span class="sr">/li</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/ul</span><span class="err">&gt;
+</span>  <span class="err">`</span>
 <span class="p">})</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">ContactsListComponent</span> <span class="p">{</span>
   <span class="p">...</span>
@@ -151,16 +152,16 @@
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="na">selector</span><span class="p">:</span> <span class="s1">'contacts-detail'</span><span class="p">,</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;h2&gt;{{contact.name}}&lt;/h2&gt;
-
-    &lt;address&gt;
-      &lt;span&gt;{{contact.street}}&lt;/span&gt;
-      &lt;span&gt;{{contact.zip}}&lt;/span&gt;
-      &lt;span&gt;{{contact.city}}&lt;/span&gt;
-      &lt;span&gt;{{contact.country}}&lt;/span&gt;
-    &lt;/address&gt;
-  `</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">h2</span><span class="o">&gt;</span><span class="p">{{</span><span class="nx">contact</span><span class="p">.</span><span class="nx">name</span><span class="p">}}</span><span class="o">&lt;</span><span class="sr">/h2</span><span class="err">&gt;
+</span>
+    <span class="o">&lt;</span><span class="nx">address</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">span</span><span class="o">&gt;</span><span class="p">{{</span><span class="nx">contact</span><span class="p">.</span><span class="nx">street</span><span class="p">}}</span><span class="o">&lt;</span><span class="sr">/span</span><span class="err">&gt;
+</span>      <span class="o">&lt;</span><span class="nx">span</span><span class="o">&gt;</span><span class="p">{{</span><span class="nx">contact</span><span class="p">.</span><span class="nx">zip</span><span class="p">}}</span><span class="o">&lt;</span><span class="sr">/span</span><span class="err">&gt;
+</span>      <span class="o">&lt;</span><span class="nx">span</span><span class="o">&gt;</span><span class="p">{{</span><span class="nx">contact</span><span class="p">.</span><span class="nx">city</span><span class="p">}}</span><span class="o">&lt;</span><span class="sr">/span</span><span class="err">&gt;
+</span>      <span class="o">&lt;</span><span class="nx">span</span><span class="o">&gt;</span><span class="p">{{</span><span class="nx">contact</span><span class="p">.</span><span class="nx">country</span><span class="p">}}</span><span class="o">&lt;</span><span class="sr">/span</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/address</span><span class="err">&gt;
+</span>  <span class="err">`</span>
 <span class="p">})</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">ContactsDetailComponent</span> <span class="p">{</span>
   <span class="p">...</span>
@@ -223,12 +224,12 @@
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="na">selector</span><span class="p">:</span> <span class="s1">'contacts-app'</span><span class="p">,</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;h1&gt;Contacts App&lt;/h1&gt;
-
-    &lt;!-- here's where we want to load
-      the detail and the list view --&gt;
-  `</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">h1</span><span class="o">&gt;</span><span class="nx">Contacts</span> <span class="nx">App</span><span class="o">&lt;</span><span class="sr">/h1</span><span class="err">&gt;
+</span>
+    <span class="c">&lt;!--</span> <span class="nx">here</span><span class="err">'</span><span class="nx">s</span> <span class="nx">where</span> <span class="nx">we</span> <span class="nx">want</span> <span class="nx">to</span> <span class="nx">load</span>
+      <span class="nx">the</span> <span class="nx">detail</span> <span class="nx">and</span> <span class="nx">the</span> <span class="nx">list</span> <span class="nx">view</span> <span class="o">--&gt;</span>
+  <span class="err">`</span>
 <span class="p">})</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">ContactsAppComponent</span> <span class="p">{</span>
   <span class="p">...</span>
@@ -238,10 +239,10 @@
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="p">...</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;h1&gt;Contacts App&lt;/h1&gt;
-    &lt;router-outlet&gt;&lt;/router-outlet&gt;
-  `</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">h1</span><span class="o">&gt;</span><span class="nx">Contacts</span> <span class="nx">App</span><span class="o">&lt;</span><span class="sr">/h1</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">router</span><span class="o">-</span><span class="nx">outlet</span><span class="o">&gt;&lt;</span><span class="sr">/router-outlet</span><span class="err">&gt;
+</span>  <span class="err">`</span>
 <span class="p">})</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">ContactsAppComponent</span> <span class="p">{</span>
   <span class="p">...</span>
@@ -271,16 +272,16 @@
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="na">selector</span><span class="p">:</span> <span class="s1">'contacts-list'</span><span class="p">,</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;h2&gt;Contacts&lt;/h2&gt;
-    &lt;ul&gt;
-      &lt;li *ngFor="let contact of contacts | async"&gt;
-        &lt;a [routerLink]="['/contacts', contact.id]"&gt;
-          {{contact.name}}
-        &lt;/a&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  `</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">h2</span><span class="o">&gt;</span><span class="nx">Contacts</span><span class="o">&lt;</span><span class="sr">/h2</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">ul</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">li</span> <span class="o">*</span><span class="nx">ngFor</span><span class="o">=</span><span class="s2">"let contact of contacts | async"</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">a</span> <span class="p">[</span><span class="nx">routerLink</span><span class="p">]</span><span class="o">=</span><span class="s2">"['/contacts', contact.id]"</span><span class="o">&gt;</span>
+          <span class="p">{{</span><span class="nx">contact</span><span class="p">.</span><span class="nx">name</span><span class="p">}}</span>
+        <span class="o">&lt;</span><span class="sr">/a</span><span class="err">&gt;
+</span>      <span class="o">&lt;</span><span class="sr">/li</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/ul</span><span class="err">&gt;
+</span>  <span class="err">`</span>
 <span class="p">})</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">ContactsListComponent</span> <span class="p">{</span>
   <span class="p">...</span>
@@ -307,7 +308,7 @@
 <span class="p">})</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">ContactsDetailComponent</span> <span class="p">{</span>
 
-  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">route</span><span class="p">:</span> <span class="nx">ActivatedRoute</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">route</span><span class="err">:</span> <span class="nx">ActivatedRoute</span><span class="p">)</span> <span class="p">{</span>
 
   <span class="p">}</span>
 <span class="p">}</span></code></pre></div>
@@ -326,8 +327,8 @@
   <span class="nl">contact</span><span class="p">:</span> <span class="nx">Contact</span><span class="p">;</span>
 
   <span class="nx">constructor</span><span class="p">(</span>
-    <span class="kr">private</span> <span class="nx">route</span><span class="p">:</span> <span class="nx">ActivatedRoute</span><span class="p">,</span>
-    <span class="kr">private</span> <span class="nx">contactsService</span><span class="p">:</span> <span class="nx">ContactsService</span>
+    <span class="kr">private</span> <span class="nx">route</span><span class="err">:</span> <span class="nx">ActivatedRoute</span><span class="p">,</span>
+    <span class="kr">private</span> <span class="nx">contactsService</span><span class="err">:</span> <span class="nx">ContactsService</span>
   <span class="p">)</span> <span class="p">{</span>
 
   <span class="p">}</span>
@@ -370,6 +371,23 @@
 <span class="p">...</span></code></pre></div>
 
 <p>Check out the running example <a href="http://plnkr.co/edit/I9qFkO?p=preview">right here</a>!</p>
+
+<h2 id="parammap-since-angular-version-4x">ParamMap since Angular version 4.x</h2>
+
+<p>Because router parameters can either have single or multiple values, the params type should actually be <code>{ [key: string]: string | string[] }</code>. We as developers usually know if we expect a single or multiple values. That’s why since Angular version 4.x, there’s a new <code>ParamMap</code> interface that we can use to decide whether we we’re interested in a single value (<code>ParamMap.get()</code>) or multiple values (<code>ParamMap.getAll()</code>).</p>
+
+<p>The above code can therefore be rewritten as:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="p">...</span>
+  <span class="nx">ngOnInit</span><span class="p">()</span> <span class="p">{</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">contactsService</span>
+        <span class="p">.</span><span class="nx">getContacts</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">route</span><span class="p">.</span><span class="nx">snapshot</span><span class="p">.</span><span class="nx">paramMap</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'id'</span><span class="p">))</span>
+        <span class="p">.</span><span class="nx">subscribe</span><span class="p">(</span><span class="nx">contact</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">contact</span> <span class="o">=</span> <span class="nx">contact</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">...</span></code></pre></div>
+
+<p>This feature has been introduce in <a href="https://github.com/angular/angular/commit/a755b71">this commit</a>, go ahead and take a look for more information.</p>
 
 <p>Of course, there’s way more to cover when it comes to routing. We haven’t talked about secondary routes or <strong>guards</strong> yet, but we’ll do that in our upcoming articles. Hopefully this one gives you an idea of what to expect from the new router. For a more in-depth article on the underlying architecture, you might want to read Victor’s <a href="http://victorsavkin.com/post/145672529346/angular-router">awesome blog</a>!</p>
 

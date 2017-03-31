@@ -111,7 +111,7 @@
 <span class="p">})</span>
 <span class="kr">class</span> <span class="nx">MyComponent</span> <span class="p">{</span>
 
-  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">myService</span><span class="p">:</span> <span class="nx">MyService</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">myService</span><span class="err">:</span> <span class="nx">MyService</span><span class="p">)</span> <span class="p">{}</span>
 <span class="p">}</span></code></pre></div>
 
 <p>We would run into an error, because even though, we import <code>MyService</code> and use that type to annotate our constructor parameter, there’s nothing that tells Angular (or the injector) what to do, when someone asks for something of that type. Of course, Angular could simply automagically call <code>new</code> on the given type and that’s it, but then there’s no way to replace the actual dependency with an object of a different type, or maybe even the way we want to construct a dependency (class vs. factory vs. value).</p>
@@ -127,7 +127,7 @@
 <span class="p">})</span>
 <span class="kr">class</span> <span class="nx">MyComponent</span> <span class="p">{</span>
 
-  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">myService</span><span class="p">:</span> <span class="nx">MyService</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">myService</span><span class="err">:</span> <span class="nx">MyService</span><span class="p">)</span> <span class="p">{}</span>
 <span class="p">}</span></code></pre></div>
 
 <p>You might know that adding a provider as shown above is actually a shorthand syntax for developer ergonomics. The same logic can be expressed with this more verbose syntax:</p>
@@ -172,7 +172,7 @@
 <span class="p">})</span>
 <span class="kr">class</span> <span class="nx">MyComponent</span> <span class="p">{</span>
 
-  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">myService</span><span class="p">:</span> <span class="nx">MyService</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">myService</span><span class="err">:</span> <span class="nx">MyService</span><span class="p">)</span> <span class="p">{}</span>
 <span class="p">}</span></code></pre></div>
 
 <p>Keep in mind that this is not a breaking change that has been introduced. It’s an additional syntax we can take advantage of. If you’re into saving key strokes, you might want to prefer Map literals over <code>provide()</code>.</p>

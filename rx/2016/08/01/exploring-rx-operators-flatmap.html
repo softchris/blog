@@ -172,7 +172,7 @@
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">class</span> <span class="nx">Tweet</span> <span class="p">{</span>
   <span class="nx">likes</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Rx</span><span class="p">.</span><span class="nx">Subject</span><span class="o">&lt;</span><span class="nx">LikeAction</span><span class="o">&gt;</span><span class="p">();</span>
-  <span class="nx">constructor</span> <span class="p">(</span><span class="kr">public</span> <span class="nx">text</span><span class="p">:</span> <span class="nx">string</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="nx">constructor</span> <span class="p">(</span><span class="kr">public</span> <span class="nx">text</span><span class="err">:</span> <span class="nx">string</span><span class="p">)</span> <span class="p">{}</span>
 <span class="p">}</span></code></pre></div>
 
 <p>Don’t get confused by the use of <code>Subject</code> here. A subject is an <code>Observable</code> that one can not only subscribe to but also raise notifications on which is exactly what we need to mock the actions.</p>
@@ -204,7 +204,7 @@
 <span class="nx">tweets</span><span class="p">.</span><span class="nx">subscribe</span><span class="p">(</span><span class="nx">tweet</span> <span class="o">=&gt;</span> <span class="p">{</span>
   <span class="nx">tweet</span><span class="p">.</span><span class="nx">likes</span><span class="p">.</span><span class="nx">subscribe</span><span class="p">(</span><span class="nx">likeAction</span> <span class="o">=&gt;</span> <span class="p">{</span>
     <span class="nx">likeCount</span> <span class="o">=</span> <span class="nx">likeCount</span> <span class="o">+</span> <span class="nx">likeAction</span><span class="p">;</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`Total Likes: </span><span class="p">${</span><span class="nx">likeCount</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="err">`</span><span class="nx">Total</span> <span class="na">Likes</span><span class="p">:</span> <span class="nx">$</span><span class="p">{</span><span class="nx">likeCount</span><span class="p">}</span><span class="err">`</span><span class="p">);</span>
   <span class="p">});</span>
 <span class="p">});</span></code></pre></div>
 
@@ -218,7 +218,7 @@
 <span class="nx">tweets</span><span class="p">.</span><span class="nx">flatMap</span><span class="p">(</span><span class="nx">tweet</span> <span class="o">=&gt;</span> <span class="nx">tweet</span><span class="p">.</span><span class="nx">likes</span><span class="p">)</span>
       <span class="p">.</span><span class="nx">subscribe</span><span class="p">(</span><span class="nx">like</span> <span class="o">=&gt;</span> <span class="p">{</span>
         <span class="nx">likeCount</span> <span class="o">=</span> <span class="nx">likeCount</span> <span class="o">+</span> <span class="nx">like</span><span class="p">;</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`Likes: </span><span class="p">${</span><span class="nx">likeCount</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="err">`</span><span class="na">Likes</span><span class="p">:</span> <span class="nx">$</span><span class="p">{</span><span class="nx">likeCount</span><span class="p">}</span><span class="err">`</span><span class="p">);</span>
       <span class="p">});</span></code></pre></div>
 
 <blockquote>
@@ -236,7 +236,7 @@
 
 <span class="kr">class</span> <span class="nx">Tweet</span> <span class="p">{</span>
   <span class="nx">likes</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Rx</span><span class="p">.</span><span class="nx">Subject</span><span class="o">&lt;</span><span class="nx">LikeAction</span><span class="o">&gt;</span><span class="p">();</span>
-  <span class="nx">constructor</span> <span class="p">(</span><span class="kr">public</span> <span class="nx">text</span><span class="p">:</span> <span class="nx">string</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="nx">constructor</span> <span class="p">(</span><span class="kr">public</span> <span class="nx">text</span><span class="err">:</span> <span class="nx">string</span><span class="p">)</span> <span class="p">{}</span>
 <span class="p">}</span>
 
 <span class="kd">let</span> <span class="nx">tweets</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Rx</span><span class="p">.</span><span class="nx">Subject</span><span class="o">&lt;</span><span class="nx">Tweet</span><span class="o">&gt;</span><span class="p">();</span>
@@ -247,7 +247,7 @@
 <span class="nx">tweets</span><span class="p">.</span><span class="nx">flatMap</span><span class="p">(</span><span class="nx">tweet</span> <span class="o">=&gt;</span> <span class="nx">tweet</span><span class="p">.</span><span class="nx">likes</span><span class="p">)</span>
       <span class="p">.</span><span class="nx">subscribe</span><span class="p">(</span><span class="nx">likeAction</span> <span class="o">=&gt;</span> <span class="p">{</span>
         <span class="nx">likeCount</span> <span class="o">=</span> <span class="nx">likeCount</span> <span class="o">+</span> <span class="nx">likeAction</span><span class="p">;</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`Total Likes: </span><span class="p">${</span><span class="nx">likeCount</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="err">`</span><span class="nx">Total</span> <span class="na">Likes</span><span class="p">:</span> <span class="nx">$</span><span class="p">{</span><span class="nx">likeCount</span><span class="p">}</span><span class="err">`</span><span class="p">);</span>
       <span class="p">});</span>
 
 <span class="kd">let</span> <span class="nx">firstTweet</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Tweet</span><span class="p">(</span><span class="s1">'first tweet'</span><span class="p">);</span>
@@ -265,10 +265,10 @@
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">first</span> <span class="nx">tweet</span>
 <span class="nx">second</span> <span class="nx">tweet</span>
-<span class="nx">Total</span> <span class="nx">Likes</span><span class="p">:</span> <span class="mi">1</span>
-<span class="nx">Total</span> <span class="nx">Likes</span><span class="p">:</span> <span class="mi">2</span>
-<span class="nx">Total</span> <span class="nx">Likes</span><span class="p">:</span> <span class="mi">3</span>
-<span class="nx">Total</span> <span class="nx">Likes</span><span class="p">:</span> <span class="mi">2</span></code></pre></div>
+<span class="nx">Total</span> <span class="nx">Likes</span><span class="err">:</span> <span class="mi">1</span>
+<span class="nx">Total</span> <span class="nx">Likes</span><span class="err">:</span> <span class="mi">2</span>
+<span class="nx">Total</span> <span class="nx">Likes</span><span class="err">:</span> <span class="mi">3</span>
+<span class="nx">Total</span> <span class="nx">Likes</span><span class="err">:</span> <span class="mi">2</span></code></pre></div>
 
 <h2 id="conclusion">Conclusion</h2>
 

@@ -141,7 +141,7 @@
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">()</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">SomeComponent</span> <span class="p">{</span>
   
-  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">contactService</span><span class="p">:</span> <span class="nx">DataService</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">contactService</span><span class="err">:</span> <span class="nx">DataService</span><span class="p">)</span> <span class="p">{}</span>
 <span class="p">}</span></code></pre></div>
 
 <p>In fact, all components in our component tree will now get exactly the same instance, because their injectors will keep looking upwards in the tree for a provider, until they find one.</p>
@@ -195,7 +195,7 @@
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">()</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">SomeComponent</span> <span class="p">{</span>
   
-  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">contactService</span><span class="p">:</span> <span class="nx">RootDataService</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">contactService</span><span class="err">:</span> <span class="nx">RootDataService</span><span class="p">)</span> <span class="p">{}</span>
 <span class="p">}</span></code></pre></div>
 
 <p>Again, this is the exact same instance. Now, why is this helpful? Well… now that we have two different tokens to get the same instance, it’s no longer a problem that another provider in the injector tree “shadows” the provider from our root injector. We can now ask for the dependency instance of <code>DataService</code> that is created at the very top of our tree, no matter where we are in the component tree, because the alias token still points to the original instance.</p>

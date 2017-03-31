@@ -138,10 +138,10 @@
 
 <div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="na">selector</span><span class="p">:</span> <span class="s1">'my-component'</span><span class="p">,</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;h3&gt;We love {{name}}&lt;/h3&gt;
-    &lt;button (click)="changeName()"&gt;Change name&lt;/button&gt;
-  `</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">h3</span><span class="o">&gt;</span><span class="nx">We</span> <span class="nx">love</span> <span class="p">{{</span><span class="nx">name</span><span class="p">}}</span><span class="o">&lt;</span><span class="sr">/h3</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">button</span> <span class="p">(</span><span class="nx">click</span><span class="p">)</span><span class="o">=</span><span class="s2">"changeName()"</span><span class="o">&gt;</span><span class="nx">Change</span> <span class="nx">name</span><span class="o">&lt;</span><span class="sr">/button</span><span class="err">&gt;
+</span>  <span class="err">`</span>
 <span class="p">})</span>
 <span class="kr">class</span> <span class="nx">MyComponent</span> <span class="p">{</span>
 
@@ -160,9 +160,9 @@
 
 <div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="na">selector</span><span class="p">:</span> <span class="s1">'my-component'</span><span class="p">,</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;h3&gt;We love {{name}}&lt;/h3&gt;
-  `</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">h3</span><span class="o">&gt;</span><span class="nx">We</span> <span class="nx">love</span> <span class="p">{{</span><span class="nx">name</span><span class="p">}}</span><span class="o">&lt;</span><span class="sr">/h3</span><span class="err">&gt;
+</span>  <span class="err">`</span>
 <span class="p">})</span>
 <span class="kr">class</span> <span class="nx">MyComponent</span> <span class="kr">implements</span> <span class="nx">OnInit</span> <span class="p">{</span>
 
@@ -224,18 +224,18 @@
 
 <div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="na">selector</span><span class="p">:</span> <span class="s1">'progress-bar'</span><span class="p">,</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;h3&gt;Progress: {{progress}}&lt;/h3&gt;
-    &lt;button (click)="processWithinAngularZone()"&gt;
-      Process within Angular zone
-    &lt;/button&gt;
-  `</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">h3</span><span class="o">&gt;</span><span class="na">Progress</span><span class="p">:</span> <span class="p">{{</span><span class="nx">progress</span><span class="p">}}</span><span class="o">&lt;</span><span class="sr">/h3</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">button</span> <span class="p">(</span><span class="nx">click</span><span class="p">)</span><span class="o">=</span><span class="s2">"processWithinAngularZone()"</span><span class="o">&gt;</span>
+      <span class="nx">Process</span> <span class="nx">within</span> <span class="nx">Angular</span> <span class="nx">zone</span>
+    <span class="o">&lt;</span><span class="sr">/button</span><span class="err">&gt;
+</span>  <span class="err">`</span>
 <span class="p">})</span>
 <span class="kr">class</span> <span class="nx">ProgressBar</span> <span class="p">{</span>
 
   <span class="nl">progress</span><span class="p">:</span> <span class="nx">number</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
-  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">zone</span><span class="p">:</span> <span class="nx">NgZone</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">zone</span><span class="err">:</span> <span class="nx">NgZone</span><span class="p">)</span> <span class="p">{}</span>
 
   <span class="nx">processWithinAngularZone</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">progress</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
@@ -245,9 +245,9 @@
 
 <p>Nothing special going on here. We have component that calls <code>processWithinAngularZone()</code> when the button in the template is clicked. However, that method calls <code>increaseProgress()</code>. Let’s take a closer look at this one:</p>
 
-<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">increaseProgress</span><span class="p">(</span><span class="nx">doneCallback</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="k">void</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">increaseProgress</span><span class="p">(</span><span class="nx">doneCallback</span><span class="err">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="k">void</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">this</span><span class="p">.</span><span class="nx">progress</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`Current progress: </span><span class="p">${</span><span class="k">this</span><span class="p">.</span><span class="nx">progress</span><span class="p">}</span><span class="s2">%`</span><span class="p">);</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="err">`</span><span class="nx">Current</span> <span class="nx">progress</span><span class="err">:</span> <span class="nx">$</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">progress</span><span class="p">}</span><span class="o">%</span><span class="err">`</span><span class="p">);</span>
 
   <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">progress</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">)</span> <span class="p">{</span>
     <span class="nb">window</span><span class="p">.</span><span class="nx">setTimeout</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>

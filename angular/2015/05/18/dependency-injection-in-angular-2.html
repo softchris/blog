@@ -287,7 +287,7 @@
 <p>The <code>Inject</code> decorator attaches meta data to our <code>Car</code> class, that is then consumed by the DI system afterwards. So basically what we’re doing here, is that we tell the DI that the first constructor parameter should be an instance of type <code>Engine</code>, the second of type <code>Tires</code> and the third of type <code>Doors</code>. We can rewrite this code to TypeScript, which feels a bit more natural:</p>
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">class</span> <span class="nx">Car</span> <span class="p">{</span>
-  <span class="nx">constructor</span><span class="p">(</span><span class="nx">engine</span><span class="p">:</span> <span class="nx">Engine</span><span class="p">,</span> <span class="nx">tires</span><span class="p">:</span> <span class="nx">Tires</span><span class="p">,</span> <span class="nx">doors</span><span class="p">:</span> <span class="nx">Doors</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">constructor</span><span class="p">(</span><span class="nx">engine</span><span class="err">:</span> <span class="nx">Engine</span><span class="p">,</span> <span class="nx">tires</span><span class="err">:</span> <span class="nx">Tires</span><span class="p">,</span> <span class="nx">doors</span><span class="err">:</span> <span class="nx">Doors</span><span class="p">)</span> <span class="p">{</span>
     <span class="p">...</span>
   <span class="p">}</span>
 <span class="p">}</span></code></pre></div>
@@ -314,7 +314,7 @@
 
 <p>Now the next question comes up: When do we want to use the longer instead of the shorthand syntax? There’s no reason to write <code>{ provide: Foo, useClass: Foo}</code> if we could just stick with <code>Foo</code>, right? Yes, that’s correct. That’s why we started with the shorthand syntax in the first place. However, the longer syntax enables us to do something very very powerful. Take a look at the next code snippet.</p>
 
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="p">{</span> <span class="nl">provide</span><span class="p">:</span> <span class="nx">Engine</span><span class="p">,</span> <span class="nx">useClass</span><span class="p">:</span> <span class="nx">OtherEngine</span> <span class="p">}</span></code></pre></div>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="p">{</span> <span class="nl">provide</span><span class="p">:</span> <span class="nx">Engine</span><span class="p">,</span> <span class="nx">useClass</span><span class="err">:</span> <span class="nx">OtherEngine</span> <span class="p">}</span></code></pre></div>
 
 <p>Right. We can map a token to pretty much what ever we want. Here we’re mapping the token <code>Engine</code> to the class <code>OtherEngine</code>. Which means, when we now ask for an object of type <code>Engine</code>, we get an instance of class <code>OtherEngine</code>.</p>
 
@@ -330,7 +330,7 @@
 
 <p>We can provide a simple value using <code>useValue: value</code></p>
 
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="p">{</span> <span class="nl">provide</span><span class="p">:</span> <span class="s1">'some value'</span><span class="p">,</span> <span class="nx">useValue</span><span class="p">:</span> <span class="s1">'Hello World'</span> <span class="p">}</span></code></pre></div>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="p">{</span> <span class="nl">provide</span><span class="p">:</span> <span class="s1">'some value'</span><span class="p">,</span> <span class="nx">useValue</span><span class="err">:</span> <span class="s1">'Hello World'</span> <span class="p">}</span></code></pre></div>
 
 <p>This comes in handy when we want to provide simple configuration values.</p>
 
@@ -338,8 +338,8 @@
 
 <p>We can map an alias token to another token like this:</p>
 
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="p">{</span> <span class="nl">provide</span><span class="p">:</span> <span class="nx">Engine</span><span class="p">,</span> <span class="nx">useClass</span><span class="p">:</span> <span class="nx">Engine</span> <span class="p">}</span>
-<span class="p">{</span> <span class="nl">provide</span><span class="p">:</span> <span class="nx">V8</span><span class="p">,</span> <span class="nx">useExisting</span><span class="p">:</span> <span class="nx">Engine</span> <span class="p">}</span></code></pre></div>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="p">{</span> <span class="nl">provide</span><span class="p">:</span> <span class="nx">Engine</span><span class="p">,</span> <span class="nx">useClass</span><span class="err">:</span> <span class="nx">Engine</span> <span class="p">}</span>
+<span class="p">{</span> <span class="nl">provide</span><span class="p">:</span> <span class="nx">V8</span><span class="p">,</span> <span class="nx">useExisting</span><span class="err">:</span> <span class="nx">Engine</span> <span class="p">}</span></code></pre></div>
 
 <p><strong>Providing factories</strong></p>
 
@@ -347,7 +347,7 @@
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="p">{</span> 
   <span class="nl">provide</span><span class="p">:</span> <span class="nx">Engine</span><span class="p">,</span>
-  <span class="nx">useFactory</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">useFactory</span><span class="err">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">IS_V8</span><span class="p">)</span> <span class="p">{</span>
       <span class="k">return</span> <span class="k">new</span> <span class="nx">V8Engine</span><span class="p">();</span>
     <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
@@ -360,10 +360,10 @@
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="p">{</span>
   <span class="nl">provide</span><span class="p">:</span> <span class="nx">Engine</span><span class="p">,</span>
-  <span class="nx">useFactory</span><span class="p">:</span> <span class="p">(</span><span class="nx">car</span><span class="p">,</span> <span class="nx">engine</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">useFactory</span><span class="err">:</span> <span class="p">(</span><span class="nx">car</span><span class="p">,</span> <span class="nx">engine</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
 
   <span class="p">},</span>
-  <span class="nx">deps</span><span class="p">:</span> <span class="p">[</span><span class="nx">Car</span><span class="p">,</span> <span class="nx">Engine</span><span class="p">]</span>
+  <span class="nx">deps</span><span class="err">:</span> <span class="p">[</span><span class="nx">Car</span><span class="p">,</span> <span class="nx">Engine</span><span class="p">]</span>
 <span class="p">}</span></code></pre></div>
 
 <h2 id="optional-dependencies">Optional Dependencies</h2>
@@ -388,7 +388,7 @@
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="p">{</span> 
   <span class="nl">provide</span><span class="p">:</span> <span class="nx">Engine</span><span class="p">,</span>
-  <span class="nx">useFactory</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">useFactory</span><span class="err">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
     <span class="k">return</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
       <span class="k">return</span> <span class="k">new</span> <span class="nx">Engine</span><span class="p">();</span>
     <span class="p">}</span>
@@ -457,7 +457,7 @@
 <p>Or, if we prefer TypeScript, we can just add type annotations to our constructor:</p>
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">class</span> <span class="nx">App</span> <span class="p">{</span>
-  <span class="nx">constructor</span><span class="p">(</span><span class="nx">NameService</span><span class="p">:</span> <span class="nx">NameService</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">constructor</span><span class="p">(</span><span class="nx">NameService</span><span class="err">:</span> <span class="nx">NameService</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">NameService</span><span class="p">.</span><span class="nx">getName</span><span class="p">();</span>
   <span class="p">}</span>
 <span class="p">}</span></code></pre></div>

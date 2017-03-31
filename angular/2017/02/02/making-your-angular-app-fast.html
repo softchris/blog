@@ -74,7 +74,7 @@
         <hgroup class="thtrm-banner-container">
           <div class="thtrm-constraint thtrm-constraint--slim">
             <h2 class="thtrm-banner-text">Making your Angular apps fast</h2>
-            <span>by <a href="http://twitter.com/" title="Pascal Precht on Twitter">Pascal Precht</a> on Feb 2, 2017<br>18 minute read</span>
+            <span>by <a href="http://twitter.com/" title="Pascal Precht on Twitter">Pascal Precht</a> on Feb 2, 2017<br>19 minute read</span>
 
           </div>
         </hgroup>
@@ -128,16 +128,16 @@
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="na">selector</span><span class="p">:</span> <span class="s1">'demo-app'</span><span class="p">,</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;svg (mousedown)="mouseDown($event)"
-         (mouseup)="mouseUp($event)"
-         (mousemove)="mouseMove($event)"&gt;
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">svg</span> <span class="p">(</span><span class="nx">mousedown</span><span class="p">)</span><span class="o">=</span><span class="s2">"mouseDown($event)"</span>
+         <span class="p">(</span><span class="nx">mouseup</span><span class="p">)</span><span class="o">=</span><span class="s2">"mouseUp($event)"</span>
+         <span class="p">(</span><span class="nx">mousemove</span><span class="p">)</span><span class="o">=</span><span class="s2">"mouseMove($event)"</span><span class="o">&gt;</span>
 
-      &lt;svg:g box *ngFor="let box of boxes" [box]="box"&gt;
-      &lt;/svg:g&gt;
-
-    &lt;/svg&gt;
-  `</span>
+      <span class="o">&lt;</span><span class="na">svg</span><span class="p">:</span><span class="nx">g</span> <span class="nx">box</span> <span class="o">*</span><span class="nx">ngFor</span><span class="o">=</span><span class="s2">"let box of boxes"</span> <span class="p">[</span><span class="nx">box</span><span class="p">]</span><span class="o">=</span><span class="s2">"box"</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="sr">/svg:g</span><span class="err">&gt;
+</span>
+    <span class="o">&lt;</span><span class="sr">/svg</span><span class="err">&gt;
+</span>  <span class="err">`</span>
 <span class="p">})</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">AppComponent</span> <span class="kr">implements</span> <span class="nx">OnInit</span> <span class="p">{</span>
 
@@ -188,17 +188,17 @@
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="na">selector</span><span class="p">:</span> <span class="s1">'[box]'</span><span class="p">,</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;svg:rect
-      [attr.dataId]="box.id"
-      [attr.x]="box.x"
-      [attr.y]="box.y"
-      width="20"
-      height="20"
-      stroke="black"
-      [attr.fill]="selected ? 'red' : 'transparent'"
-      strokeWidth="1"&gt;&lt;/svg:rect&gt;
-  `</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="na">svg</span><span class="p">:</span><span class="nx">rect</span>
+      <span class="p">[</span><span class="nx">attr</span><span class="p">.</span><span class="nx">dataId</span><span class="p">]</span><span class="o">=</span><span class="s2">"box.id"</span>
+      <span class="p">[</span><span class="nx">attr</span><span class="p">.</span><span class="nx">x</span><span class="p">]</span><span class="o">=</span><span class="s2">"box.x"</span>
+      <span class="p">[</span><span class="nx">attr</span><span class="p">.</span><span class="nx">y</span><span class="p">]</span><span class="o">=</span><span class="s2">"box.y"</span>
+      <span class="nx">width</span><span class="o">=</span><span class="s2">"20"</span>
+      <span class="nx">height</span><span class="o">=</span><span class="s2">"20"</span>
+      <span class="nx">stroke</span><span class="o">=</span><span class="s2">"black"</span>
+      <span class="p">[</span><span class="nx">attr</span><span class="p">.</span><span class="nx">fill</span><span class="p">]</span><span class="o">=</span><span class="s2">"selected ? 'red' : 'transparent'"</span>
+      <span class="nx">strokeWidth</span><span class="o">=</span><span class="s2">"1"</span><span class="o">&gt;&lt;</span><span class="sr">/svg:rect</span><span class="err">&gt;
+</span>  <span class="err">`</span>
 <span class="p">})</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">BoxComponent</span> <span class="p">{</span>
   <span class="err">@</span><span class="nx">Input</span><span class="p">()</span> <span class="nx">box</span><span class="p">;</span>
@@ -354,7 +354,7 @@
 <span class="err">@</span><span class="nx">Component</span><span class="p">(...)</span>
 <span class="kr">class</span> <span class="nx">AppComponent</span> <span class="kr">implements</span> <span class="nx">AfterViewInit</span> <span class="p">{</span>
   <span class="p">...</span>
-  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">cdr</span><span class="p">:</span> <span class="nx">ChangeDetectorRef</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">cdr</span><span class="err">:</span> <span class="nx">ChangeDetectorRef</span><span class="p">)</span> <span class="p">{}</span>
 
   <span class="nx">ngAfterViewInit</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">cdr</span><span class="p">.</span><span class="nx">detach</span><span class="p">();</span>
@@ -366,7 +366,7 @@
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">(...)</span>
 <span class="kr">class</span> <span class="nx">BoxComponent</span> <span class="kr">implements</span> <span class="nx">AfterViewInit</span> <span class="p">{</span>
   <span class="p">...</span>
-  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">cdr</span><span class="p">:</span> <span class="nx">ChangeDetectorRef</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">cdr</span><span class="err">:</span> <span class="nx">ChangeDetectorRef</span><span class="p">)</span> <span class="p">{}</span>
 
   <span class="nx">ngAfterViewInit</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">cdr</span><span class="p">.</span><span class="nx">detach</span><span class="p">();</span>
@@ -412,14 +412,14 @@
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="na">selector</span><span class="p">:</span> <span class="s1">'[box]'</span><span class="p">,</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;svg:rect #rect ...&gt;&lt;/svg:rect&gt;
-  `</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="na">svg</span><span class="p">:</span><span class="nx">rect</span> <span class="err">#</span><span class="nx">rect</span> <span class="p">...</span><span class="o">&gt;&lt;</span><span class="sr">/svg:rect</span><span class="err">&gt;
+</span>  <span class="err">`</span>
 <span class="p">})</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">BoxComponent</span> <span class="kr">implements</span> <span class="nx">AfterViewInit</span> <span class="p">{</span>
 
   <span class="err">@</span><span class="nx">ViewChild</span><span class="p">(</span><span class="s1">'rect'</span><span class="p">)</span>
-  <span class="nx">set</span> <span class="nx">rect</span><span class="p">(</span><span class="nx">value</span><span class="p">:</span> <span class="nx">ElementRef</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">set</span> <span class="nx">rect</span><span class="p">(</span><span class="nx">value</span><span class="err">:</span> <span class="nx">ElementRef</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
       <span class="nx">value</span><span class="p">.</span><span class="nx">nativeElement</span><span class="p">[</span><span class="s1">'BoxComponent'</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
     <span class="p">}</span>

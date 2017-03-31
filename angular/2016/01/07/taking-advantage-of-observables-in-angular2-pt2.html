@@ -116,9 +116,9 @@
 <span class="err">@</span><span class="nx">Injectable</span><span class="p">()</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">WikipediaService</span> <span class="p">{</span>
 
-  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">jsonp</span><span class="p">:</span> <span class="nx">Jsonp</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">jsonp</span><span class="err">:</span> <span class="nx">Jsonp</span><span class="p">)</span> <span class="p">{}</span>
 
-  <span class="nx">search</span> <span class="p">(</span><span class="nx">term</span><span class="p">:</span> <span class="nx">string</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">search</span> <span class="p">(</span><span class="nx">term</span><span class="err">:</span> <span class="nx">string</span><span class="p">)</span> <span class="p">{</span>
     <span class="kd">var</span> <span class="nx">search</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">URLSearchParams</span><span class="p">()</span>
     <span class="nx">search</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">'action'</span><span class="p">,</span> <span class="s1">'opensearch'</span><span class="p">);</span>
     <span class="nx">search</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">'search'</span><span class="p">,</span> <span class="nx">term</span><span class="p">);</span>
@@ -133,22 +133,22 @@
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="na">selector</span><span class="p">:</span> <span class="s1">'my-app'</span><span class="p">,</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;div&gt;
-      &lt;h2&gt;Wikipedia Search&lt;/h2&gt;
-      &lt;input type="text" [formControl]="term"/&gt;
-      &lt;ul&gt;
-        &lt;li *ngFor="let item of items | async"&gt;{{item}}&lt;/li&gt;
-      &lt;/ul&gt;
-    &lt;/div&gt;
-  `</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">h2</span><span class="o">&gt;</span><span class="nx">Wikipedia</span> <span class="nx">Search</span><span class="o">&lt;</span><span class="sr">/h2</span><span class="err">&gt;
+</span>      <span class="o">&lt;</span><span class="nx">input</span> <span class="nx">type</span><span class="o">=</span><span class="s2">"text"</span> <span class="p">[</span><span class="nx">formControl</span><span class="p">]</span><span class="o">=</span><span class="s2">"term"</span><span class="o">/&gt;</span>
+      <span class="o">&lt;</span><span class="nx">ul</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">li</span> <span class="o">*</span><span class="nx">ngFor</span><span class="o">=</span><span class="s2">"let item of items | async"</span><span class="o">&gt;</span><span class="p">{{</span><span class="nx">item</span><span class="p">}}</span><span class="o">&lt;</span><span class="sr">/li</span><span class="err">&gt;
+</span>      <span class="o">&lt;</span><span class="sr">/ul</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>  <span class="err">`</span>
 <span class="p">})</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">App</span> <span class="kr">implements</span> <span class="nx">OnInit</span> <span class="p">{</span>
 
   <span class="nl">items</span><span class="p">:</span> <span class="nx">Observable</span><span class="o">&lt;</span><span class="nb">Array</span><span class="o">&lt;</span><span class="nx">string</span><span class="o">&gt;&gt;</span><span class="p">;</span>
   <span class="nx">term</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FormControl</span><span class="p">();</span>
 
-  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">wikipediaService</span><span class="p">:</span> <span class="nx">WikipediaService</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">wikipediaService</span><span class="err">:</span> <span class="nx">WikipediaService</span><span class="p">)</span> <span class="p">{}</span>
 
   <span class="nx">ngOnInit</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">items</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">term</span><span class="p">.</span><span class="nx">valueChanges</span>
@@ -178,15 +178,15 @@
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Injectable</span><span class="p">()</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">WikipediaService</span> <span class="p">{</span>
-  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">jsonp</span><span class="p">:</span> <span class="nx">Jsonp</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">jsonp</span><span class="err">:</span> <span class="nx">Jsonp</span><span class="p">)</span> <span class="p">{}</span>
 
-  <span class="nx">search</span><span class="p">(</span><span class="nx">terms</span><span class="p">:</span> <span class="nx">Observable</span><span class="o">&lt;</span><span class="nx">string</span><span class="o">&gt;</span><span class="p">,</span> <span class="nx">debounceDuration</span> <span class="o">=</span> <span class="mi">400</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">search</span><span class="p">(</span><span class="nx">terms</span><span class="err">:</span> <span class="nx">Observable</span><span class="o">&lt;</span><span class="nx">string</span><span class="o">&gt;</span><span class="p">,</span> <span class="nx">debounceDuration</span> <span class="o">=</span> <span class="mi">400</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">return</span> <span class="nx">terms</span><span class="p">.</span><span class="nx">debounceTime</span><span class="p">(</span><span class="nx">debounceDuration</span><span class="p">)</span>
                 <span class="p">.</span><span class="nx">distinctUntilChanged</span><span class="p">()</span>
                 <span class="p">.</span><span class="nx">switchMap</span><span class="p">(</span><span class="nx">term</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">rawSearch</span><span class="p">(</span><span class="nx">term</span><span class="p">));</span>
   <span class="p">}</span>
 
-  <span class="nx">rawSearch</span> <span class="p">(</span><span class="nx">term</span><span class="p">:</span> <span class="nx">string</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">rawSearch</span> <span class="p">(</span><span class="nx">term</span><span class="err">:</span> <span class="nx">string</span><span class="p">)</span> <span class="p">{</span>
     <span class="kd">var</span> <span class="nx">search</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">URLSearchParams</span><span class="p">()</span>
     <span class="nx">search</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">'action'</span><span class="p">,</span> <span class="s1">'opensearch'</span><span class="p">);</span>
     <span class="nx">search</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">'search'</span><span class="p">,</span> <span class="nx">term</span><span class="p">);</span>
@@ -203,22 +203,22 @@
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="na">selector</span><span class="p">:</span> <span class="s1">'my-app'</span><span class="p">,</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;div&gt;
-      &lt;h2&gt;Wikipedia Search&lt;/h2&gt;
-      &lt;input type="text" [formControl]="term"/&gt;
-      &lt;ul&gt;
-        &lt;li *ngFor="let item of items | async"&gt;{{item}}&lt;/li&gt;
-      &lt;/ul&gt;
-    &lt;/div&gt;
-  `</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">h2</span><span class="o">&gt;</span><span class="nx">Wikipedia</span> <span class="nx">Search</span><span class="o">&lt;</span><span class="sr">/h2</span><span class="err">&gt;
+</span>      <span class="o">&lt;</span><span class="nx">input</span> <span class="nx">type</span><span class="o">=</span><span class="s2">"text"</span> <span class="p">[</span><span class="nx">formControl</span><span class="p">]</span><span class="o">=</span><span class="s2">"term"</span><span class="o">/&gt;</span>
+      <span class="o">&lt;</span><span class="nx">ul</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">li</span> <span class="o">*</span><span class="nx">ngFor</span><span class="o">=</span><span class="s2">"let item of items | async"</span><span class="o">&gt;</span><span class="p">{{</span><span class="nx">item</span><span class="p">}}</span><span class="o">&lt;</span><span class="sr">/li</span><span class="err">&gt;
+</span>      <span class="o">&lt;</span><span class="sr">/ul</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>  <span class="err">`</span>
 <span class="p">})</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">App</span> <span class="p">{</span>
 
   <span class="nl">items</span><span class="p">:</span> <span class="nx">Observable</span><span class="o">&lt;</span><span class="nb">Array</span><span class="o">&lt;</span><span class="nx">string</span><span class="o">&gt;&gt;</span><span class="p">;</span>
   <span class="nx">term</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FormControl</span><span class="p">();</span>
 
-  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">wikipediaService</span><span class="p">:</span> <span class="nx">WikipediaService</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">wikipediaService</span><span class="err">:</span> <span class="nx">WikipediaService</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">items</span> <span class="o">=</span> <span class="nx">wikipediaService</span><span class="p">.</span><span class="nx">search</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">term</span><span class="p">.</span><span class="nx">valueChanges</span><span class="p">);</span>
   <span class="p">}</span>
 <span class="p">}</span></code></pre></div>

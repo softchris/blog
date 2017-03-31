@@ -176,7 +176,7 @@
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">()</span>
 <span class="kr">class</span> <span class="nx">Cmp</span> <span class="p">{</span>
 
-  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">fb</span><span class="p">:</span> <span class="nx">FormBuilder</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">fb</span><span class="err">:</span> <span class="nx">FormBuilder</span><span class="p">)</span> <span class="p">{}</span>
 
   <span class="nx">ngOnInit</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">form</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">fb</span><span class="p">.</span><span class="nx">group</span><span class="p">({</span>
@@ -212,7 +212,7 @@
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">FormControl</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/forms'</span><span class="p">;</span>
 
-<span class="kd">function</span> <span class="nx">validateEmail</span><span class="p">(</span><span class="nx">c</span><span class="p">:</span> <span class="nx">FormControl</span><span class="p">)</span> <span class="p">{</span>
+<span class="kd">function</span> <span class="nx">validateEmail</span><span class="p">(</span><span class="nx">c</span><span class="err">:</span> <span class="nx">FormControl</span><span class="p">)</span> <span class="p">{</span>
   <span class="kd">let</span> <span class="nx">EMAIL_REGEXP</span> <span class="o">=</span> <span class="p">...</span>
 
   <span class="k">return</span> <span class="nx">EMAIL_REGEXP</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="nx">c</span><span class="p">.</span><span class="nx">value</span><span class="p">)</span> <span class="p">?</span> <span class="kc">null</span> <span class="p">:</span> <span class="p">{</span>
@@ -311,8 +311,8 @@ Here’s what it looks like if we’d combine the <code>required</code> validato
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">FormControl</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/forms'</span><span class="p">;</span>
 
-<span class="kd">function</span> <span class="nx">validateEmailFactory</span><span class="p">(</span><span class="nx">emailBlackList</span><span class="p">:</span> <span class="nx">EmailBlackList</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">return</span> <span class="p">(</span><span class="nx">c</span><span class="p">:</span> <span class="nx">FormControl</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+<span class="kd">function</span> <span class="nx">validateEmailFactory</span><span class="p">(</span><span class="nx">emailBlackList</span><span class="err">:</span> <span class="nx">EmailBlackList</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span><span class="nx">c</span><span class="err">:</span> <span class="nx">FormControl</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
     <span class="kd">let</span> <span class="nx">EMAIL_REGEXP</span> <span class="o">=</span> <span class="p">...</span>
 
     <span class="kd">let</span> <span class="nx">isValid</span> <span class="o">=</span> <span class="cm">/* check validation with emailBlackList */</span>
@@ -359,11 +359,11 @@ Here’s what it looks like if we’d combine the <code>required</code> validato
   
   <span class="nl">validator</span><span class="p">:</span> <span class="nb">Function</span><span class="p">;</span>
 
-  <span class="nx">constructor</span><span class="p">(</span><span class="nx">emailBlackList</span><span class="p">:</span> <span class="nx">EmailBlackList</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">constructor</span><span class="p">(</span><span class="nx">emailBlackList</span><span class="err">:</span> <span class="nx">EmailBlackList</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">validator</span> <span class="o">=</span> <span class="nx">validateEmailFactory</span><span class="p">(</span><span class="nx">emailBlackList</span><span class="p">);</span>
   <span class="p">}</span>
 
-  <span class="nx">validate</span><span class="p">(</span><span class="nx">c</span><span class="p">:</span> <span class="nx">FormControl</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">validate</span><span class="p">(</span><span class="nx">c</span><span class="err">:</span> <span class="nx">FormControl</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">validator</span><span class="p">(</span><span class="nx">c</span><span class="p">);</span>
   <span class="p">}</span>
 <span class="p">}</span></code></pre></div>
@@ -403,8 +403,8 @@ Here’s what it looks like if we’d combine the <code>required</code> validato
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">Directive</span><span class="p">,</span> <span class="nx">forwardRef</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/core'</span><span class="p">;</span>
 <span class="kr">import</span> <span class="p">{</span> <span class="nx">NG_VALIDATORS</span><span class="p">,</span> <span class="nx">FormControl</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/forms'</span><span class="p">;</span>
 
-<span class="kd">function</span> <span class="nx">validateEmailFactory</span><span class="p">(</span><span class="nx">emailBlackList</span><span class="p">:</span> <span class="nx">EmailBlackList</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">return</span> <span class="p">(</span><span class="nx">c</span><span class="p">:</span> <span class="nx">FormControl</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+<span class="kd">function</span> <span class="nx">validateEmailFactory</span><span class="p">(</span><span class="nx">emailBlackList</span><span class="err">:</span> <span class="nx">EmailBlackList</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span><span class="nx">c</span><span class="err">:</span> <span class="nx">FormControl</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
     <span class="kd">let</span> <span class="nx">EMAIL_REGEXP</span> <span class="o">=</span> <span class="sr">/^</span><span class="se">[</span><span class="sr">a-z0-9!#$%&amp;'*+</span><span class="se">\/</span><span class="sr">=?^_`{|}~.-</span><span class="se">]</span><span class="sr">+@</span><span class="se">[</span><span class="sr">a-z0-9</span><span class="se">]([</span><span class="sr">a-z0-9-</span><span class="se">]</span><span class="sr">*</span><span class="se">[</span><span class="sr">a-z0-9</span><span class="se">])?(\.[</span><span class="sr">a-z0-9</span><span class="se">]([</span><span class="sr">a-z0-9-</span><span class="se">]</span><span class="sr">*</span><span class="se">[</span><span class="sr">a-z0-9</span><span class="se">])?)</span><span class="sr">*$/i</span><span class="p">;</span>
 
     <span class="k">return</span> <span class="nx">EMAIL_REGEXP</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="nx">c</span><span class="p">.</span><span class="nx">value</span><span class="p">)</span> <span class="p">?</span> <span class="kc">null</span> <span class="p">:</span> <span class="p">{</span>
@@ -423,7 +423,7 @@ Here’s what it looks like if we’d combine the <code>required</code> validato
 <span class="p">})</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">EmailValidator</span> <span class="p">{</span>
 
-  <span class="na">validator</span><span class="p">:</span> <span class="nb">Function</span><span class="p">;</span>
+  <span class="nl">validator</span><span class="p">:</span> <span class="nb">Function</span><span class="p">;</span>
 
   <span class="nx">constructor</span><span class="p">(</span><span class="na">emailBlackList</span><span class="p">:</span> <span class="nx">EmailBlackList</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">validator</span> <span class="o">=</span> <span class="nx">validateEmailFactory</span><span class="p">(</span><span class="nx">emailBlackList</span><span class="p">);</span>

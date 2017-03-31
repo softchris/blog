@@ -137,10 +137,10 @@
 <p>Now that we know what change detection is all about, we might wonder, when exactly can such a change happen? When does Angular know that it has to update the view? Well, let’s take a look at the following code:</p>
 
 <div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;h1&gt;{{firstname}} {{lastname}}&lt;/h1&gt;
-    &lt;button (click)="changeName()"&gt;Change name&lt;/button&gt;
-  `</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">h1</span><span class="o">&gt;</span><span class="p">{{</span><span class="nx">firstname</span><span class="p">}}</span> <span class="p">{{</span><span class="nx">lastname</span><span class="p">}}</span><span class="o">&lt;</span><span class="sr">/h1</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">button</span> <span class="p">(</span><span class="nx">click</span><span class="p">)</span><span class="o">=</span><span class="s2">"changeName()"</span><span class="o">&gt;</span><span class="nx">Change</span> <span class="nx">name</span><span class="o">&lt;</span><span class="sr">/button</span><span class="err">&gt;
+</span>  <span class="err">`</span>
 <span class="p">})</span>
 <span class="kr">class</span> <span class="nx">MyApp</span> <span class="p">{</span>
 
@@ -164,7 +164,7 @@
 
   <span class="nl">contacts</span><span class="p">:</span><span class="nx">Contact</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[];</span>
 
-  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">http</span><span class="p">:</span> <span class="nx">Http</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">http</span><span class="err">:</span> <span class="nx">Http</span><span class="p">)</span> <span class="p">{}</span>
 
   <span class="nx">ngOnInit</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">http</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'/contacts'</span><span class="p">)</span>
@@ -200,7 +200,7 @@
 
   <span class="nl">changeDetectorRefs</span><span class="p">:</span><span class="nx">ChangeDetectorRef</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[];</span>
 
-  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">zone</span><span class="p">:</span> <span class="nx">NgZone</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">zone</span><span class="err">:</span> <span class="nx">NgZone</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">zone</span><span class="p">.</span><span class="nx">onTurnDone</span>
       <span class="p">.</span><span class="nx">subscribe</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">zone</span><span class="p">.</span><span class="nx">run</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">tick</span><span class="p">());</span>
   <span class="p">}</span>
@@ -302,10 +302,10 @@ Or in short: <strong>If there’s a change, we get a new reference</strong>.</p>
 <p>Let’s see how that works by taking a look at <code>&lt;v-card&gt;</code>:</p>
 
 <div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;h2&gt;{{vData.name}}&lt;/h2&gt;
-    &lt;span&gt;{{vData.email}}&lt;/span&gt;
-  `</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">h2</span><span class="o">&gt;</span><span class="p">{{</span><span class="nx">vData</span><span class="p">.</span><span class="nx">name</span><span class="p">}}</span><span class="o">&lt;</span><span class="sr">/h2</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">span</span><span class="o">&gt;</span><span class="p">{{</span><span class="nx">vData</span><span class="p">.</span><span class="nx">email</span><span class="p">}}</span><span class="o">&lt;</span><span class="sr">/span</span><span class="err">&gt;
+</span>  <span class="err">`</span>
 <span class="p">})</span>
 <span class="kr">class</span> <span class="nx">VCardCmp</span> <span class="p">{</span>
   <span class="err">@</span><span class="nx">Input</span><span class="p">()</span> <span class="nx">vData</span><span class="p">;</span>
@@ -314,10 +314,10 @@ Or in short: <strong>If there’s a change, we get a new reference</strong>.</p>
 <p>As we can see, <code>VCardCmp</code> only depends on its input properties. Great. We can tell Angular to skip change detection for this component’s subtree if none of its inputs changed by setting the change detection strategy to <code>OnPush</code> like this:</p>
 
 <div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;h2&gt;{{vData.name}}&lt;/h2&gt;
-    &lt;span&gt;{{vData.email}}&lt;/span&gt;
-  `</span><span class="p">,</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">h2</span><span class="o">&gt;</span><span class="p">{{</span><span class="nx">vData</span><span class="p">.</span><span class="nx">name</span><span class="p">}}</span><span class="o">&lt;</span><span class="sr">/h2</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">span</span><span class="o">&gt;</span><span class="p">{{</span><span class="nx">vData</span><span class="p">.</span><span class="nx">email</span><span class="p">}}</span><span class="o">&lt;</span><span class="sr">/span</span><span class="err">&gt;
+</span>  <span class="err">`</span><span class="p">,</span>
   <span class="na">changeDetection</span><span class="p">:</span> <span class="nx">ChangeDetectionStrategy</span><span class="p">.</span><span class="nx">OnPush</span>
 <span class="p">})</span>
 <span class="kr">class</span> <span class="nx">VCardCmp</span> <span class="p">{</span>
@@ -344,7 +344,7 @@ Or in short: <strong>If there’s a change, we get a new reference</strong>.</p>
 <span class="p">})</span>
 <span class="kr">class</span> <span class="nx">CartBadgeCmp</span> <span class="p">{</span>
 
-  <span class="err">@</span><span class="nx">Input</span><span class="p">()</span> <span class="nx">addItemStream</span><span class="p">:</span><span class="nx">Observable</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="err">@</span><span class="nx">Input</span><span class="p">()</span> <span class="nx">addItemStream</span><span class="err">:</span><span class="nx">Observable</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span><span class="p">;</span>
   <span class="nx">counter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
   <span class="nx">ngOnInit</span><span class="p">()</span> <span class="p">{</span>
@@ -376,7 +376,7 @@ Or in short: <strong>If there’s a change, we get a new reference</strong>.</p>
 
 <p>Let’s inject it into our component:</p>
 
-<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">cd</span><span class="p">:</span> <span class="nx">ChangeDetectorRef</span><span class="p">)</span> <span class="p">{}</span></code></pre></div>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">cd</span><span class="err">:</span> <span class="nx">ChangeDetectorRef</span><span class="p">)</span> <span class="p">{}</span></code></pre></div>
 
 <p>Then, tell Angular to mark the path from this component until root to be checked:</p>
 

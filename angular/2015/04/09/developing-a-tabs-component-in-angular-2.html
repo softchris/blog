@@ -74,7 +74,7 @@
         <hgroup class="thtrm-banner-container">
           <div class="thtrm-constraint thtrm-constraint--slim">
             <h2 class="thtrm-banner-text">Developing a tabs component in Angular</h2>
-            <span>by <a href="http://twitter.com/" title="Pascal Precht on Twitter">Pascal Precht</a> on Apr 9, 2015, last updated on Dec 16, 2016<br>14 minute read</span>
+            <span>by <a href="http://twitter.com/" title="Pascal Precht on Twitter">Pascal Precht</a> on Apr 9, 2015, last updated on Dec 16, 2016<br>15 minute read</span>
 
           </div>
         </hgroup>
@@ -162,12 +162,12 @@ you know that we need the <code>@Component()</code> decorator to tell Angular wh
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="na">selector</span><span class="p">:</span> <span class="s1">'tabs'</span><span class="p">,</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;ul&gt;
-      &lt;li&gt;Tab 1&lt;/li&gt;
-      &lt;li&gt;Tab 2&lt;/li&gt;
-    &lt;/ul&gt;
-  `</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">ul</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">li</span><span class="o">&gt;</span><span class="nx">Tab</span> <span class="mi">1</span><span class="o">&lt;</span><span class="sr">/li</span><span class="err">&gt;
+</span>      <span class="o">&lt;</span><span class="nx">li</span><span class="o">&gt;</span><span class="nx">Tab</span> <span class="mi">2</span><span class="o">&lt;</span><span class="sr">/li</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/ul</span><span class="err">&gt;
+</span>  <span class="err">`</span>
 <span class="p">})</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">Tabs</span> <span class="p">{</span>
 
@@ -179,13 +179,13 @@ you know that we need the <code>@Component()</code> decorator to tell Angular wh
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="na">selector</span><span class="p">:</span> <span class="s1">'tabs'</span><span class="p">,</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;ul&gt;
-      &lt;li&gt;Tab 1&lt;/li&gt;
-      &lt;li&gt;Tab 2&lt;/li&gt;
-    &lt;/ul&gt;
-    &lt;ng-content&gt;&lt;/ng-content&gt;
-  `</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">ul</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">li</span><span class="o">&gt;</span><span class="nx">Tab</span> <span class="mi">1</span><span class="o">&lt;</span><span class="sr">/li</span><span class="err">&gt;
+</span>      <span class="o">&lt;</span><span class="nx">li</span><span class="o">&gt;</span><span class="nx">Tab</span> <span class="mi">2</span><span class="o">&lt;</span><span class="sr">/li</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/ul</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">ng</span><span class="o">-</span><span class="nx">content</span><span class="o">&gt;&lt;</span><span class="sr">/ng-content</span><span class="err">&gt;
+</span>  <span class="err">`</span>
 <span class="p">})</span></code></pre></div>
 
 <p>Cool, we can already start using our <code>&lt;tabs&gt;</code> component and write HTML into it like this:</p>
@@ -198,11 +198,11 @@ you know that we need the <code>@Component()</code> decorator to tell Angular wh
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="na">selector</span><span class="p">:</span> <span class="s1">'tab'</span><span class="p">,</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;div&gt;
-      &lt;ng-content&gt;&lt;/ng-content&gt;
-    &lt;/div&gt;
-  `</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">ng</span><span class="o">-</span><span class="nx">content</span><span class="o">&gt;&lt;</span><span class="sr">/ng-content</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>  <span class="err">`</span>
 <span class="p">})</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">Tab</span> <span class="p">{</span>
   <span class="err">@</span><span class="nx">Input</span><span class="p">()</span> <span class="nx">tabTitle</span><span class="p">;</span>
@@ -237,7 +237,7 @@ you know that we need the <code>@Component()</code> decorator to tell Angular wh
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">export</span> <span class="kr">class</span> <span class="nx">Tabs</span> <span class="p">{</span>
   <span class="p">...</span>
-  <span class="nx">addTab</span><span class="p">(</span><span class="nx">tab</span><span class="p">:</span><span class="nx">Tab</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">addTab</span><span class="p">(</span><span class="nx">tab</span><span class="err">:</span><span class="nx">Tab</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">tabs</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">tab</span><span class="p">);</span>
   <span class="p">}</span>
 <span class="p">}</span></code></pre></div>
@@ -246,11 +246,11 @@ you know that we need the <code>@Component()</code> decorator to tell Angular wh
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="p">...</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;ul&gt;
-      &lt;li *ngFor="let tab of tabs"&gt;{{ tab.tabTitle }}&lt;/li&gt;
-    &lt;/ul&gt;
-  `</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">ul</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">li</span> <span class="o">*</span><span class="nx">ngFor</span><span class="o">=</span><span class="s2">"let tab of tabs"</span><span class="o">&gt;</span><span class="p">{{</span> <span class="nx">tab</span><span class="p">.</span><span class="nx">tabTitle</span> <span class="p">}}</span><span class="o">&lt;</span><span class="sr">/li</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/ul</span><span class="err">&gt;
+</span>  <span class="err">`</span>
 <span class="p">})</span></code></pre></div>
 
 <p>If the templating syntax doesn’t make sense to you at all, you might want to check out <a href="https://docs.google.com/document/d/1HHy_zPLGqJj0bHMiWPzPCxn1pO5GlOYwmv-qGgl4f_s/edit">this design doc</a>.</p>
@@ -260,7 +260,7 @@ you know that we need the <code>@Component()</code> decorator to tell Angular wh
 <p>That’s where the <code>&lt;tab&gt;</code> component comes into play (again). Inside the component we can simply ask for a <strong>parent</strong> <code>Tabs</code> dependency by using the new, much more powerful dependency injection system and get an instance of it. This allows us to simply use given APIs inside a child component. Let’s take a look at what that looks like.</p>
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">class</span> <span class="nx">Tab</span> <span class="p">{</span>
-  <span class="nx">constructor</span><span class="p">(</span><span class="nx">tabs</span><span class="p">:</span> <span class="nx">Tabs</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">constructor</span><span class="p">(</span><span class="nx">tabs</span><span class="err">:</span> <span class="nx">Tabs</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">tabs</span><span class="p">.</span><span class="nx">addTab</span><span class="p">(</span><span class="k">this</span><span class="p">)</span>
   <span class="p">}</span>
 <span class="p">}</span></code></pre></div>
@@ -287,11 +287,11 @@ Using that instance, we can simply call the <code>addTab()</code> method with a 
 <p>Well, first we need a property that activates or deactivates a tab and depending on that value, we either show or hide it. We can simply extend our <code>&lt;tab&gt;</code> template accordingly like this:</p>
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;div [hidden]="!active"&gt;
-      &lt;ng-content&gt;&lt;/ng-content&gt;
-    &lt;/div&gt;
-  `</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">div</span> <span class="p">[</span><span class="nx">hidden</span><span class="p">]</span><span class="o">=</span><span class="s2">"!active"</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">ng</span><span class="o">-</span><span class="nx">content</span><span class="o">&gt;&lt;</span><span class="sr">/ng-content</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>  <span class="err">`</span>
 <span class="p">})</span>
 <span class="kr">class</span> <span class="nx">Tab</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span></code></pre></div>
 
@@ -299,7 +299,7 @@ Using that instance, we can simply call the <code>addTab()</code> method with a 
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">export</span> <span class="kr">class</span> <span class="nx">Tabs</span> <span class="p">{</span>
   <span class="p">...</span>
-  <span class="nx">addTab</span><span class="p">(</span><span class="nx">tab</span><span class="p">:</span><span class="nx">Tab</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">addTab</span><span class="p">(</span><span class="nx">tab</span><span class="err">:</span><span class="nx">Tab</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">tabs</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
       <span class="nx">tab</span><span class="p">.</span><span class="nx">active</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
     <span class="p">}</span>
@@ -311,7 +311,7 @@ Using that instance, we can simply call the <code>addTab()</code> method with a 
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">export</span> <span class="kr">class</span> <span class="nx">Tabs</span> <span class="p">{</span>
   <span class="p">...</span>
-  <span class="nx">selectTab</span><span class="p">(</span><span class="nx">tab</span><span class="p">:</span><span class="nx">Tab</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">selectTab</span><span class="p">(</span><span class="nx">tab</span><span class="err">:</span><span class="nx">Tab</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">tabs</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">tab</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
       <span class="nx">tab</span><span class="p">.</span><span class="nx">active</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
     <span class="p">});</span>
@@ -323,13 +323,13 @@ Using that instance, we can simply call the <code>addTab()</code> method with a 
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="p">...</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;ul&gt;
-      &lt;li *ngFor="let tab of tabs" (click)="selectTab(tab)"&gt;
-        {{tab.tabTitle}}
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  `</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">ul</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">li</span> <span class="o">*</span><span class="nx">ngFor</span><span class="o">=</span><span class="s2">"let tab of tabs"</span> <span class="p">(</span><span class="nx">click</span><span class="p">)</span><span class="o">=</span><span class="s2">"selectTab(tab)"</span><span class="o">&gt;</span>
+        <span class="p">{{</span><span class="nx">tab</span><span class="p">.</span><span class="nx">tabTitle</span><span class="p">}}</span>
+      <span class="o">&lt;</span><span class="sr">/li</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/ul</span><span class="err">&gt;
+</span>  <span class="err">`</span>
 <span class="p">})</span></code></pre></div>
 
 <p>Again, if this template syntax is new to you, check out the mentioned design document. What happens here is, whenever a <code>click</code> event is fired <code>selectTab()</code> is executed with the iterator tab instance. Try it out!</p>
@@ -338,19 +338,19 @@ Using that instance, we can simply call the <code>addTab()</code> method with a 
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="na">selector</span><span class="p">:</span> <span class="s1">'tabs'</span><span class="p">,</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;ul&gt;
-      &lt;li *ngFor="let tab of tabs" (click)="selectTab(tab)"&gt;
-        {{tab.tabTitle}}
-      &lt;/li&gt;
-    &lt;/ul&gt;
-    &lt;ng-content&gt;&lt;/ng-content&gt;
-  `</span><span class="p">,</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">ul</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">li</span> <span class="o">*</span><span class="nx">ngFor</span><span class="o">=</span><span class="s2">"let tab of tabs"</span> <span class="p">(</span><span class="nx">click</span><span class="p">)</span><span class="o">=</span><span class="s2">"selectTab(tab)"</span><span class="o">&gt;</span>
+        <span class="p">{{</span><span class="nx">tab</span><span class="p">.</span><span class="nx">tabTitle</span><span class="p">}}</span>
+      <span class="o">&lt;</span><span class="sr">/li</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/ul</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">ng</span><span class="o">-</span><span class="nx">content</span><span class="o">&gt;&lt;</span><span class="sr">/ng-content</span><span class="err">&gt;
+</span>  <span class="err">`</span><span class="p">,</span>
 <span class="p">})</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">Tabs</span> <span class="p">{</span>
   <span class="nl">tabs</span><span class="p">:</span> <span class="nx">Tab</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[];</span>
 
-  <span class="nx">selectTab</span><span class="p">(</span><span class="nx">tab</span><span class="p">:</span> <span class="nx">Tab</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">selectTab</span><span class="p">(</span><span class="nx">tab</span><span class="err">:</span> <span class="nx">Tab</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">tabs</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">tab</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
       <span class="nx">tab</span><span class="p">.</span><span class="nx">active</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
     <span class="p">});</span>
@@ -367,11 +367,11 @@ Using that instance, we can simply call the <code>addTab()</code> method with a 
 
 <span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="na">selector</span><span class="p">:</span> <span class="s1">'tab'</span><span class="p">,</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;div [hidden]="!active"&gt;
-      &lt;ng-content&gt;&lt;/ng-content&gt;
-    &lt;/div&gt;
-  `</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">div</span> <span class="p">[</span><span class="nx">hidden</span><span class="p">]</span><span class="o">=</span><span class="s2">"!active"</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">ng</span><span class="o">-</span><span class="nx">content</span><span class="o">&gt;&lt;</span><span class="sr">/ng-content</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>  <span class="err">`</span>
 <span class="p">})</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">Tab</span> <span class="p">{</span>
 

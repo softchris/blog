@@ -74,7 +74,7 @@
         <hgroup class="thtrm-banner-container">
           <div class="thtrm-constraint thtrm-constraint--slim">
             <h2 class="thtrm-banner-text">Understanding @Injectable in Angular</h2>
-            <span>by <a href="http://twitter.com/" title="Pascal Precht on Twitter">Pascal Precht</a> on Sep 17, 2015, last updated on Nov 8, 2016<br>8 minute read</span>
+            <span>by <a href="http://twitter.com/" title="Pascal Precht on Twitter">Pascal Precht</a> on Sep 17, 2015, last updated on Nov 8, 2016<br>9 minute read</span>
 
           </div>
         </hgroup>
@@ -127,15 +127,15 @@
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="na">selector</span><span class="p">:</span> <span class="s1">'my-app'</span><span class="p">,</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;ul&gt;
-      &lt;li *ngFor="let item of items"&gt;{{item.name}}&lt;/li&gt;
-    &lt;/ul&gt;
-  `</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">ul</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">li</span> <span class="o">*</span><span class="nx">ngFor</span><span class="o">=</span><span class="s2">"let item of items"</span><span class="o">&gt;</span><span class="p">{{</span><span class="nx">item</span><span class="p">.</span><span class="nx">name</span><span class="p">}}</span><span class="o">&lt;</span><span class="sr">/li</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/ul</span><span class="err">&gt;
+</span>  <span class="err">`</span>
 <span class="p">})</span>
 <span class="kr">class</span> <span class="nx">AppComponent</span> <span class="p">{</span>
   <span class="nl">items</span><span class="p">:</span><span class="nb">Array</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span><span class="p">;</span>
-  <span class="nx">constructor</span><span class="p">(</span><span class="nx">dataService</span><span class="p">:</span> <span class="nx">DataService</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">constructor</span><span class="p">(</span><span class="nx">dataService</span><span class="err">:</span> <span class="nx">DataService</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">items</span> <span class="o">=</span> <span class="nx">dataService</span><span class="p">.</span><span class="nx">getItems</span><span class="p">();</span>
   <span class="p">}</span>
 <span class="p">}</span></code></pre></div>
@@ -162,11 +162,11 @@
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="na">selector</span><span class="p">:</span> <span class="s1">'my-app'</span><span class="p">,</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;ul&gt;
-      &lt;li *ngFor="let item of items"&gt;{{item.name}}&lt;/li&gt;
-    &lt;/ul&gt;
-  `</span><span class="p">,</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">ul</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">li</span> <span class="o">*</span><span class="nx">ngFor</span><span class="o">=</span><span class="s2">"let item of items"</span><span class="o">&gt;</span><span class="p">{{</span><span class="nx">item</span><span class="p">.</span><span class="nx">name</span><span class="p">}}</span><span class="o">&lt;</span><span class="sr">/li</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/ul</span><span class="err">&gt;
+</span>  <span class="err">`</span><span class="p">,</span>
   <span class="na">providers</span><span class="p">:</span> <span class="p">[</span><span class="nx">DataService</span><span class="p">]</span>
 <span class="p">})</span>
 <span class="p">...</span></code></pre></div>
@@ -193,7 +193,7 @@
 <span class="kr">class</span> <span class="nx">DataService</span> <span class="p">{</span>
   <span class="nl">items</span><span class="p">:</span><span class="nb">Array</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span><span class="p">;</span>
 
-  <span class="nx">constructor</span><span class="p">(</span><span class="nx">http</span><span class="p">:</span><span class="nx">Http</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">constructor</span><span class="p">(</span><span class="nx">http</span><span class="err">:</span><span class="nx">Http</span><span class="p">)</span> <span class="p">{</span>
     <span class="p">...</span>
   <span class="p">}</span>
   <span class="p">...</span>
@@ -249,7 +249,7 @@ Cannot resolve all parameters for DataService(?). Make sure they all have valid 
 <span class="kr">class</span> <span class="nx">DataService</span> <span class="p">{</span>
   <span class="nl">items</span><span class="p">:</span><span class="nb">Array</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span><span class="p">;</span>
 
-  <span class="nx">constructor</span><span class="p">(</span><span class="err">@</span><span class="nx">Inject</span><span class="p">(</span><span class="nx">Http</span><span class="p">)</span> <span class="nx">http</span><span class="p">:</span><span class="nx">Http</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">constructor</span><span class="p">(</span><span class="err">@</span><span class="nx">Inject</span><span class="p">(</span><span class="nx">Http</span><span class="p">)</span> <span class="nx">http</span><span class="err">:</span><span class="nx">Http</span><span class="p">)</span> <span class="p">{</span>
     <span class="p">...</span>
   <span class="p">}</span>
   <span class="p">...</span>
@@ -279,7 +279,7 @@ Cannot resolve all parameters for DataService(?). Make sure they all have valid 
 <span class="kr">class</span> <span class="nx">DataService</span> <span class="p">{</span>
   <span class="nl">items</span><span class="p">:</span><span class="nb">Array</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span><span class="p">;</span>
 
-  <span class="nx">constructor</span><span class="p">(</span><span class="nx">http</span><span class="p">:</span><span class="nx">Http</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">constructor</span><span class="p">(</span><span class="nx">http</span><span class="err">:</span><span class="nx">Http</span><span class="p">)</span> <span class="p">{</span>
     <span class="p">...</span>
   <span class="p">}</span>
   <span class="p">...</span>

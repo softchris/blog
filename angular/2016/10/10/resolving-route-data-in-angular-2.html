@@ -128,7 +128,7 @@
 <span class="kr">import</span> <span class="p">{</span> <span class="nx">ContactsListComponent</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'./contacts-list'</span><span class="p">;</span>
 <span class="kr">import</span> <span class="p">{</span> <span class="nx">ContactsDetailComponent</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'./contacts-detail'</span><span class="p">;</span>
 
-<span class="kr">export</span> <span class="kr">const</span> <span class="nx">AppRoutes</span><span class="p">:</span> <span class="nx">Routes</span> <span class="o">=</span> <span class="p">[</span>
+<span class="kr">export</span> <span class="kr">const</span> <span class="nx">AppRoutes</span><span class="err">:</span> <span class="nx">Routes</span> <span class="o">=</span> <span class="p">[</span>
   <span class="p">{</span> <span class="na">path</span><span class="p">:</span> <span class="s1">''</span><span class="p">,</span> <span class="na">component</span><span class="p">:</span> <span class="nx">ContactsListComponent</span> <span class="p">},</span>
   <span class="p">{</span> <span class="na">path</span><span class="p">:</span> <span class="s1">'contact/:id'</span><span class="p">,</span> <span class="na">component</span><span class="p">:</span> <span class="nx">ContactsDetailComponent</span> <span class="p">}</span>
 <span class="p">];</span></code></pre></div>
@@ -167,12 +167,12 @@
   <span class="nl">contact</span><span class="p">:</span> <span class="nx">Contact</span><span class="p">;</span>
 
   <span class="nx">constructor</span><span class="p">(</span>
-    <span class="kr">private</span> <span class="nx">contactsService</span><span class="p">:</span> <span class="nx">ContactsService</span><span class="p">,</span>
-    <span class="kr">private</span> <span class="nx">route</span><span class="p">:</span> <span class="nx">ActivatedRoute</span>
+    <span class="kr">private</span> <span class="nx">contactsService</span><span class="err">:</span> <span class="nx">ContactsService</span><span class="p">,</span>
+    <span class="kr">private</span> <span class="nx">route</span><span class="err">:</span> <span class="nx">ActivatedRoute</span>
   <span class="p">)</span> <span class="p">{}</span>
 
   <span class="nx">ngOnInit</span><span class="p">()</span> <span class="p">{</span>
-    <span class="kd">let</span> <span class="nx">id</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">route</span><span class="p">.</span><span class="nx">snapshot</span><span class="p">.</span><span class="nx">params</span><span class="p">[</span><span class="s1">'id'</span><span class="p">];</span>
+    <span class="kd">let</span> <span class="nx">id</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">route</span><span class="p">.</span><span class="nx">snapshot</span><span class="p">.</span><span class="nx">paramMap</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'id'</span><span class="p">);</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">contactsService</span><span class="p">.</span><span class="nx">getContact</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span>
         <span class="p">.</span><span class="nx">subscribe</span><span class="p">(</span><span class="nx">contact</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">contact</span> <span class="o">=</span> <span class="nx">contact</span><span class="p">);</span>
   <span class="p">}</span>
@@ -244,12 +244,12 @@
 
 <p>Here’s how we add our resolver function to our route configuration:</p>
 
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">export</span> <span class="kr">const</span> <span class="nx">AppRoutes</span><span class="p">:</span> <span class="nx">Routes</span> <span class="o">=</span> <span class="p">[</span>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">export</span> <span class="kr">const</span> <span class="nx">AppRoutes</span><span class="err">:</span> <span class="nx">Routes</span> <span class="o">=</span> <span class="p">[</span>
   <span class="p">...</span>
   <span class="p">{</span> 
     <span class="nl">path</span><span class="p">:</span> <span class="s1">'contact/:id'</span><span class="p">,</span>
-    <span class="nx">component</span><span class="p">:</span> <span class="nx">ContactsDetailComponent</span><span class="p">,</span>
-    <span class="nx">resolve</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nx">component</span><span class="err">:</span> <span class="nx">ContactsDetailComponent</span><span class="p">,</span>
+    <span class="nx">resolve</span><span class="err">:</span> <span class="p">{</span>
       <span class="nl">contact</span><span class="p">:</span> <span class="s1">'contact'</span>
     <span class="p">}</span>
   <span class="p">}</span>
@@ -264,7 +264,7 @@
 
   <span class="nx">contact</span><span class="p">;</span>
 
-  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">route</span><span class="p">:</span> <span class="nx">ActivatedRoute</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">route</span><span class="err">:</span> <span class="nx">ActivatedRoute</span><span class="p">)</span> <span class="p">{}</span>
 
   <span class="nx">ngOnInit</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">contact</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">route</span><span class="p">.</span><span class="nx">snapshot</span><span class="p">.</span><span class="nx">data</span><span class="p">[</span><span class="s1">'contact'</span><span class="p">];</span>
@@ -308,7 +308,7 @@
   <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="na">contactsService</span><span class="p">:</span> <span class="nx">ContactsService</span><span class="p">)</span> <span class="p">{}</span>
 
   <span class="nx">resolve</span><span class="p">(</span><span class="na">route</span><span class="p">:</span> <span class="nx">ActivatedRouteSnapshot</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">contactsService</span><span class="p">.</span><span class="nx">getContact</span><span class="p">(</span><span class="nx">route</span><span class="p">.</span><span class="nx">params</span><span class="p">[</span><span class="s1">'id'</span><span class="p">]);</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">contactsService</span><span class="p">.</span><span class="nx">getContact</span><span class="p">(</span><span class="nx">route</span><span class="p">.</span><span class="nx">paramMap</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'id'</span><span class="p">));</span>
   <span class="p">}</span>
 <span class="p">}</span></code></pre></div>
 
@@ -325,12 +325,12 @@
 
 <p>And of course, we use the same token to configure the resolver on our routes:</p>
 
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">export</span> <span class="kr">const</span> <span class="nx">AppRoutes</span><span class="p">:</span> <span class="nx">Routes</span> <span class="o">=</span> <span class="p">[</span>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">export</span> <span class="kr">const</span> <span class="nx">AppRoutes</span><span class="err">:</span> <span class="nx">Routes</span> <span class="o">=</span> <span class="p">[</span>
   <span class="p">...</span>
   <span class="p">{</span> 
     <span class="nl">path</span><span class="p">:</span> <span class="s1">'contact/:id'</span><span class="p">,</span>
-    <span class="nx">component</span><span class="p">:</span> <span class="nx">ContactsDetailComponent</span><span class="p">,</span>
-    <span class="nx">resolve</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nx">component</span><span class="err">:</span> <span class="nx">ContactsDetailComponent</span><span class="p">,</span>
+    <span class="nx">resolve</span><span class="err">:</span> <span class="p">{</span>
       <span class="nl">contact</span><span class="p">:</span> <span class="nx">ContactResolve</span>
     <span class="p">}</span>
   <span class="p">}</span>

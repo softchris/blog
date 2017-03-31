@@ -74,7 +74,7 @@
         <hgroup class="thtrm-banner-container">
           <div class="thtrm-constraint thtrm-constraint--slim">
             <h2 class="thtrm-banner-text">Component-Relative Paths in Angular</h2>
-            <span>by <a href="http://twitter.com/" title="Thomas Burleson on Twitter">Thomas Burleson</a> on Jun 8, 2016, last updated on Dec 18, 2016<br>12 minute read</span>
+            <span>by <a href="http://twitter.com/" title="Thomas Burleson on Twitter">Thomas Burleson</a> on Jun 8, 2016, last updated on Dec 18, 2016<br>13 minute read</span>
 
           </div>
         </hgroup>
@@ -113,11 +113,11 @@
 
 <span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="na">selector</span><span class="p">:</span> <span class="s1">'contacts-header'</span><span class="p">,</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;nav class="navbar-fixed"&gt;
-      &lt;span class="brand-logo center"&gt;Contacts&lt;/span&gt;
-    &lt;/nav&gt;
-  `</span><span class="p">,</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">nav</span> <span class="kr">class</span><span class="o">=</span><span class="s2">"navbar-fixed"</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">span</span> <span class="kr">class</span><span class="o">=</span><span class="s2">"brand-logo center"</span><span class="o">&gt;</span><span class="nx">Contacts</span><span class="o">&lt;</span><span class="sr">/span</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/nav</span><span class="err">&gt;
+</span>  <span class="err">`</span><span class="p">,</span>
   <span class="na">styles</span><span class="p">:</span> <span class="p">[</span><span class="s1">'.navbar-fixed { position:fixed; }'</span><span class="p">]</span>
 <span class="p">})</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">HeaderComponent</span> <span class="kr">implements</span> <span class="nx">OnInit</span> <span class="p">{</span>  <span class="p">}</span></code></pre></div>
@@ -146,13 +146,13 @@
 
 <span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="na">selector</span><span class="p">:</span> <span class="s1">'contacts-header'</span><span class="p">,</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;nav class="navbar-fixed"&gt;
-      &lt;div class="nav-wrapper"&gt;
-        &lt;span class="brand-logo center"&gt;Contacts&lt;/span&gt;
-      &lt;/div&gt;
-    &lt;/nav&gt;
-  `</span><span class="p">,</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">nav</span> <span class="kr">class</span><span class="o">=</span><span class="s2">"navbar-fixed"</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">div</span> <span class="kr">class</span><span class="o">=</span><span class="s2">"nav-wrapper"</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">span</span> <span class="kr">class</span><span class="o">=</span><span class="s2">"brand-logo center"</span><span class="o">&gt;</span><span class="nx">Contacts</span><span class="o">&lt;</span><span class="sr">/span</span><span class="err">&gt;
+</span>      <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/nav</span><span class="err">&gt;
+</span>  <span class="err">`</span><span class="p">,</span>
   <span class="na">styles</span><span class="p">:</span> <span class="p">[</span><span class="s1">'.navbar-fixed { position:fixed; }'</span><span class="p">]</span>
 <span class="p">})</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">HeaderComponent</span> <span class="kr">implements</span> <span class="nx">OnInit</span> <span class="p">{</span>

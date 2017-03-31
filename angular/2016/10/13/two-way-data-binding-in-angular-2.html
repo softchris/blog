@@ -172,11 +172,11 @@
 
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="na">selector</span><span class="p">:</span> <span class="s1">'custom-counter'</span><span class="p">,</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s2">`
-    &lt;button (click)="decrement()"&gt;-&lt;/button&gt;
-    &lt;span&gt;{{counter}}&lt;/span&gt;
-    &lt;button (click)="increment()"&gt;+&lt;/button&gt;
-  `</span>
+  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
+    <span class="o">&lt;</span><span class="nx">button</span> <span class="p">(</span><span class="nx">click</span><span class="p">)</span><span class="o">=</span><span class="s2">"decrement()"</span><span class="o">&gt;-&lt;</span><span class="sr">/button</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">span</span><span class="o">&gt;</span><span class="p">{{</span><span class="nx">counter</span><span class="p">}}</span><span class="o">&lt;</span><span class="sr">/span</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="nx">button</span> <span class="p">(</span><span class="nx">click</span><span class="p">)</span><span class="o">=</span><span class="s2">"increment()"</span><span class="o">&gt;+&lt;</span><span class="sr">/button</span><span class="err">&gt;
+</span>  <span class="err">`</span>
 <span class="p">})</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">CustomCounterComponent</span> <span class="p">{</span>
 

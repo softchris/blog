@@ -109,7 +109,7 @@
 <span class="err">@</span><span class="nx">Component</span><span class="p">(...)</span>
 <span class="kr">class</span> <span class="nx">AppComponent</span> <span class="p">{</span>
 
-  <span class="nx">constructor</span><span class="p">(</span><span class="nx">dataService</span><span class="p">:</span> <span class="nx">DataService</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">constructor</span><span class="p">(</span><span class="nx">dataService</span><span class="err">:</span> <span class="nx">DataService</span><span class="p">)</span> <span class="p">{</span>
     <span class="c1">// dataService instanceof DataService === true</span>
   <span class="p">}</span>
 <span class="p">}</span></code></pre></div>
@@ -155,7 +155,7 @@
 
 <p>With multi providers, we can basically provide <strong>multiple dependencies for a single token</strong>. Let’s see what that looks like. The following code manually creates an injector with multi providers:</p>
 
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">SOME_TOKEN</span><span class="p">:</span> <span class="nx">OpaqueToken</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">OpaqueToken</span><span class="p">(</span><span class="s1">'SomeToken'</span><span class="p">);</span>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">SOME_TOKEN</span><span class="err">:</span> <span class="nx">OpaqueToken</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">OpaqueToken</span><span class="p">(</span><span class="s1">'SomeToken'</span><span class="p">);</span>
 
 <span class="kd">var</span> <span class="nx">injector</span> <span class="o">=</span> <span class="nx">ReflectiveInjector</span><span class="p">.</span><span class="nx">resolveAndCreate</span><span class="p">([</span>
   <span class="p">{</span> <span class="na">provide</span><span class="p">:</span> <span class="nx">SOME_TOKEN</span><span class="p">,</span> <span class="na">useValue</span><span class="p">:</span> <span class="s1">'dependency one'</span><span class="p">,</span> <span class="na">multi</span><span class="p">:</span> <span class="kc">true</span> <span class="p">},</span>
