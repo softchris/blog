@@ -74,7 +74,7 @@
         <hgroup class="thtrm-banner-container">
           <div class="thtrm-constraint thtrm-constraint--slim">
             <h2 class="thtrm-banner-text">Angular Animations - Foundation Concepts</h2>
-            <span>by <a href="http://twitter.com/" title="Thomas Burleson on Twitter">Thomas Burleson</a> on Sep 16, 2016, last updated on Dec 18, 2016<br>12 minute read</span>
+            <span>by <a href="http://twitter.com/" title="Thomas Burleson on Twitter">Thomas Burleson</a> on Sep 16, 2016, last updated on Apr 1, 2017<br>13 minute read</span>
 
           </div>
         </hgroup>
@@ -130,6 +130,23 @@
 <p>This component simply publishes an <code>@Input() isVisible</code> property; which allows other external components to show/hide the text content… without any animations.</p>
 
 <iframe src="http://embed.plnkr.co/vUPTsY/?deferRun" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe>
+
+<h3 id="enable-animations-module">Enable Animations Module</h3>
+
+<p>Since Angular 4.x, there’s a new module <code>BrowserAnimationsModule</code> that introduces all animation capabilities. That’s why we first have add that to our application module’s <code>imports</code> like this:</p>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">BrowserAnimationsModule</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/platform-browser/animations'</span><span class="p">;</span>
+
+<span class="err">@</span><span class="nx">NgModule</span><span class="p">({</span>
+  <span class="na">imports</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">...</span>
+    <span class="nx">BrowserAnimationsModule</span>
+  <span class="p">]</span>
+  <span class="p">...</span>
+<span class="p">})</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">AppModule</span> <span class="p">{}</span></code></pre></div>
+
+<p>Once that is done, we can use any kind of animation API in our application. If we want to use animation function like <code>trigger()</code> or <code>state()</code>, we need to import them also from <code>'@angular/platform-browser/animations'</code> instead of <code>'@angular/core'</code>.</p>
 
 <h3 id="configure-component-animations">Configure Component Animations</h3>
 
@@ -220,10 +237,8 @@ While we configured the Animation metadata,  I am sure you are wondering:</p>
 
 <p>Here is the entire component definition updated with Animation features:</p>
 
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> 
-  <span class="nx">Component</span><span class="p">,</span> <span class="nx">OnChanges</span><span class="p">,</span> <span class="nx">Input</span><span class="p">,</span> 
-  <span class="nx">trigger</span><span class="p">,</span> <span class="nx">state</span><span class="p">,</span> <span class="nx">animate</span><span class="p">,</span> <span class="nx">transition</span><span class="p">,</span> <span class="nx">style</span> 
-<span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/core'</span><span class="p">;</span>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">Component</span><span class="p">,</span> <span class="nx">OnChanges</span><span class="p">,</span> <span class="nx">Input</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/core'</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">trigger</span><span class="p">,</span> <span class="nx">state</span><span class="p">,</span> <span class="nx">animate</span><span class="p">,</span> <span class="nx">transition</span><span class="p">,</span> <span class="nx">style</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/platform-browser/animations'</span><span class="p">;</span>
 
 <span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="na">selector</span> <span class="p">:</span> <span class="s1">'my-fader'</span><span class="p">,</span>
@@ -282,10 +297,8 @@ While we configured the Animation metadata,  I am sure you are wondering:</p>
 
 <p>If you use the <code>myFader::isVisible</code> boolean property, then your animation state values must be changed to <code>true</code> and <code>false</code> since those are the possible values of the <code>isVisible</code> property.</p>
 
-<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span>
-  <span class="nx">Component</span><span class="p">,</span> <span class="nx">OnChanges</span><span class="p">,</span> <span class="nx">Input</span><span class="p">,</span>
-  <span class="nx">trigger</span><span class="p">,</span> <span class="nx">state</span><span class="p">,</span> <span class="nx">animate</span><span class="p">,</span> <span class="nx">transition</span><span class="p">,</span> <span class="nx">style</span>
-<span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/core'</span><span class="p">;</span>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">Component</span><span class="p">,</span> <span class="nx">OnChanges</span><span class="p">,</span> <span class="nx">Input</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">'@angular/core'</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">trigger</span><span class="p">,</span> <span class="nx">state</span><span class="p">,</span> <span class="nx">animate</span><span class="p">,</span> <span class="nx">transition</span><span class="p">,</span> <span class="nx">style</span> <span class="p">}</span> <span class="nx">form</span> <span class="s1">'@angular/platform-browser/animations'</span><span class="p">;</span>
 
 <span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
   <span class="na">selector</span> <span class="p">:</span> <span class="s1">'my-fader'</span><span class="p">,</span>
