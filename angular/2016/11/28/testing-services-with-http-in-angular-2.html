@@ -249,7 +249,7 @@
   <span class="p">...</span>
   <span class="na">providers</span><span class="p">:</span> <span class="p">[</span>
     <span class="p">...</span>
-    <span class="p">{</span> <span class="nl">provide</span><span class="p">:</span> <span class="nx">XHRBackend</span><span class="p">,</span> <span class="na">useClass</span><span class="p">:</span> <span class="nx">MockBackend</span> <span class="p">}</span>
+    <span class="p">{</span> <span class="na">provide</span><span class="p">:</span> <span class="nx">XHRBackend</span><span class="p">,</span> <span class="na">useClass</span><span class="p">:</span> <span class="nx">MockBackend</span> <span class="p">}</span>
   <span class="p">]</span>
 <span class="p">});</span>
 <span class="p">...</span></code></pre></div>
@@ -398,7 +398,7 @@
   <span class="nx">describe</span><span class="p">(</span><span class="s1">'getVideos()'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
 
     <span class="nx">it</span><span class="p">(</span><span class="s1">'should return an Observable&lt;Array&lt;Video&gt;&gt;'</span><span class="p">,</span>
-        <span class="nx">inject</span><span class="p">([</span><span class="nx">VideoService</span><span class="p">,</span> <span class="nx">MockBackend</span><span class="p">],</span> <span class="p">(</span><span class="nx">videoService</span><span class="p">,</span> <span class="nx">mockBackend</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">inject</span><span class="p">([</span><span class="nx">VideoService</span><span class="p">,</span> <span class="nx">XHRBackend</span><span class="p">],</span> <span class="p">(</span><span class="nx">videoService</span><span class="p">,</span> <span class="nx">mockBackend</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
 
         <span class="kr">const</span> <span class="nx">mockResponse</span> <span class="o">=</span> <span class="p">{</span>
           <span class="na">data</span><span class="p">:</span> <span class="p">[</span>
@@ -491,7 +491,7 @@
           <span class="thtrm-article-author-avatar"><img src="/images/author-pascal.jpg" alt="Picture of Pascal Precht"></span>
           <div class="thtrm-article-author-matter">
             <h4 class="thtrm-article-author-name">Pascal Precht</h4>
-            <p class="thtrm-article-author-text">Pascal is a front-end engineer and a Angular Developer Expert nominated by Google. He created the angular-translate module, is an Angular 2 contributor and also part of the Angular 2 Docs Authoring team.</p>
+            <p class="thtrm-article-author-text">Pascal is a front-end engineer and a Angular Developer Expert nominated by Google. He created the angular-translate module, is an Angular contributor and also part of the Angular Docs Authoring team.</p>
             <p>
               <a class="thtrm-article-author-cta thtrm-article-author-cta-twitter" href="http://twitter.com/PascalPrecht" title="Pascal Precht on Twitter">Twitter</a>
               <a class="thtrm-article-author-cta" href="http://github.com/PascalPrecht" title="Pascal Precht on GitHub">GitHub</a>

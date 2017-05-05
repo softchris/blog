@@ -74,7 +74,7 @@
         <hgroup class="thtrm-banner-container">
           <div class="thtrm-constraint thtrm-constraint--slim">
             <h2 class="thtrm-banner-text">Template-driven Forms in Angular</h2>
-            <span>by <a href="http://twitter.com/" title="Pascal Precht on Twitter">Pascal Precht</a> on Mar 21, 2016, last updated on Dec 18, 2016<br>11 minute read</span>
+            <span>by <a href="http://twitter.com/" title="Pascal Precht on Twitter">Pascal Precht</a> on Mar 21, 2016, last updated on Dec 18, 2016<br>12 minute read</span>
 
           </div>
         </hgroup>
@@ -188,17 +188,17 @@
 
 <p>Angular comes with a very convenient way of exposing directive instances in a component’s template using the <code>exportAs</code> property of the directive metadata. For example, if we’d build a directive <code>draggable</code>, we could expose an instance to the template via the name <code>draggable</code> like so:</p>
 
-<div class="highlight"><pre><code class="language-ts" data-lang="ts">@Directive({
-  selector: '[draggable]',
-  exportAs: 'draggable'
-})
-class Draggable {
-  ...
-}</code></pre></div>
+<div class="highlight"><pre><code class="language-ts" data-lang="ts"><span class="err">@</span><span class="nx">Directive</span><span class="p">({</span>
+  <span class="na">selector</span><span class="p">:</span> <span class="s1">'[draggable]'</span><span class="p">,</span>
+  <span class="na">exportAs</span><span class="p">:</span> <span class="s1">'draggable'</span>
+<span class="p">})</span>
+<span class="kr">class</span> <span class="nx">Draggable</span> <span class="p">{</span>
+  <span class="p">...</span>
+<span class="p">}</span></code></pre></div>
 
 <p>And then, in the template where it’s used, we can simply ask for it using Angular’s local variable mechanism:</p>
 
-<div class="highlight"><pre><code class="language-ts" data-lang="ts">&lt;div draggable #myDraggable="draggable"&gt;I'm draggable!&lt;/div&gt;</code></pre></div>
+<div class="highlight"><pre><code class="language-ts" data-lang="ts"><span class="o">&lt;</span><span class="nx">div</span> <span class="nx">draggable</span> <span class="err">#</span><span class="nx">myDraggable</span><span class="o">=</span><span class="s2">"draggable"</span><span class="o">&gt;</span><span class="nx">I</span><span class="err">'</span><span class="nx">m</span> <span class="nx">draggable</span><span class="o">!&lt;</span><span class="sr">/div&gt;</span></code></pre></div>
 
 <p>From this point on <code>myDraggable</code> is a reference to an instance of <code>Draggable</code> and we can use it throughout our entire template as part of other expressions.</p>
 
@@ -458,7 +458,7 @@ class Draggable {
           <span class="thtrm-article-author-avatar"><img src="/images/author-pascal.jpg" alt="Picture of Pascal Precht"></span>
           <div class="thtrm-article-author-matter">
             <h4 class="thtrm-article-author-name">Pascal Precht</h4>
-            <p class="thtrm-article-author-text">Pascal is a front-end engineer and a Angular Developer Expert nominated by Google. He created the angular-translate module, is an Angular 2 contributor and also part of the Angular 2 Docs Authoring team.</p>
+            <p class="thtrm-article-author-text">Pascal is a front-end engineer and a Angular Developer Expert nominated by Google. He created the angular-translate module, is an Angular contributor and also part of the Angular Docs Authoring team.</p>
             <p>
               <a class="thtrm-article-author-cta thtrm-article-author-cta-twitter" href="http://twitter.com/PascalPrecht" title="Pascal Precht on Twitter">Twitter</a>
               <a class="thtrm-article-author-cta" href="http://github.com/PascalPrecht" title="Pascal Precht on GitHub">GitHub</a>

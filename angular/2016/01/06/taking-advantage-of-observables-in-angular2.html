@@ -192,9 +192,9 @@ after the request that carries the results for <em>car</em>. This may happen bec
 </span>  <span class="err">`</span>
 <span class="p">})</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">AppComponent</span> <span class="p">{</span>
-  <span class="nl">items</span><span class="p">:</span> <span class="nb">Array</span><span class="o">&lt;</span><span class="nx">string</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="na">items</span><span class="p">:</span> <span class="nb">Array</span><span class="o">&lt;</span><span class="nx">string</span><span class="o">&gt;</span><span class="p">;</span>
 
-  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">wikipediaService</span><span class="err">:</span> <span class="nx">WikipediaService</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="na">wikipediaService</span><span class="p">:</span> <span class="nx">WikipediaService</span><span class="p">)</span> <span class="p">{}</span>
 
   <span class="nx">search</span><span class="p">(</span><span class="nx">term</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">wikipediaService</span><span class="p">.</span><span class="nx">search</span><span class="p">(</span><span class="nx">term</span><span class="p">)</span>
@@ -314,10 +314,10 @@ The good news is, now that <code>search</code> returns an <code>Observable&lt;Ar
 <span class="p">})</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">App</span> <span class="p">{</span>
 
-  <span class="nl">items</span><span class="p">:</span> <span class="nx">Observable</span><span class="o">&lt;</span><span class="nb">Array</span><span class="o">&lt;</span><span class="nx">string</span><span class="o">&gt;&gt;</span><span class="p">;</span>
+  <span class="na">items</span><span class="p">:</span> <span class="nx">Observable</span><span class="o">&lt;</span><span class="nb">Array</span><span class="o">&lt;</span><span class="nx">string</span><span class="o">&gt;&gt;</span><span class="p">;</span>
   <span class="nx">term</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FormControl</span><span class="p">();</span>
 
-  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">wikipediaService</span><span class="err">:</span> <span class="nx">WikipediaService</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="na">wikipediaService</span><span class="p">:</span> <span class="nx">WikipediaService</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">items</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">term</span><span class="p">.</span><span class="nx">valueChanges</span>
                  <span class="p">.</span><span class="nx">debounceTime</span><span class="p">(</span><span class="mi">400</span><span class="p">)</span>
                  <span class="p">.</span><span class="nx">distinctUntilChanged</span><span class="p">()</span>
@@ -417,7 +417,7 @@ The good news is, now that <code>search</code> returns an <code>Observable&lt;Ar
           <span class="thtrm-article-author-avatar"><img src="/images/author-christoph.jpg" alt="Picture of Christoph Burgdorf"></span>
           <div class="thtrm-article-author-matter">
             <h4 class="thtrm-article-author-name">Christoph Burgdorf</h4>
-            <p class="thtrm-article-author-text">Christoph began programming at the age of 10. He is the creator of the Nickel.rs web framework and a contributor of the AngularJS project. Christoph is also part of the Angular 2 Docs Authoring team.</p>
+            <p class="thtrm-article-author-text">Christoph began programming at the age of 10. He is the creator of the Nickel.rs web framework and a contributor of the AngularJS project. Christoph is also part of the Angular Docs Authoring team.</p>
             <p>
               <a class="thtrm-article-author-cta thtrm-article-author-cta-twitter" href="http://twitter.com/cburgdorf" title="Christoph Burgdorf on Twitter">Twitter</a>
               <a class="thtrm-article-author-cta" href="http://github.com/cburgdorf" title="Christoph Burgdorf on GitHub">GitHub</a>

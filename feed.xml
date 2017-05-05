@@ -7,6 +7,51 @@
     <atom:link href="http://blog.thoughtram.io/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
+        <title>Announcing Angular Master Class in Denmark</title>
+        <description>&lt;p&gt;Today we are excited to announce our next public Angular Master Class way up north in Denmark! We couldn’t be happier to finally run our training in the country where &lt;a href=&quot;https://en.wikipedia.org/wiki/Bjarne_Stroustrup&quot;&gt;Bjarne Stroustrup&lt;/a&gt; and &lt;a href=&quot;https://en.wikipedia.org/wiki/Anders_Hejlsberg&quot;&gt;Anders Hejlsberg&lt;/a&gt; were born!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/foss-analytics-a-s-office.jpg&quot; alt=&quot;Foss Office Building Hillerød&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The event takes place on the &lt;strong&gt;20th to 22th March 2017 at Foss&lt;/strong&gt; in Hillerød about 35 km out of Copenhagen. We couldn’t be happier to have &lt;a href=&quot;http://foss.dk&quot;&gt;Foss&lt;/a&gt; as a strong partner to help us bring our famous training to Denmark.&lt;/p&gt;
+
+&lt;p&gt;We will have three (3) days of fun and learning the ins and outs of Angular including things like&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Components and Modules&lt;/li&gt;
+  &lt;li&gt;Fetching data using Http&lt;/li&gt;
+  &lt;li&gt;Advanced Dependency Injection&lt;/li&gt;
+  &lt;li&gt;Basic Forms&lt;/li&gt;
+  &lt;li&gt;Observables deep-dive&lt;/li&gt;
+  &lt;li&gt;Architectural patterns&lt;/li&gt;
+  &lt;li&gt;ContentChildren and ViewChildren&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Redux and ngrx&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;…and many more!&lt;/p&gt;
+
+&lt;p&gt;Yes, that’s right: This will be the first public training where we debut our brand new courseware on &lt;strong&gt;Redux and ngrx&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;tickets-on-sale-now&quot;&gt;Tickets on sale now&lt;/h3&gt;
+
+&lt;p&gt;The early bird round of tickets is on sale now. You can &lt;strong&gt;save up to 200,00 €&lt;/strong&gt; so you’ll better be fast. Seats are &lt;strong&gt;very&lt;/strong&gt; limited this time with only &lt;strong&gt;3&lt;/strong&gt; early bird tickets available!&lt;/p&gt;
+
+&lt;p&gt;Come to our training… have a blast and get the best acceleration into Angular possible. You can find more information on our official &lt;a href=&quot;https://amc-denmark.eventbrite.com/?aff=blogAnnouncement&quot;&gt;event page&lt;/a&gt;, or grab your ticket right here!&lt;/p&gt;
+
+&lt;iframe src=&quot;//eventbrite.de/tickets-external?eid=34271504994&amp;amp;ref=etckt&quot; frameborder=&quot;0&quot; vspace=&quot;0&quot; hspace=&quot;0&quot; marginheight=&quot;5&quot; marginwidth=&quot;5&quot; scrolling=&quot;auto&quot; allowtransparency=&quot;true&quot;&gt;&lt;/iframe&gt;
+
+&lt;h3 id=&quot;free-goodies&quot;&gt;Free Goodies&lt;/h3&gt;
+
+&lt;p&gt;In addition to our three day course there’ll be a free community event in the evening that we’ll announce soon. We’ll also have special deals with hotels in Hillerød as well as Copenhagen.&lt;/p&gt;
+
+&lt;p&gt;See you in Denmark!&lt;/p&gt;
+
+</description>
+        <pubDate>Fri, 05 May 2017 02:00:00 +0200</pubDate>
+        <link>http://blog.thoughtram.io/announcements/2017/05/05/announcing-angular-master-class-in-denmark.html</link>
+        <guid isPermaLink="true">http://blog.thoughtram.io/announcements/2017/05/05/announcing-angular-master-class-in-denmark.html</guid>
+      </item>
+    
+      <item>
         <title>Three things you didn&#39;t know about the AsyncPipe</title>
         <description>&lt;p&gt;You sure heard about Angular’s &lt;code&gt;AsyncPipe&lt;/code&gt; haven’t you? It’s this handy little pipe that we can use from within our templates so that we don’t have to deal with unwrapping data from Observables or Promises imperatively. Turns out the &lt;code&gt;AsyncPipe&lt;/code&gt; is full of little wonders that may not be obvious at first sight. In this article we like to shed some light on the inner workings of this useful little tool.&lt;/p&gt;
 
@@ -40,9 +85,9 @@
 &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
 &lt;span class=&quot;kr&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ContactsListComponent&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;implements&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;OnInit&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
 
-  &lt;span class=&quot;nl&quot;&gt;contacts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Observable&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;Array&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Contact&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;contacts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Observable&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;Array&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Contact&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
 
-  &lt;span class=&quot;nx&quot;&gt;constructor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;contactsService&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ContactsService&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;constructor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;contactsService&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ContactsService&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
 
   &lt;span class=&quot;nx&quot;&gt;ngOnInit&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
     &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;contacts&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;contactsService&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;getContacts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
@@ -144,7 +189,7 @@
 &lt;/span&gt;    &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/ul&amp;gt;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;`
 &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
 &lt;span class=&quot;kr&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;AppComponent&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;nl&quot;&gt;items&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Observable&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;any&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;items&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Observable&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;any&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
 
   &lt;span class=&quot;nx&quot;&gt;constructor&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
     &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;newSeq&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
@@ -180,7 +225,7 @@
 &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
 &lt;span class=&quot;kr&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;SeqComponent&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;err&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Input&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-  &lt;span class=&quot;nl&quot;&gt;items&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Array&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;any&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;items&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Array&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;any&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Notice the &lt;code&gt;@Input()&lt;/code&gt;decorator for &lt;code&gt;items&lt;/code&gt; which means the component will receive those from the outside via a property binding.
@@ -251,7 +296,7 @@ Our root component maintains an array &lt;code&gt;seqs&lt;/code&gt; and pushes n
 &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
 &lt;span class=&quot;kr&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;SeqComponent&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;err&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Input&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-  &lt;span class=&quot;nl&quot;&gt;items&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Observable&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;Array&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;any&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;items&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Observable&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;Array&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;any&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Also note that it now applies the &lt;code&gt;AsyncPipe&lt;/code&gt; in its template since it’s not dealing with a plain array anymore. Our &lt;code&gt;AppComponent&lt;/code&gt; needs to be changed as well to &lt;strong&gt;not&lt;/strong&gt; apply the &lt;code&gt;AsyncPipe&lt;/code&gt; in the property binding anymore.&lt;/p&gt;
@@ -1805,7 +1850,7 @@ unit tests.&lt;/p&gt;
   &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
   &lt;span class=&quot;na&quot;&gt;providers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
     &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;provide&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;XHRBackend&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;useClass&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;MockBackend&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;provide&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;XHRBackend&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;useClass&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;MockBackend&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
@@ -1954,7 +1999,7 @@ unit tests.&lt;/p&gt;
   &lt;span class=&quot;nx&quot;&gt;describe&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;getVideos()&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
 
     &lt;span class=&quot;nx&quot;&gt;it&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;should return an Observable&amp;lt;Array&amp;lt;Video&amp;gt;&amp;gt;&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-        &lt;span class=&quot;nx&quot;&gt;inject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;VideoService&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;MockBackend&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;videoService&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;mockBackend&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;inject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;VideoService&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;XHRBackend&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;videoService&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;mockBackend&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
 
         &lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;mockResponse&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
           &lt;span class=&quot;na&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
@@ -2225,62 +2270,6 @@ Epoch 124/20000
         <pubDate>Wed, 02 Nov 2016 01:00:00 +0100</pubDate>
         <link>http://blog.thoughtram.io/machine-learning/2016/11/02/understanding-XOR-with-keras-and-tensorlow.html</link>
         <guid isPermaLink="true">http://blog.thoughtram.io/machine-learning/2016/11/02/understanding-XOR-with-keras-and-tensorlow.html</guid>
-      </item>
-    
-      <item>
-        <title>Announcing Angular 2 Master Class in Sydney</title>
-        <description>&lt;p&gt;Just a couple of weeks ago we &lt;a href=&quot;/announcements/2016/08/30/announcing-angular-2-master-class-in-nyc.html&quot;&gt;announced&lt;/a&gt; to bring our Angular 2 Master Class to New York City. And now in fact it’s happening in just about two weeks with only very few &lt;a href=&quot;https://www.eventbrite.de/e/angular-2-master-class-new-york-city-tickets-27384912009&quot;&gt;tickets&lt;/a&gt; left.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Today we are incredibly excited to announce that we’ll bring our Angular 2 Master Class to the land of kangaroos and…sharks! Yes, that’s right we are coming to Sydney!&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;The event takes place on the &lt;strong&gt;9th to 11th January 2017&lt;/strong&gt; and we’ll announce the exact location very soon. Like in NYC we’ll offer an optional third training day, allowing us to cover even more topics on Angular 2! In just 3 days you will get more than 22 hours of hands-on, developer training for the Angular 2 platform. It’s up to you if you want to get an awesome 2-day training experience, or if you want to go one step further and gain even more knowledge with the third day.&lt;/p&gt;
-
-&lt;h2 id=&quot;br&quot;&gt;&lt;br /&gt;&lt;/h2&gt;
-
-&lt;h3 id=&quot;young-minds-free-training&quot;&gt;&lt;strong&gt;“Young-Minds”&lt;/strong&gt; Free Training&lt;/h3&gt;
-
-&lt;p&gt;As recently  &lt;a href=&quot;http://blog.thoughtram.io/announcements/2016/08/30/announcing-angular-2-master-class-in-nyc.html#young-minds-free-training&quot;&gt;announced&lt;/a&gt;, we are committed to encourage and inspire the next generation of developers… we think of this as a pay-forward, investment for the future of Angular!&lt;/p&gt;
-
-&lt;p&gt;With our new A2MC Training Sponsorship, we will encourage teenagers to continue their exploration &amp;amp; skills development with web app technologies and the Angular 2 platform.
-There simply is no better way to quickly ramp up on Angular 2!&lt;/p&gt;
-
-&lt;p&gt;Do you know a young teenager who has impressed you with their interest and beginner-skills in web app development? Do you want to inspire them to continue their amazing journey with software development?&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://cloud.githubusercontent.com/assets/210413/18170153/dde74962-7022-11e6-9dcc-f64f24f79d0d.jpg&quot; alt=&quot;youngmindstraining&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;For this training, we will give away three (3) FREE tickets to our Angular 2 Master Class.&lt;/strong&gt; Just tweet why you think your nominee should get a ticket! Mention that person’s twitter handle or email in the tweet. Include hashtag &lt;a href=&quot;https://twitter.com/search?f=tweets&amp;amp;q=%23A2MC_YoungMinds&quot;&gt;#A2MC_YoungMinds&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;The nominee must be between at least 13 years old and younger than 18 years of age: high school students. And all candidates must be nominated by the Angular community.&lt;/p&gt;
-
-&lt;p&gt;For example:&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;blockquote&gt;
-    &lt;p&gt;“I nominate @SomeOne because she’s the youngest Angular Material contributor &lt;strong&gt;#A2MC_YoungMinds&lt;/strong&gt;”&lt;/p&gt;
-  &lt;/blockquote&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;For each of our future public trainings, we promise to continue this sponsorship program… to promote young minds and the Angular platform.&lt;/p&gt;
-
-&lt;h2 id=&quot;br-1&quot;&gt;&lt;br /&gt;&lt;/h2&gt;
-
-&lt;h3 id=&quot;tickets-on-sale-now&quot;&gt;Tickets on sale now&lt;/h3&gt;
-
-&lt;p&gt;The early bird round of tickets is on sale now. You can save up to &lt;strong&gt;$125.00&lt;/strong&gt; so you’ll better be fast. Seats are limited!&lt;/p&gt;
-
-&lt;p&gt;Come to our training… have a blast and get the best acceleration into Angular 2 possible.&lt;/p&gt;
-
-&lt;p&gt;You can find more information on our official &lt;a href=&quot;https://www.eventbrite.de/e/angular-2-master-class-sydney-tickets-28884003833?ref=etckt&quot;&gt;event page&lt;/a&gt;.&lt;/p&gt;
-
-&lt;iframe src=&quot;//eventbrite.de/tickets-external?eid=28884003833&amp;amp;ref=etckt&quot; frameborder=&quot;0&quot; vspace=&quot;0&quot; hspace=&quot;0&quot; marginheight=&quot;5&quot; marginwidth=&quot;5&quot; scrolling=&quot;auto&quot; allowtransparency=&quot;true&quot;&gt;&lt;/iframe&gt;
-
-&lt;p&gt;See you in Sydney!&lt;/p&gt;
-
-&lt;p&gt;Pascal, Thomas &amp;amp; Christoph&lt;/p&gt;
-</description>
-        <pubDate>Sun, 30 Oct 2016 02:00:00 +0200</pubDate>
-        <link>http://blog.thoughtram.io/announcements/2016/10/30/announcing-angular-2-master-class-in-sydney.html</link>
-        <guid isPermaLink="true">http://blog.thoughtram.io/announcements/2016/10/30/announcing-angular-2-master-class-in-sydney.html</guid>
       </item>
     
   </channel>
