@@ -8,10 +8,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="With the release of Angular 1.4, a few changes landed that affect the ngMessages module. This article discusses what has changed.">
+    <meta name="description" content="Today we're super excited to announce that we finished working on our new Angular Master Class courseware. Read on for more information!">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="author" content="thoughtram">
-    <title>ngMessages revisited by thoughtram</title>
+    <title>Angular Master Class - Redux and ngrx by thoughtram</title>
     <meta name="google-site-verification" content="o9eGPEgIETEqYGombq7NiQuBIB_qa6gz1yAL7PxKyK0">
 
     <!-- Add to homescreen for Chrome on Android -->
@@ -31,15 +31,15 @@
 
     <meta property="og:locale" content="en_US">
     <meta property="og:type" content="article">
-    <meta property="og:title" content="ngMessages revisited">
-    <meta property="og:description" content="With the release of Angular 1.4, a few changes landed that affect the ngMessages module. This article discusses what has changed.">
-    <meta property="og:url" content="http://blog.thoughtram.io/2015/06/06/ng-messages-revisited.html">
+    <meta property="og:title" content="Angular Master Class - Redux and ngrx">
+    <meta property="og:description" content="Today we're super excited to announce that we finished working on our new Angular Master Class courseware. Read on for more information!">
+    <meta property="og:url" content="http://blog.thoughtram.io/angular/2017/05/08/angular-master-class-redux-and-ngrx.html">
     <meta property="og:site_name" content="Articles by thoughtram">
-    <meta property="og:image" content="http://blog.thoughtram.io">
+    <meta property="og:image" content="http://blog.thoughtram.io/images/banner/ngrx_slide_logo.jpg">
     <meta property="og:publisher" content="http://www.facebook.com/thoughtram">
 
     <meta property="twitter:card" content="summary">
-    <meta property="twitter:title" content="ngMessages revisited">
+    <meta property="twitter:title" content="Angular Master Class - Redux and ngrx">
     <meta property="twitter:site" content="thoughtram Blog">
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -70,11 +70,11 @@
     </header>
 
     <main role="main" class="thtrm-main">
-    <div class="thtrm-banner" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%), url('/images/banner/fallback.jpeg');">
+    <div class="thtrm-banner" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%), url('/images/banner/ngrx_slide_logo.jpg');">
         <hgroup class="thtrm-banner-container">
           <div class="thtrm-constraint thtrm-constraint--slim">
-            <h2 class="thtrm-banner-text">ngMessages revisited</h2>
-            <span>by <a href="http://twitter.com/" title="Pascal Precht on Twitter">Pascal Precht</a> on Jun 6, 2015, last updated on Jun 16, 2015<br>4 minute read</span>
+            <h2 class="thtrm-banner-text">Angular Master Class - Redux and ngrx</h2>
+            <span>by <a href="http://twitter.com/" title="Pascal Precht on Twitter">Pascal Precht</a> on May 8, 2017<br>3 minute read</span>
 
           </div>
         </hgroup>
@@ -91,59 +91,59 @@
 
 
           
+          <p style="background-color: lightgoldenrodyellow; border: solid 2px #f9dead; padding: 1em; text-align: center; border-radius: 0.3em;">Contents are based on Angular version <strong>>= 2.x</strong> unless explicitely stated differently.</p>
+          
 
-          <p>If you’ve followed our series on <a href="http://blog.thoughtram.io/exploring-angular-1.3">Exploring Angular 1.3</a>, you know that we’ve written an <a href="http://blog.thoughtram.io/angularjs/2015/01/23/exploring-angular-1.3-ngMessages.html">article</a> about a new module that has been introduced then, called ngMessages. If you haven’t read that article we highly recommend checking it out, since this article builds on top of that.</p>
+          <p>Despite some appearances at <a href="https://www.ng-conf.org/">ng-conf</a> and <a href="http://jazoon.com/">Jazoon Conference</a>, it’s been a little bit quiet around us since <a href="/angular/2017/02/27/three-things-you-didnt-know-about-the-async-pipe.html">the last time we blogged</a>. You might have read our <a href="/announcements/2017/05/05/announcing-angular-master-class-in-denmark.html">announcement about the upcoming Angular Master Class</a> in Denmark, however, apart from that, many people have been wondering what we’ve been up to these days and what’s the reason for not publishing Angular articles at the pace we usually do. Let’s get straight to the point: We’ve been working super hard on some very exciting things. One of these things is - you probably guessed it - <strong>brand new Angular Master Class courseware</strong>, and we can’t wait to see it in action in our upcoming classes!</p>
 
-<p>Angular 1.4 has been released just a few days ago and weeks before that, there were several beta releases so we could make our feet wet with it. Next to a ton of improvements, bug fixes and features, this release also introduces a couple of minor breaking changes. In this article we discuss the latest changes to the ngMessages module, so you can update your application code accordingly.</p>
+<p><img src="/images/banner/ngrx_slide_logo.jpg" alt="Redux and ngrx banner" /></p>
 
-<h2 id="ngmessagesinclude-no-longer-an-attribute">ngMessagesInclude no longer an attribute</h2>
+<h2 id="whats-new">What’s new?</h2>
 
-<p>In applications where more than just a single form exists, we might want to reuse message templates. E.g. if we have an input field that is required, we want to display an error message that says so, in case the user forgets to enter anything. Such required fields appear very often in forms, so it would be quite cumbersome if we would have to define the same error message in a template over and over again.</p>
+<p>We’ve seen a lot of interest in topics around architecture and state management in bigger Angular applications. Common questions regarding this topic are “<em>How to manage state across many components that deal with different kinds of data?</em>” or “<em>How do we ensure a robust and predictable data flow?</em>”. That’s why we decided to extend the Angular Master Class experience with additional courseware on <a href="http://redux.js.org/">Redux</a> and <a href="https://github.com/ngrx">ngrx</a>. You’ve probably heard of both, if not, here’s a brief primer:</p>
 
-<p>To solve that issue, there was an <code>ngMessagesInclude</code> attribute, which we could use in combination with the <code>ngMessages</code> directive, to include existing templates in other <code>ngMessages</code> container.</p>
+<p><strong>Redux</strong> is a pattern that let’s us implement a predictable state container for our applications. <strong>ngrx</strong> is a library for Angular that implements Redux in a reactive fashion by using Observable APIs.</p>
 
-<p>To illustrate this scenario, here’s what such a template definition could look like:</p>
+<p>Hence, the courseware is split up into two parts. While the first part focusses on understanding Redux as a design pattern, how an implementation could look like, and how the redux library can be used in an application to take advantage of this pattern, the second part explores ngrx as the most appropriate solution for Angular applications, as it integrates perfectly with its reactive APIs.</p>
 
-<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"script/ng-template"</span> <span class="na">id=</span><span class="s">"required-message"</span><span class="nt">&gt;</span>
-  <span class="o">&lt;</span><span class="nx">ng</span><span class="o">-</span><span class="nx">message</span> <span class="nx">when</span><span class="o">=</span><span class="s2">"required"</span><span class="o">&gt;</span>
-    <span class="nx">This</span> <span class="nx">field</span> <span class="nx">is</span> <span class="nx">required</span><span class="o">!</span>
-  <span class="o">&lt;</span><span class="sr">/ng-message</span><span class="err">&gt;
-</span><span class="nt">&lt;/script&gt;</span></code></pre></div>
+<p>To give you a better idea, here’s a rough overview of <strong>part one</strong>:</p>
 
-<p>It’s an overloaded <code>script</code> tag that has an <code>id</code> attribute so we can refer to it later, and in that script we can just define a template. In order to (re)use that template, all we had to do, was to use the <code>ngMessagesInclude</code> attribute like this:</p>
+<ul>
+  <li>Understanding Redux, Stores, Dispatchers and Actions</li>
+  <li>Implementing a custom Redux store</li>
+  <li>Using redux as implemented library in an Angular application</li>
+  <li>Applying middleware for side effects</li>
+  <li>Learning how to deal with deferred and asynchronous actions</li>
+</ul>
 
-<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;ng-messages</span> <span class="na">ng-messages-include=</span><span class="s">"required-message"</span> <span class="na">for=</span><span class="s">"otherForm.field.$error"</span><span class="nt">&gt;</span>
-  ...
-<span class="nt">&lt;/ng-messages&gt;</span></code></pre></div>
+<p><strong>Part two</strong> discusses the following things:</p>
 
-<p>What happens here, is that we just have our <code>ngMessages</code> container to display messages, but in addition to that, an existing template will be automatically included and activated. Included templates have always been added to the <strong>bottom</strong> of the <code>ngMessages</code> container.</p>
+<ul>
+  <li>What is ngrx and how does it compare to redux</li>
+  <li>Setting up ngrx stores and creating an dispatching actions</li>
+  <li>Building and using store selectors</li>
+  <li>Improving performance with reselect queries</li>
+  <li>Applying third-party and custom middleware</li>
+  <li>Dealing asynchronous actions using ngrx Effects</li>
+  <li>Creating facade architectures for better reusability</li>
+  <li>Devtools</li>
+</ul>
 
-<p><strong>In Angular 1.4, this has changed</strong>. <code>ngMessagesInclude</code> is no longer an attribute but a directive. Which means, if we want to use it the same way, instead of adding an attribute to the <code>ngMessages</code> container, we have to add the <code>ngMessagesInclude</code> directive as a child element to the container like this:</p>
+<h2 id="who-is-this-training-for">Who is this training for?</h2>
 
-<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;ng-messages</span> <span class="na">for=</span><span class="s">"otherForm.field.$error"</span><span class="nt">&gt;</span>
-  <span class="nt">&lt;div</span> <span class="na">ng-message=</span><span class="s">"minlength"</span><span class="nt">&gt;</span>...<span class="nt">&lt;div&gt;</span>
-  <span class="nt">&lt;div</span> <span class="na">ng-messages-include=</span><span class="s">"required-message"</span><span class="nt">&gt;&lt;/div&gt;</span>
-<span class="nt">&lt;/ng-messages&gt;</span></code></pre></div>
+<p>We consider this additional courseware as one of the more advanced topics, especially because the ngrx requires knowledge that goes far beyond the basics. This means, this training is for you if you’ve already attended one of our Angular Master Classes.</p>
 
-<p>Of course, this gives us much better control over what happens inside the <code>ngMessages</code> container. Don’t forget that the order of <code>ngMessage</code> directives inside a container configures the priority of each message.</p>
+<h2 id="when-will-we-teach-it">When will we teach it?</h2>
 
-<h2 id="dynamic-message-resolution">Dynamic Message resolution</h2>
+<p><strong>It’s really up to you!</strong> As always, we put a lot of time into figuring out how the new courseware can fit into the existing one and we think we came up with the best possible solution for our setup.</p>
 
-<p>A better method to include existing message templates is already great, but the framework could do better. Even if <code>ngMessages</code> as a whole is a very nice and useful extension, it turns out that there was one issue with it, that should have been supported out of the box based on the nature of Angular.</p>
+<p>The courseware is built in a way that it can either form a full isolated single-day training, or, being part of the bigger Angular Master Class experience. This means, if you’ve already attended one of our 3-day classes, <strong>this is the right time to reach out to us</strong> to discuss training on Redux and ngrx on top of that!</p>
 
-<p>It was not possible to pass expressions to <code>ngMessage</code> directives, that evaluate to any kind of error type. This restricted us to only define static templates for each error message, which not only means we had to type more, it’s also not possible to render error messages dynamically that come from a server. In addition to that, it was not possible to use directives on ngMessages that do structure changes to the DOM (e.g. <code>ngIf</code>, <code>ngRepeat</code>).</p>
+<h2 id="what-else-are-we-working-on">What else are we working on?</h2>
 
-<p><strong>Angular 1.4 fixes that issue</strong>. It introduces another directive called <code>ngMessageExp</code> which gets an expression that evaluates to an error type, so we can dynamically display messages. Combined with directives that do structural changes to the DOM, this can be very powerful. Just imagine you’d get a list of error messages back from a server due to asynchronous validation. With the new added features, this can easily be implemented like this:</p>
+<p>Of course we don’t stop here. There’s even more courseware material in the making that’s almost finished, and we know, almost everyone needs it.</p>
 
-<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;ng-messages</span> <span class="na">for=</span><span class="s">"otherForm.field.$error"</span><span class="nt">&gt;</span>
-  <span class="nt">&lt;div</span> <span class="na">ng-repeat=</span><span class="s">"errorMessage in errorMessages"</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;div</span> <span class="na">ng-message-exp=</span><span class="s">"errorMessage.type"</span><span class="nt">&gt;</span>
-      {{errorMessage.text}}
-    <span class="nt">&lt;/div&gt;</span>
-  <span class="nt">&lt;/div&gt;</span>
-<span class="nt">&lt;/ng-messages&gt;</span></code></pre></div>
-
-<p>We can simply iterate over a collection of messages using <code>ngRepeat</code> and dynamically display error messages based on the collection’s message objects. Super powerful.</p>
+<p>Make sure to follow us on <a href="http://twitter.com/thoughtram">Twitter</a> and <a href="http://facebook.com/thoughtram">Facebook</a> or subscribe to our blog, to get notified when we announce it in the next couple of weeks!</p>
 
 
           
@@ -168,7 +168,7 @@
 
         <div class="thtrm-social-links">
             <!-- Sharingbutton Facebook -->
-            <a class="resp-sharing-button__link" href="https://facebook.com/sharer/sharer.php?u=http%3A%2F%2Fblog.thoughtram.io/2015/06/06/ng-messages-revisited.html" target="_blank" aria-label="Share on Facebook">
+            <a class="resp-sharing-button__link" href="https://facebook.com/sharer/sharer.php?u=http%3A%2F%2Fblog.thoughtram.io/angular/2017/05/08/angular-master-class-redux-and-ngrx.html" target="_blank" aria-label="Share on Facebook">
               <div class="resp-sharing-button resp-sharing-button--facebook resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
                 <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
                     <g>
@@ -179,7 +179,7 @@
             </a>
 
             <!-- Sharingbutton Twitter -->
-            <a class="resp-sharing-button__link" href="https://twitter.com/intent/tweet/?text=ngMessages%20revisited&amp;url=http://blog.thoughtram.io/2015/06/06/ng-messages-revisited.html" target="_blank" aria-label="Share on Twitter">
+            <a class="resp-sharing-button__link" href="https://twitter.com/intent/tweet/?text=Angular%20Master%20Class%20-%20Redux%20and%20ngrx&amp;url=http://blog.thoughtram.io/angular/2017/05/08/angular-master-class-redux-and-ngrx.html" target="_blank" aria-label="Share on Twitter">
               <div class="resp-sharing-button resp-sharing-button--twitter resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
                 <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
                     <g>
@@ -190,7 +190,7 @@
             </a>
 
             <!-- Sharingbutton Google+ -->
-            <a class="resp-sharing-button__link" href="https://plus.google.com/share?url=http%3A%2F%2Fblog.thoughtram.io/2015/06/06/ng-messages-revisited.html" target="_blank" aria-label="Share on Google+">
+            <a class="resp-sharing-button__link" href="https://plus.google.com/share?url=http%3A%2F%2Fblog.thoughtram.io/angular/2017/05/08/angular-master-class-redux-and-ngrx.html" target="_blank" aria-label="Share on Google+">
               <div class="resp-sharing-button resp-sharing-button--google resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
                 <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
                     <g>
@@ -225,66 +225,66 @@
         
           
           <li>
-            <a class="thtrm-article-card" href="/angularjs/2016/03/29/exploring-angular-1.5-lifecycle-hooks.html" title="Exploring Angular 1.5: Lifecycle Hooks">
-              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/fallback.jpeg);"></div>
+            <a class="thtrm-article-card" href="/rx/2016/08/01/exploring-rx-operators-flatmap.html" title="Exploring Rx Operators: flatMap">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/rx-flatmap.jpeg);"></div>
               <div class="thtrm-article-card-content ">
-                <h3>Exploring Angular 1.5: Lifecycle Hooks</h3>
-                <p>Angular 1.5 is finally out! This article discusses the new lifecycle hooks in Angular.</p>
+                <h3>Exploring Rx Operators: flatMap</h3>
+                <p>Another post in a series of articles to discover the magic of different Rx operators. In this article we like...</p>
               </div>
             </a>
           </li>
         
           
           <li>
-            <a class="thtrm-article-card" href="/announcements/2016/02/10/sponsoring-angularconnect-again.html" title="Sponsoring AngularConnect. Again.">
+            <a class="thtrm-article-card" href="/angular/2016/01/07/taking-advantage-of-observables-in-angular2-pt2.html" title="Taking advantage of Observables in Angular 2 - Part 2">
               <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/fallback.jpeg);"></div>
               <div class="thtrm-article-card-content ">
-                <h3>Sponsoring AngularConnect. Again.</h3>
-                <p>Today we are very happy to announce that we're going to sponsor AngularConnect - again! We're also going to run...</p>
+                <h3>Taking advantage of Observables in Angular 2 - Part 2</h3>
+                <p>This is a follow up article that demonstrates how Observables can influence our API design.</p>
               </div>
             </a>
           </li>
         
           
           <li>
-            <a class="thtrm-article-card" href="/angular/2015/12/10/ng-message-format-the-unheard-feature-in-angular.html" title="ngMessageFormat - Angular's unheard feature">
-              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/fallback.jpeg);"></div>
+            <a class="thtrm-article-card" href="/angular/2016/01/06/taking-advantage-of-observables-in-angular2.html" title="Taking advantage of Observables in Angular">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/taking-advantage-of-observables.png);"></div>
               <div class="thtrm-article-card-content ">
-                <h3>ngMessageFormat - Angular's unheard feature</h3>
-                <p>Angular 1.5 is pretty much around the corner. It turns out that there's a feature that already landed in Angular...</p>
+                <h3>Taking advantage of Observables in Angular</h3>
+                <p>Since version 2.x Angular favors Observables over Promises when it comes to async. In this article we explore some practical...</p>
               </div>
             </a>
           </li>
         
           
           <li>
-            <a class="thtrm-article-card" href="/angular/2015/11/16/multiple-transclusion-and-named-slots.html" title="Multiple Transclusion and named Slots">
-              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/fallback.jpeg);"></div>
+            <a class="thtrm-article-card" href="/angular/2016/06/16/cold-vs-hot-observables.html" title="Cold vs Hot Observables">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/hot-vs-cold-observables.jpeg);"></div>
               <div class="thtrm-article-card-content ">
-                <h3>Multiple Transclusion and named Slots</h3>
-                <p>One of those bigger features in the 1.5 release is multiple transclusion via named slots. In this article we're going...</p>
+                <h3>Cold vs Hot Observables</h3>
+                <p>In this article we are going to demystify what the term hot vs cold means when it comes to Observables....</p>
               </div>
             </a>
           </li>
         
           
           <li>
-            <a class="thtrm-article-card" href="/angular/2015/07/07/service-vs-factory-once-and-for-all.html" title="Service vs Factory - Once and for all">
-              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/service-vs-factory.png);"></div>
+            <a class="thtrm-article-card" href="/angular/2016/05/16/exploring-rx-operators-map.html" title="Exploring Rx Operators: map">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/rx-map.jpg);"></div>
               <div class="thtrm-article-card-content ">
-                <h3>Service vs Factory - Once and for all</h3>
-                <p>This is yet another article on services vs factories in AngularJS. It explains once and for all, why we mostly...</p>
+                <h3>Exploring Rx Operators: map</h3>
+                <p>This is the first article that is part of a new series where we take a look at different operators...</p>
               </div>
             </a>
           </li>
         
           
           <li>
-            <a class="thtrm-article-card" href="/angular/2015/06/25/taking-angular-master-class-to-the-next-level.html" title="Taking Angular Master Class to the next level">
-              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/fallback.jpeg);"></div>
+            <a class="thtrm-article-card" href="/angular/2017/02/27/three-things-you-didnt-know-about-the-async-pipe.html" title="Three things you didn't know about the AsyncPipe">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/three-things-about-the-async-pipe.jpg);"></div>
               <div class="thtrm-article-card-content ">
-                <h3>Taking Angular Master Class to the next level</h3>
-                <p>We always collect feedback to make our material and trainings even better. We listened. Here's what we did.</p>
+                <h3>Three things you didn't know about the AsyncPipe</h3>
+                <p>This article explains three lesser known features of the AsyncPipe that help us to write better async code.</p>
               </div>
             </a>
           </li>
@@ -293,20 +293,6 @@
         </ul>
         
 
-      
-      <h4 class="thtrm-section-headline thtrm-section-headline--with-big-margin thtrm-section-headline--centered">You might also be interested in</h4>
-      <ul class="thtrm-three-column-list thtrm-three-column-list--with-padding">
-        
-        <li>
-          <div class="thtrm-article-card thtrm-article-card--with-border" title="Exploring Angular 1.3 - ngMessages">
-            <div class="thtrm-article-card-content ">
-              <h3>Exploring Angular 1.3 - ngMessages</h3>
-              <a class="thtrm-cta thtrm-cta--small" href="http://blog.thoughtram.io/angularjs/2015/01/23/exploring-angular-1.3-ngMessages.html" title="Exploring Angular 1.3 - ngMessages">Read more</a>
-            </div>
-          </div>
-        </li>
-        
-      </ul>
       
 
       </div>
