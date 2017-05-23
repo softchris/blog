@@ -1,0 +1,768 @@
+
+
+
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Angular Material offers great theming capabilities for both, built-in and custom themes. In this article we'll explore how to make your custom components theme aware!  ">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="thoughtram">
+    <title>Custom themes with Angular Material by thoughtram</title>
+    <meta name="google-site-verification" content="o9eGPEgIETEqYGombq7NiQuBIB_qa6gz1yAL7PxKyK0">
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#4D8799">
+    <link rel="icon" sizes="192x192" href="/images/touch/chrome-touch-icon-192x192.png">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="thoughtram">
+    <link rel="apple-touch-icon" href="/images/touch/apple-touch-icon.png">
+
+    <!-- Tile icon for Win8 (144x144 + tile color) -->
+    <meta name="msapplication-TileImage" content="/images/touch/ms-touch-icon-144x144-precomposed.png">
+    <meta name="msapplication-TileColor" content="#4D8799">
+
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Custom themes with Angular Material">
+    <meta property="og:description" content="Angular Material offers great theming capabilities for both, built-in and custom themes. In this article we'll explore how to make your custom components theme aware!  ">
+    <meta property="og:url" content="http://blog.thoughtram.io/angular/2017/05/23/custom-themes-with-angular-material.html">
+    <meta property="og:site_name" content="Articles by thoughtram">
+    <meta property="og:image" content="http://blog.thoughtram.io/images/banner/custom-themes-with-angular-material.jpg">
+    <meta property="og:publisher" content="http://www.facebook.com/thoughtram">
+
+    <meta property="twitter:card" content="summary">
+    <meta property="twitter:title" content="Custom themes with Angular Material">
+    <meta property="twitter:site" content="thoughtram Blog">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css" type="text/css">
+  </head>
+  <body class="sub-site">
+    <!-- Add your site or app content here -->
+
+    <!--[if lt IE 10]>
+        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <header class="thtrm-header" role="banner">
+      <div class="thtrm-header-bar">
+        <div class="thtrm-constraint">
+          <a href="http://thoughtram.io" class="thtrm-header-logo-link" title="thoughtram.io Start Page"><h1 class="thtrm-header-logo">thoughtram</h1></a>
+          <div class="thtrm-header-menu-wrapper">
+            <span role="button" tabindex="0" class="thtrm-header-menu-label">Menu</span>
+            <ul class="thtrm-header-menu">
+              <li><a title="Training" class="thtrm-header-menu-item" href="http://thoughtram.io/training.html">Training</a></li>
+              <li><a title="Code Review" class="thtrm-header-menu-item" href="http://thoughtram.io/code-review.html">Code Review</a></li>
+              <li><a title="Casts" class="thtrm-header-menu-item " href="http://casts.thoughtram.io">Casts</a></li>
+              <li><a title="Blog" class="thtrm-header-menu-item" href="/">Blog</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main role="main" class="thtrm-main">
+    <div class="thtrm-banner" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%), url('/images/banner/custom-themes-with-angular-material.jpg');">
+        <hgroup class="thtrm-banner-container">
+          <div class="thtrm-constraint thtrm-constraint--slim">
+            <h2 class="thtrm-banner-text">Custom themes with Angular Material</h2>
+            <span>by <a href="http://twitter.com/" title="Pascal Precht on Twitter">Pascal Precht</a> on May 23, 2017<br>21 minute read</span>
+
+          </div>
+        </hgroup>
+      </div>
+      <div class="thtrm-constraint thtrm-constraint--slim">
+
+        <div class="thtrm-article">
+          <section class="thtrm-ad thtrm-section thtrm-section--is-promo is-sticky">
+  <img width="100" src="/images/angular2-shield-inverse.svg">
+  <h3 class="thtrm-section-headline">Angular Master Class in Denmark</h3>
+  <p class="thtrm-section-text">Join our upcoming public training! </p>
+  <a href="https://www.eventbrite.de/e/angular-master-class-denmark-tickets-34271504994?aff=blogAd" title="Angular Master Class in Denmark" id="event-cta" class="thtrm-layout-divider-cta">Get a ticket <strong>&rarr;</strong></a>
+</section>
+
+
+          
+          <p style="background-color: lightgoldenrodyellow; border: solid 2px #f9dead; padding: 1em; text-align: center; border-radius: 0.3em;">Contents are based on Angular version <strong>>= 2.x</strong> unless explicitely stated differently.</p>
+          
+
+          <p>When building bigger applications, we always strive for flexibility, extensibility and reusability. This applies not only to the actual application logic, but also to style sheets. Especially nowadays, where things like <a href="https://developers.google.com/web/updates/2016/02/css-variables-why-should-you-care">CSS variables</a> and <a href="https://github.com/css-modules/css-modules">modules</a> exist. These tools are great and they solve many different problems in a very elegant way. However, one thing that’s still super hard to do these days is <strong>theming</strong>. Being able to use existing, or create new components, but easily changing their look and feel without changing their code. This is often required when we build things that can be reused across different projects, or if the project we’re working on should simply enable the user to change the color scheme.</p>
+
+<p>The <a href="http://material.angular.io">Angular Material</a> project comes with a built-in story for theming, including using any of Material Design’s own <strong>predefined themes</strong>, but also creating custom themes that will be used not only by components provided by Angular Material, but also our own custom ones.</p>
+
+<p>In this article we’ll explore how theming is implemented, how pre-built themes can be used and how we can make our own custom components theme-able so they pick up the configured theme as well!</p>
+
+<div class="thtrm-toc is-sticky">
+  <h3 class="no_toc" id="table-of-contents">TABLE OF CONTENTS</h3>
+<ul id="markdown-toc">
+  <li><a href="#what-is-a-theme" id="markdown-toc-what-is-a-theme">What is a theme?</a></li>
+  <li><a href="#using-pre-built-themes" id="markdown-toc-using-pre-built-themes">Using pre-built themes</a></li>
+  <li><a href="#custom-theme-using-built-in-color-palettes" id="markdown-toc-custom-theme-using-built-in-color-palettes">Custom theme using built-in color palettes</a>    <ul>
+      <li><a href="#generate-core-styles" id="markdown-toc-generate-core-styles">Generate core styles</a></li>
+      <li><a href="#generate-color-palettes" id="markdown-toc-generate-color-palettes">Generate color palettes</a></li>
+      <li><a href="#understanding-mat-palette" id="markdown-toc-understanding-mat-palette">Understanding mat-palette</a></li>
+      <li><a href="#generating-themes" id="markdown-toc-generating-themes">Generating themes</a></li>
+    </ul>
+  </li>
+  <li><a href="#theming-custom-components" id="markdown-toc-theming-custom-components">Theming custom components</a></li>
+  <li><a href="#conclusion" id="markdown-toc-conclusion">Conclusion</a></li>
+</ul>
+
+</div>
+
+<h2 id="what-is-a-theme">What is a theme?</h2>
+
+<p>“Theme” can mean many different things to different people, so it’s good to clarify what a theme in the context of Angular Material means. Let’s get right into it.</p>
+
+<p>The <a href="https://github.com/angular/material2/blob/master/guides/theming.md">official theming guide</a> is pretty much to the point here:</p>
+
+<blockquote>
+  <p>A theme is a set of colors that will be applied to the Angular Material components.</p>
+</blockquote>
+
+<p>To be more specific, a theme is a <strong>composition of color palettes</strong>. That’s right, not just a single color palette, multiple color palettes. While this might sound unnecessary first, it turns out that this is a very powerful setup to define themes in a very flexible way.</p>
+
+<p>Alright, but what color palettes are needed to compose a theme? As for Angular Material, it boils down to five different color palettes with each being used for different parts of the design:</p>
+
+<ul>
+  <li><strong>Primary</strong> - Main colors most widely used across all screens and components.</li>
+  <li><strong>Accent</strong> - Also known as the secondary color. Used for floating action buttons and interactive elements.</li>
+  <li><strong>Warn</strong> - Colors to convey error state.</li>
+  <li><strong>Foreground</strong> - Used for text and icons.</li>
+  <li><strong>Background</strong> - Colors used for element backgrounds.</li>
+</ul>
+
+<p>If you want to dive deeper into the whole color usuability story in Material Design, we recommend checking out the <a href="https://material.io/guidelines/style/color.html#color-usability">Material Design Specification for colors</a>, as it describes the topic in very deep detail.</p>
+
+<h2 id="using-pre-built-themes">Using pre-built themes</h2>
+
+<p>As mentioned earlier, Angular Material already comes with a set of pre-built themes that can be used right out of the box. Available pre-built themes are: <code>deeppurple-amber</code>, <code>indigo-pink</code>, <code>pink-bluegrey</code> and <code>purple-green</code>.</p>
+
+<p>Using them is as easy as including or importing the dedicated CSS file that comes with all Angular Material builds. So assuming we’ve installed Angular Material in our <strong>Angular CLI</strong> project using:</p>
+
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span class="gp">$ </span>yarn|npm install --save @angular/material</code></pre></div>
+
+<p>We can go ahead and add any of the pre-built CSS files to our global styles by configuring our <code>.angular-cli.json</code> accordingly:</p>
+
+<div class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span><span class="w">
+  </span><span class="err">...</span><span class="w">
+  </span><span class="nt">"styles"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"../node_modules/@angular/material/prebuilt-themes/indigo-pink.css"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"styles.scss"</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+  </span><span class="err">...</span><span class="w">
+</span><span class="p">}</span></code></pre></div>
+
+<p>Or, if we don’t want to fiddle around in our <code>angular-cli.json</code> file, we can also import any pre-built theme right into the projects <code>styles.scss</code> file like this:</p>
+
+<div class="highlight"><pre><code class="language-scss" data-lang="scss"><span class="k">@import</span> <span class="s1">'../node_modules/@angular/material/prebuilt-themes/indigo-pink.css'</span><span class="p">;</span></code></pre></div>
+
+<p>We can easily try it out by having our application using Angular Material components. So first we add <code>MaterialModule</code> to our <code>AppModule</code>’s imports:</p>
+
+<div class="highlight"><pre><code class="language-ts" data-lang="ts">import { MaterialModule } from '@angular/material';
+
+@NgModule({
+  imports: [
+    ...
+    MaterialModule
+  ],
+  ...
+})
+export class AppModule {}</code></pre></div>
+
+<p>Then we go ahead and render, for example, Angular Material’s tool bar component:</p>
+
+<div class="highlight"><pre><code class="language-ts" data-lang="ts">@Component({
+  selector: 'my-app',
+  template: `
+    &lt;md-toolbar&gt;Awesome toolbar&lt;/md-toolbar&gt;
+  `
+})
+export class AppComponent {}</code></pre></div>
+
+<p><img src="/images/md-toolbar.png" alt="Picture of md-toolbar component" /></p>
+
+<p>Looks cool right? Another thing that’s worth mentioning is that some Material components offer properties to configure whether they use the current theme’s primary, accent or warn color:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;md-toolbar</span> <span class="na">color=</span><span class="s">"primary"</span><span class="nt">&gt;</span>Awesome toolbar<span class="nt">&lt;/md-toolbar&gt;</span></code></pre></div>
+
+<p><img src="/images/md-toolbar-primary.png" alt="Picture of md-toolbar component with primary theme color" /></p>
+
+<h2 id="custom-theme-using-built-in-color-palettes">Custom theme using built-in color palettes</h2>
+
+<p>Alright, using pre-built themes is a pretty cool thing as we get good looking components right away without doing any serious work. Let’s talk about how to create a <strong>custom theme</strong> using Angular Material’s predefined color palettes.</p>
+
+<p>In order to create a custom theme, we need to do a couple of things:</p>
+
+<ul>
+  <li><strong>Generate core styles</strong> - These are theme independent styles, including styles for elevation levels, ripple effects, styles for accessibility and overlays</li>
+  <li><strong>Primary color palette</strong> - Generate color palette for the theme’s primary color</li>
+  <li><strong>Accent color palette</strong> - Generate color palette for the theme’s accent color</li>
+  <li><strong>Warn color palette</strong> - Generate color palette for the theme’s warn color</li>
+  <li><strong>Theme generation</strong> - Given the color palettes we generated, we create a theme, which can be used by Angular Material, or custom components</li>
+</ul>
+
+<p>While this looks like a lot of work, it turns out Angular Material gives us many tools to make these tasks a breeze. Let’s start off by creating a new <code>custom-theme.scss</code> file and import it in our root <code>styles.scss</code> instead of the pre-built theme. After that we’ll go through the list step by step:</p>
+
+<div class="highlight"><pre><code class="language-scss" data-lang="scss"><span class="k">@import</span> <span class="s1">'./custom-theme'</span><span class="p">;</span></code></pre></div>
+
+<h3 id="generate-core-styles">Generate core styles</h3>
+
+<p>This is a pretty easy one. Angular Material provides many very powerful SCSS mix-ins that do all the ground work for us. The mix-in that generates Material’s core styles is called <code>mat-core</code>. All we have to do is to import and call it.</p>
+
+<p>Here’s what that looks like (custom-theme.scss):</p>
+
+<div class="highlight"><pre><code class="language-scss" data-lang="scss"><span class="k">@import</span> <span class="s1">'../node_modules/@angular/material/theming'</span><span class="p">;</span>
+
+<span class="k">@include</span> <span class="nd">mat-core</span><span class="p">();</span></code></pre></div>
+
+<h3 id="generate-color-palettes">Generate color palettes</h3>
+
+<p>The next thing we need to do is to generate color palettes, which can then be composed to an actual theme. To generate a color palette, we can use Angular Material’s <code>mat-palette</code> mix-in. <code>mat-palette</code> takes a <strong>base palette</strong> (yes, that’s another palette, more on that in a second), and returns a new palette that comes with Material specific <a href="https://en.wikipedia.org/wiki/Hue">hue color values</a> for “light”, “dark” and “contrast” colors of the given base palette.</p>
+
+<p>But what is this base palette? The base palette is just another color palette that compromises primary and accent colors of a single color. Wait, this sounds super confusing! Let’s take Material Design’s red color palette as an example:</p>
+
+<p><img src="/images/material-design-red-palette.png" alt="Picture of a Material Design color palette" /></p>
+
+<p>Here we see all color codes for lighter and darker versions of the color red, as part of the Material Design specification. The values 50 - 900 represent the hue values or the “strength” of the color, or how light or dark it is. 500 is the recommended value for a theme’s primary color. There are much more defined color palettes and they are very nicely documented <a href="https://material.io/guidelines/style/color.html#color-color-palette">right here</a>.</p>
+
+<p>So now that we know what a base palette is, we need to figure out how to create such a thing. Do we have to define and write them ourselves? The answer is yes and no. If we want to use our own custom color palettes, we need to define them manually. However, if we want to use any of Material Design colors, Angular Material comes with predefined palette definitions for all of them! If we take a quick look at the source code, we can see how to palette for the color red is implemented:</p>
+
+<div class="highlight"><pre><code class="language-scss" data-lang="scss"><span class="nv">$mat-red</span><span class="p">:</span> <span class="p">(</span>
+  <span class="m">50</span><span class="o">:</span> <span class="mh">#ffebee</span><span class="o">,</span>
+  <span class="m">100</span><span class="o">:</span> <span class="mh">#ffcdd2</span><span class="o">,</span>
+  <span class="m">200</span><span class="o">:</span> <span class="mh">#ef9a9a</span><span class="o">,</span>
+  <span class="m">300</span><span class="o">:</span> <span class="mh">#e57373</span><span class="o">,</span>
+  <span class="m">400</span><span class="o">:</span> <span class="mh">#ef5350</span><span class="o">,</span>
+  <span class="m">500</span><span class="o">:</span> <span class="mh">#f44336</span><span class="o">,</span>
+  <span class="m">600</span><span class="o">:</span> <span class="mh">#e53935</span><span class="o">,</span>
+  <span class="m">700</span><span class="o">:</span> <span class="mh">#d32f2f</span><span class="o">,</span>
+  <span class="m">800</span><span class="o">:</span> <span class="mh">#c62828</span><span class="o">,</span>
+  <span class="m">900</span><span class="o">:</span> <span class="mh">#b71c1c</span><span class="o">,</span>
+  <span class="n">A100</span><span class="o">:</span> <span class="mh">#ff8a80</span><span class="o">,</span>
+  <span class="n">A200</span><span class="o">:</span> <span class="mh">#ff5252</span><span class="o">,</span>
+  <span class="n">A400</span><span class="o">:</span> <span class="mh">#ff1744</span><span class="o">,</span>
+  <span class="n">A700</span><span class="o">:</span> <span class="mh">#d50000</span><span class="o">,</span>
+  <span class="n">contrast</span><span class="o">:</span> <span class="p">(</span>
+    <span class="m">50</span><span class="o">:</span> <span class="nv">$black-87-opacity</span><span class="o">,</span>
+    <span class="m">100</span><span class="o">:</span> <span class="nv">$black-87-opacity</span><span class="o">,</span>
+    <span class="m">200</span><span class="o">:</span> <span class="nv">$black-87-opacity</span><span class="o">,</span>
+    <span class="m">300</span><span class="o">:</span> <span class="nv">$black-87-opacity</span><span class="o">,</span>
+    <span class="m">400</span><span class="o">:</span> <span class="nv">$black-87-opacity</span><span class="o">,</span>
+    <span class="m">500</span><span class="o">:</span> <span class="no">white</span><span class="o">,</span>
+    <span class="m">600</span><span class="o">:</span> <span class="no">white</span><span class="o">,</span>
+    <span class="m">700</span><span class="o">:</span> <span class="no">white</span><span class="o">,</span>
+    <span class="m">800</span><span class="o">:</span> <span class="nv">$white-87-opacity</span><span class="o">,</span>
+    <span class="m">900</span><span class="o">:</span> <span class="nv">$white-87-opacity</span><span class="o">,</span>
+    <span class="n">A100</span><span class="o">:</span> <span class="nv">$black-87-opacity</span><span class="o">,</span>
+    <span class="n">A200</span><span class="o">:</span> <span class="no">white</span><span class="o">,</span>
+    <span class="n">A400</span><span class="o">:</span> <span class="no">white</span><span class="o">,</span>
+    <span class="n">A700</span><span class="o">:</span> <span class="no">white</span><span class="o">,</span>
+  <span class="p">)</span>
+<span class="p">);</span></code></pre></div>
+
+<p>It’s basically just a map where each key (tone value) maps to a color code. So if we ever want to define our own custom color palette, this is what it could look like.</p>
+
+<p>Okay, let’s create a palette for our primary, accent and warn colors. All we have to do is to call the <code>mat-palette</code> mix-in with a base color palette. Let’s use <code>$mat-light-blue</code> for primary, <code>$mat-orange</code> for accent and <code>$mat-red</code> for warn colors. We can simply reference these variables because we imported Angular Material’s theming capabilities in the previous step:</p>
+
+<div class="highlight"><pre><code class="language-scss" data-lang="scss"><span class="nv">$custom-theme-primary</span><span class="p">:</span> <span class="nf">mat-palette</span><span class="p">(</span><span class="nv">$mat-light-blue</span><span class="p">);</span>
+<span class="nv">$custom-theme-accent</span><span class="p">:</span> <span class="nf">mat-palette</span><span class="p">(</span><span class="nv">$mat-orange</span><span class="o">,</span> <span class="n">A200</span><span class="o">,</span> <span class="n">A100</span><span class="o">,</span> <span class="n">A400</span><span class="p">);</span>
+<span class="nv">$custom-theme-warn</span><span class="p">:</span> <span class="nf">mat-palette</span><span class="p">(</span><span class="nv">$mat-red</span><span class="p">);</span></code></pre></div>
+
+<p>Oh wait, what’s that? Why do we pass additional values to <code>mat-palette</code> when generating our accent color palette? Well… Let’s take a closer look at what <code>mat-palette</code> actually does.</p>
+
+<h3 id="understanding-mat-palette">Understanding mat-palette</h3>
+
+<p>We’ve already mentioned that <code>mat-palette</code> generates a Material Design color palette out of a base color palette. But what does that actually mean? In order to get a better picture of what’s going on in that mix-in, let’s take a look at its source code:</p>
+
+<div class="highlight"><pre><code class="language-scss" data-lang="scss"><span class="k">@function</span> <span class="nf">mat-palette</span><span class="p">(</span><span class="nv">$base-palette</span><span class="o">,</span> <span class="nv">$default</span><span class="o">:</span> <span class="m">500</span><span class="o">,</span> <span class="nv">$lighter</span><span class="o">:</span> <span class="m">100</span><span class="o">,</span> <span class="nv">$darker</span><span class="o">:</span> <span class="m">700</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nv">$result</span><span class="p">:</span> <span class="nf">map_merge</span><span class="p">(</span><span class="nv">$base-palette</span><span class="o">,</span> <span class="p">(</span>
+    <span class="nb">default</span><span class="o">:</span> <span class="nf">map-get</span><span class="p">(</span><span class="nv">$base-palette</span><span class="o">,</span> <span class="nv">$default</span><span class="p">)</span><span class="o">,</span>
+    <span class="nb">lighter</span><span class="o">:</span> <span class="nf">map-get</span><span class="p">(</span><span class="nv">$base-palette</span><span class="o">,</span> <span class="nv">$lighter</span><span class="p">)</span><span class="o">,</span>
+    <span class="n">darker</span><span class="o">:</span> <span class="nf">map-get</span><span class="p">(</span><span class="nv">$base-palette</span><span class="o">,</span> <span class="nv">$darker</span><span class="p">)</span><span class="o">,</span>
+
+    <span class="n">default-contrast</span><span class="o">:</span> <span class="nf">mat-contrast</span><span class="p">(</span><span class="nv">$base-palette</span><span class="o">,</span> <span class="nv">$default</span><span class="p">)</span><span class="o">,</span>
+    <span class="n">lighter-contrast</span><span class="o">:</span> <span class="nf">mat-contrast</span><span class="p">(</span><span class="nv">$base-palette</span><span class="o">,</span> <span class="nv">$lighter</span><span class="p">)</span><span class="o">,</span>
+    <span class="n">darker-contrast</span><span class="o">:</span> <span class="nf">mat-contrast</span><span class="p">(</span><span class="nv">$base-palette</span><span class="o">,</span> <span class="nv">$darker</span><span class="p">)</span>
+  <span class="p">));</span>
+
+  <span class="c1">// For each hue in the palette, add a "-contrast" color to the map.
+</span>  <span class="k">@each</span> <span class="nv">$hue</span><span class="o">,</span> <span class="nv">$color</span> <span class="n">in</span> <span class="nv">$base-palette</span> <span class="p">{</span>
+    <span class="nv">$result</span><span class="p">:</span> <span class="nf">map_merge</span><span class="p">(</span><span class="nv">$result</span><span class="o">,</span> <span class="p">(</span>
+      <span class="s1">'</span><span class="si">#{</span><span class="nv">$hue</span><span class="si">}</span><span class="s1">-contrast'</span><span class="o">:</span> <span class="nf">mat-contrast</span><span class="p">(</span><span class="nv">$base-palette</span><span class="o">,</span> <span class="nv">$hue</span><span class="p">)</span>
+    <span class="p">));</span>
+  <span class="p">}</span>
+
+  <span class="k">@return</span> <span class="nv">$result</span><span class="p">;</span>
+<span class="p">}</span></code></pre></div>
+
+<p>A mix-in is just a function - it takes arguments and returns something. <code>mat-palette</code> takes a base color palette (which is a map like <code>$mat-red</code>) and optional default values for the generated color palette’s <strong>default</strong>, <strong>lighter</strong> and <strong>darker</strong> colors. Eventually it returns a new color palette that has some additional map values. Those additional values are the mentioned <code>default</code>, <code>lighter</code> and <code>darker</code> colors, as well as their corresponding <code>default-contrast</code>, <code>lighter-contrast</code> and <code>darker-contrast</code> colors. On top of that it generates keys for contrast values for each base hue tone (50 - 900).</p>
+
+<p>As we can see, we basically end up with a color palette that comes with everything the base palette provides, plus some additional keys for easy accessibility. So coming back to the question why we pass additional values to <code>mat-palette</code> for our accent color, we now know that all we do is configuring the <code>default</code>, <code>lighter</code> and <code>darker</code> color tone.</p>
+
+<h3 id="generating-themes">Generating themes</h3>
+
+<p>A theme lets us apply a consistent tone to our application. It specifies the darkness of the surfaces, level of shadow and appropriate opacity of ink elements. The Material Design specification describes <a href="https://material.io/guidelines/style/color.html#color-themes">two different variations of themes</a> - dark and light.</p>
+
+<p>Angular Material implements another set of mix-ins to generate either light or dark themes using <code>mat-light-theme</code> and <code>mat-dark-theme</code> respectively. Now that we have all of our color palettes in place, we can do exactly that. Let’s create a light theme object like this:</p>
+
+<div class="highlight"><pre><code class="language-scss" data-lang="scss"><span class="nv">$custom-theme</span><span class="p">:</span> <span class="nf">mat-light-theme</span><span class="p">(</span><span class="nv">$custom-theme-primary</span><span class="o">,</span> <span class="nv">$custom-theme-accent</span><span class="o">,</span> <span class="nv">$custom-theme-warn</span><span class="p">);</span></code></pre></div>
+
+<p>If we take a quick look at <code>mat-light-theme</code>’s source code, we can see that ti really just prepares another map object that can be later easily consumed for theming:</p>
+
+<div class="highlight"><pre><code class="language-scss" data-lang="scss"><span class="k">@function</span> <span class="nf">mat-light-theme</span><span class="p">(</span><span class="nv">$primary</span><span class="o">,</span> <span class="nv">$accent</span><span class="o">,</span> <span class="nv">$warn</span><span class="o">:</span> <span class="nf">mat-palette</span><span class="p">(</span><span class="nv">$mat-red</span><span class="p">))</span> <span class="p">{</span>
+  <span class="k">@return</span> <span class="p">(</span>
+    <span class="n">primary</span><span class="o">:</span> <span class="nv">$primary</span><span class="o">,</span>
+    <span class="n">accent</span><span class="o">:</span> <span class="nv">$accent</span><span class="o">,</span>
+    <span class="n">warn</span><span class="o">:</span> <span class="nv">$warn</span><span class="o">,</span>
+    <span class="n">is-dark</span><span class="o">:</span> <span class="bp">false</span><span class="o">,</span>
+    <span class="n">foreground</span><span class="o">:</span> <span class="nv">$mat-light-theme-foreground</span><span class="o">,</span>
+    <span class="n">background</span><span class="o">:</span> <span class="nv">$mat-light-theme-background</span><span class="o">,</span>
+  <span class="p">);</span>
+<span class="p">}</span></code></pre></div>
+
+<p>That’s it! We can now use that generated theme object and feed it to Angular Material’s <code>angular-material-theme</code> mix-in, which really just passes that theme object to other mix-ins for each component, so they can access the color values from there:</p>
+
+<div class="highlight"><pre><code class="language-scss" data-lang="scss"><span class="k">@include</span> <span class="nd">angular-material-theme</span><span class="p">(</span><span class="nv">$custom-theme</span><span class="p">);</span></code></pre></div>
+
+<p>Here’s the complete code for our custom theme, using <code>$mat-light-blue</code> and <code>$mat-orange</code>:</p>
+
+<div class="highlight"><pre><code class="language-scss" data-lang="scss"><span class="k">@import</span> <span class="s1">'../node_modules/@angular/material/theming'</span><span class="p">;</span>
+
+<span class="k">@include</span> <span class="nd">mat-core</span><span class="p">();</span>
+
+<span class="nv">$custom-theme-primary</span><span class="p">:</span> <span class="nf">mat-palette</span><span class="p">(</span><span class="nv">$mat-light-blue</span><span class="p">);</span>
+<span class="nv">$custom-theme-accent</span><span class="p">:</span> <span class="nf">mat-palette</span><span class="p">(</span><span class="nv">$mat-orange</span><span class="o">,</span> <span class="n">A200</span><span class="o">,</span> <span class="n">A100</span><span class="o">,</span> <span class="n">A400</span><span class="p">);</span>
+<span class="nv">$custom-theme-warn</span><span class="p">:</span> <span class="nf">mat-palette</span><span class="p">(</span><span class="nv">$mat-red</span><span class="p">);</span>
+
+<span class="nv">$custom-theme</span><span class="p">:</span> <span class="nf">mat-light-theme</span><span class="p">(</span><span class="nv">$custom-theme-primary</span><span class="o">,</span> <span class="nv">$custom-theme-accent</span><span class="o">,</span> <span class="nv">$custom-theme-warn</span><span class="p">);</span>
+
+<span class="k">@include</span> <span class="nd">angular-material-theme</span><span class="p">(</span><span class="nv">$custom-theme</span><span class="p">);</span></code></pre></div>
+
+<h2 id="theming-custom-components">Theming custom components</h2>
+
+<p>There’s one thing we haven’t talked about yet: theming custom components. So far we’ve only changed the look and feel of Angular Material’s components. That’s because we’re calling the <code>angular-material-theme</code> mix-in with our custom theme object. If we’d remove that call, we’d end up with all Material components in their base colors. This becomes more clear when we take a look at what <code>angular-material-theme</code> does:</p>
+
+<div class="highlight"><pre><code class="language-scss" data-lang="scss"><span class="k">@mixin</span> <span class="nf">angular-material-theme</span><span class="p">(</span><span class="nv">$theme</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">@include</span> <span class="nd">mat-core-theme</span><span class="p">(</span><span class="nv">$theme</span><span class="p">);</span>
+  <span class="k">@include</span> <span class="nd">mat-autocomplete-theme</span><span class="p">(</span><span class="nv">$theme</span><span class="p">);</span>
+  <span class="k">@include</span> <span class="nd">mat-button-theme</span><span class="p">(</span><span class="nv">$theme</span><span class="p">);</span>
+  <span class="k">@include</span> <span class="nd">mat-button-toggle-theme</span><span class="p">(</span><span class="nv">$theme</span><span class="p">);</span>
+  <span class="k">@include</span> <span class="nd">mat-card-theme</span><span class="p">(</span><span class="nv">$theme</span><span class="p">);</span>
+  <span class="k">@include</span> <span class="nd">mat-checkbox-theme</span><span class="p">(</span><span class="nv">$theme</span><span class="p">);</span>
+  <span class="k">@include</span> <span class="nd">mat-chips-theme</span><span class="p">(</span><span class="nv">$theme</span><span class="p">);</span>
+  <span class="k">@include</span> <span class="nd">mat-datepicker-theme</span><span class="p">(</span><span class="nv">$theme</span><span class="p">);</span>
+  <span class="k">@include</span> <span class="nd">mat-dialog-theme</span><span class="p">(</span><span class="nv">$theme</span><span class="p">);</span>
+  <span class="k">@include</span> <span class="nd">mat-grid-list-theme</span><span class="p">(</span><span class="nv">$theme</span><span class="p">);</span>
+  <span class="k">@include</span> <span class="nd">mat-icon-theme</span><span class="p">(</span><span class="nv">$theme</span><span class="p">);</span>
+  <span class="k">@include</span> <span class="nd">mat-input-theme</span><span class="p">(</span><span class="nv">$theme</span><span class="p">);</span>
+  <span class="k">@include</span> <span class="nd">mat-list-theme</span><span class="p">(</span><span class="nv">$theme</span><span class="p">);</span>
+  <span class="k">@include</span> <span class="nd">mat-menu-theme</span><span class="p">(</span><span class="nv">$theme</span><span class="p">);</span>
+  <span class="k">@include</span> <span class="nd">mat-progress-bar-theme</span><span class="p">(</span><span class="nv">$theme</span><span class="p">);</span>
+  <span class="k">@include</span> <span class="nd">mat-progress-spinner-theme</span><span class="p">(</span><span class="nv">$theme</span><span class="p">);</span>
+  <span class="k">@include</span> <span class="nd">mat-radio-theme</span><span class="p">(</span><span class="nv">$theme</span><span class="p">);</span>
+  <span class="k">@include</span> <span class="nd">mat-select-theme</span><span class="p">(</span><span class="nv">$theme</span><span class="p">);</span>
+  <span class="k">@include</span> <span class="nd">mat-sidenav-theme</span><span class="p">(</span><span class="nv">$theme</span><span class="p">);</span>
+  <span class="k">@include</span> <span class="nd">mat-slide-toggle-theme</span><span class="p">(</span><span class="nv">$theme</span><span class="p">);</span>
+  <span class="k">@include</span> <span class="nd">mat-slider-theme</span><span class="p">(</span><span class="nv">$theme</span><span class="p">);</span>
+  <span class="k">@include</span> <span class="nd">mat-tabs-theme</span><span class="p">(</span><span class="nv">$theme</span><span class="p">);</span>
+  <span class="k">@include</span> <span class="nd">mat-toolbar-theme</span><span class="p">(</span><span class="nv">$theme</span><span class="p">);</span>
+  <span class="k">@include</span> <span class="nd">mat-tooltip-theme</span><span class="p">(</span><span class="nv">$theme</span><span class="p">);</span>
+<span class="p">}</span></code></pre></div>
+
+<p>Every component in Angular Material comes with a dedicated theme mix-in, that takes a theme object to access its values for theme specific styles. We can use exactly the same pattern to theme our own custom components. This turns out to be very powerful because it enables us to easily change a theme in our entire application just by changing the theme object!</p>
+
+<p>Let’s say we have a custom component <code>FileTreeComponent</code> as we created it in <a href="https://blog.machinelabs.ai/2017/05/11/introducing-machinelabs/">MachineLabs</a> (a project you might want to check out!). <code>FileTreeComponent</code> renders a list of files and we want that component to respond to the configured theme. Here’s what its template looks like (simplified):</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;ul</span> <span class="na">class=</span><span class="s">"ml-file-list"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;li</span> <span class="na">class=</span><span class="s">"ml-file-list-item"</span> <span class="err">*</span><span class="na">ngFor=</span><span class="s">"let file of files"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;md-icon&gt;</span>description<span class="nt">&lt;/md-icon&gt;</span> {{file.name}}
+  <span class="nt">&lt;/li&gt;</span>
+<span class="nt">&lt;/ul&gt;</span></code></pre></div>
+
+<p>It also comes with a base CSS file that introduces just enough styles so that the component is usable and accessible. No colors applied though. We won’t go into much detail here because there’s nothing new to learn. However, just to give a better idea, here are some corresponding base styles for <code>FileTreeComponent</code>:</p>
+
+<div class="highlight"><pre><code class="language-scss" data-lang="scss"><span class="nc">.ml-file-list</span> <span class="p">{</span>
+  <span class="nl">max-height</span><span class="p">:</span> <span class="m">250px</span><span class="p">;</span>
+  <span class="nl">overflow</span><span class="p">:</span> <span class="nb">scroll</span><span class="p">;</span>
+  <span class="nl">list-style</span><span class="p">:</span> <span class="nb">none</span><span class="p">;</span>
+  <span class="nl">margin</span><span class="p">:</span> <span class="m">0</span><span class="p">;</span>
+  <span class="nl">padding-left</span><span class="p">:</span> <span class="m">2em</span><span class="p">;</span>
+  <span class="nl">padding-right</span><span class="p">:</span> <span class="m">2em</span><span class="p">;</span>
+  <span class="nl">padding-top</span><span class="p">:</span> <span class="m">1</span><span class="mi">.2em</span><span class="p">;</span>
+  <span class="nl">padding-bottom</span><span class="p">:</span> <span class="m">1</span><span class="mi">.2em</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nc">.ml-file-list-item</span> <span class="p">{</span>
+  <span class="nl">font-size</span><span class="p">:</span> <span class="m">0</span><span class="mi">.9em</span><span class="p">;</span>
+  <span class="nl">font-weight</span><span class="p">:</span> <span class="m">400</span><span class="p">;</span>
+  <span class="nl">padding</span><span class="p">:</span> <span class="m">0</span><span class="mi">.4em</span> <span class="m">0</span><span class="mi">.4em</span><span class="p">;</span>
+  <span class="nl">line-height</span><span class="p">:</span> <span class="m">1</span><span class="mi">.4</span><span class="p">;</span>
+  <span class="nl">position</span><span class="p">:</span> <span class="nb">relative</span><span class="p">;</span>
+
+  <span class="nt">md-icon</span> <span class="p">{</span>
+    <span class="nl">font-size</span><span class="p">:</span> <span class="m">1</span><span class="mi">.2em</span><span class="p">;</span>
+    <span class="nl">vertical-align</span><span class="p">:</span> <span class="m">-22%</span><span class="p">;</span>
+    <span class="nl">height</span><span class="p">:</span> <span class="m">18px</span><span class="p">;</span>
+    <span class="nl">width</span><span class="p">:</span> <span class="m">18px</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">&amp;</span><span class="nd">:hover</span> <span class="p">{</span> <span class="nl">cursor</span><span class="p">:</span> <span class="nb">pointer</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p>The component looks something like this:</p>
+
+<p><img src="/images/ml-file-tree.png" alt="MachineLabs file tree component" /></p>
+
+<p>We want to add theming capabilities to the following elements inside <code>FileTreeComponent</code> when a theme is applied:</p>
+
+<ul>
+  <li><code>.ml-file-list</code> needs a border in the “foreground” color of the configured theme</li>
+  <li><code>.ml-file-list-item</code> needs the theme’s background hover color when hovering over it</li>
+  <li>When <code>ml-file-list-item</code> is selected, we need to give it a lighter version of the theme’s primary color</li>
+</ul>
+
+<p>These rules can be easily implemented, simply by following the same pattern that Angular Material is using for its own components. We define a mix-in for <code>FileTreeComponent</code> that takes a theme object and uses that to access theme values using <code>map-get</code> and <code>mat-color</code> mix-ins.</p>
+
+<p>Let’ start off by creating a <code>ml-file-tree-theme</code> mix-in and pull out the color palettes from the given theme we’re interested in (file-tree-theme.scss):</p>
+
+<div class="highlight"><pre><code class="language-scss" data-lang="scss"><span class="k">@mixin</span> <span class="nf">ml-file-tree-theme</span><span class="p">(</span><span class="nv">$theme</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="nv">$primary</span><span class="p">:</span> <span class="nf">map-get</span><span class="p">(</span><span class="nv">$theme</span><span class="o">,</span> <span class="n">primary</span><span class="p">);</span>
+  <span class="nv">$warn</span><span class="p">:</span> <span class="nf">map-get</span><span class="p">(</span><span class="nv">$theme</span><span class="o">,</span> <span class="n">warn</span><span class="p">);</span>
+  <span class="nv">$background</span><span class="p">:</span> <span class="nf">map-get</span><span class="p">(</span><span class="nv">$theme</span><span class="o">,</span> <span class="n">background</span><span class="p">);</span>
+  <span class="nv">$foreground</span><span class="p">:</span> <span class="nf">map-get</span><span class="p">(</span><span class="nv">$theme</span><span class="o">,</span> <span class="n">foreground</span><span class="p">);</span>
+
+<span class="p">}</span></code></pre></div>
+
+<p>Remember how <code>mat-light-theme</code> created additional values for <code>foreground</code> and <code>background</code> for our theme? With <code>map-get</code> we can access any value by its key of a given map. In other words, we’re pulling out color palettes for the theme’s primary, warn, background and foreground  colors.</p>
+
+<p>Once that is done, we can start using color values of these color palettes in our style sheets using the <code>mat-color</code> mix-in. <code>mat-color</code> takes a color palette and a hue value (or one of the descriptive names like <code>lighter</code>) returns the color corresponding color. If we want <code>.ml-file-list</code> to have a border in the divider foreground color of the given theme, it’d look something like this:</p>
+
+<div class="highlight"><pre><code class="language-scss" data-lang="scss"><span class="nc">.ml-file-list</span> <span class="p">{</span>
+  <span class="nl">border-bottom</span><span class="p">:</span> <span class="m">1px</span> <span class="nb">solid</span> <span class="nf">mat-color</span><span class="p">(</span><span class="nv">$foreground</span><span class="o">,</span> <span class="n">divider</span><span class="p">);</span>
+<span class="p">}</span></code></pre></div>
+
+<p>We use exactly the same technique to theme the background color of <code>.ml-file-list-item</code> like this:</p>
+
+<div class="highlight"><pre><code class="language-scss" data-lang="scss"><span class="nc">.ml-file-list-item</span> <span class="p">{</span>
+
+  <span class="k">&amp;</span><span class="nd">:hover</span><span class="o">,</span> <span class="k">&amp;</span><span class="nd">:active</span><span class="o">,</span> <span class="k">&amp;</span><span class="nd">:focus</span> <span class="p">{</span>
+    <span class="nl">background-color</span><span class="p">:</span> <span class="nf">mat-color</span><span class="p">(</span><span class="nv">$background</span><span class="o">,</span> <span class="n">hover</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="k">&amp;</span><span class="nc">.selected</span> <span class="p">{</span>
+    <span class="nl">background-color</span><span class="p">:</span> <span class="nf">mat-color</span><span class="p">(</span><span class="nv">$primary</span><span class="o">,</span> <span class="nb">lighter</span><span class="o">,</span> <span class="m">0</span><span class="mi">.5</span><span class="p">);</span>
+    <span class="nl">color</span><span class="p">:</span> <span class="nf">mat-color</span><span class="p">(</span><span class="nv">$foreground</span><span class="o">,</span> <span class="nb">text</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p>One thing to note here is that <code>mat-color</code> takes an optional third argument to configure the color’s opacity.</p>
+
+<p>That’s it! <code>FileTreeComponent</code> is now fully theme-aware and its look and feel responds to the configured theme. Here’s the complete code:</p>
+
+<div class="highlight"><pre><code class="language-scss" data-lang="scss"><span class="k">@mixin</span> <span class="nf">ml-file-tree-theme</span><span class="p">(</span><span class="nv">$theme</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="nv">$primary</span><span class="p">:</span> <span class="nf">map-get</span><span class="p">(</span><span class="nv">$theme</span><span class="o">,</span> <span class="n">primary</span><span class="p">);</span>
+  <span class="nv">$warn</span><span class="p">:</span> <span class="nf">map-get</span><span class="p">(</span><span class="nv">$theme</span><span class="o">,</span> <span class="n">warn</span><span class="p">);</span>
+  <span class="nv">$background</span><span class="p">:</span> <span class="nf">map-get</span><span class="p">(</span><span class="nv">$theme</span><span class="o">,</span> <span class="n">background</span><span class="p">);</span>
+  <span class="nv">$foreground</span><span class="p">:</span> <span class="nf">map-get</span><span class="p">(</span><span class="nv">$theme</span><span class="o">,</span> <span class="n">foreground</span><span class="p">);</span>
+
+  <span class="nc">.ml-file-list</span> <span class="p">{</span>
+    <span class="nl">border-bottom</span><span class="p">:</span> <span class="m">1px</span> <span class="nb">solid</span> <span class="nf">mat-color</span><span class="p">(</span><span class="nv">$foreground</span><span class="o">,</span> <span class="n">divider</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="nc">.ml-file-list-item</span> <span class="p">{</span>
+
+    <span class="k">&amp;</span><span class="nd">:hover</span><span class="o">,</span> <span class="k">&amp;</span><span class="nd">:active</span><span class="o">,</span> <span class="k">&amp;</span><span class="nd">:focus</span> <span class="p">{</span>
+      <span class="nl">background-color</span><span class="p">:</span> <span class="nf">mat-color</span><span class="p">(</span><span class="nv">$background</span><span class="o">,</span> <span class="n">hover</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">&amp;</span><span class="nc">.selected</span> <span class="p">{</span>
+      <span class="nl">background-color</span><span class="p">:</span> <span class="nf">mat-color</span><span class="p">(</span><span class="nv">$primary</span><span class="o">,</span> <span class="nb">lighter</span><span class="o">,</span> <span class="m">0</span><span class="mi">.5</span><span class="p">);</span>
+      <span class="nl">color</span><span class="p">:</span> <span class="nf">mat-color</span><span class="p">(</span><span class="nv">$foreground</span><span class="o">,</span> <span class="nb">text</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p>And here’s what our component looks like now:</p>
+
+<p><img src="/images/ml-file-tree-themed.png" alt="MachineLabs file tree component" /></p>
+
+<p>Last but not least, we have to call the <code>ml-file-tree-theme</code> mixing with our custom theme object. We do that by importing the mix-in in our <code>custom-theme.scss</code> file and execute it like this:</p>
+
+<div class="highlight"><pre><code class="language-scss" data-lang="scss"><span class="nc">...</span>
+<span class="o">@</span><span class="nt">import</span> <span class="s1">'app/lab-editor/file-tree/file-tree-theme.scss'</span><span class="p">;</span>
+
+<span class="nc">...</span>
+<span class="o">@</span><span class="nt">include</span> <span class="nt">ml-file-tree-theme</span><span class="o">(</span><span class="err">$</span><span class="nt">custom-theme</span><span class="o">)</span><span class="p">;</span></code></pre></div>
+
+<p>In fact, we can take it one level further and create a meta theme mix-in that executes all theme mix-ins for our custom components, the same way Angular Material does it with <code>angular-material-theme</code>. To do that we create a new mix-in <code>custom-theme</code>, which would look like this:</p>
+
+<div class="highlight"><pre><code class="language-scss" data-lang="scss"><span class="k">@mixin</span> <span class="nf">custom-theme</span><span class="p">(</span><span class="nv">$theme</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">@include</span> <span class="nd">ml-file-tree-theme</span><span class="p">(</span><span class="n">theme</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">@include</span> <span class="nd">custom-theme</span><span class="p">(</span><span class="nv">$custom-theme</span><span class="p">);</span></code></pre></div>
+
+<p>Here again, the complete code of our <code>custom-theme.scss</code> file:</p>
+
+<div class="highlight"><pre><code class="language-scss" data-lang="scss"><span class="k">@import</span> <span class="s1">'../node_modules/@angular/material/theming'</span><span class="p">;</span>
+<span class="k">@import</span> <span class="s1">'app/lab-editor/file-tree/file-tree-theme.scss'</span><span class="p">;</span>
+
+<span class="k">@include</span> <span class="nd">mat-core</span><span class="p">();</span>
+
+<span class="nv">$custom-theme-primary</span><span class="p">:</span> <span class="nf">mat-palette</span><span class="p">(</span><span class="nv">$mat-light-blue</span><span class="p">);</span>
+<span class="nv">$custom-theme-accent</span><span class="p">:</span> <span class="nf">mat-palette</span><span class="p">(</span><span class="nv">$mat-orange</span><span class="o">,</span> <span class="n">A200</span><span class="o">,</span> <span class="n">A100</span><span class="o">,</span> <span class="n">A400</span><span class="p">);</span>
+<span class="nv">$custom-theme-warn</span><span class="p">:</span> <span class="nf">mat-palette</span><span class="p">(</span><span class="nv">$mat-red</span><span class="p">);</span>
+
+<span class="nv">$custom-theme</span><span class="p">:</span> <span class="nf">mat-light-theme</span><span class="p">(</span><span class="nv">$custom-theme-primary</span><span class="o">,</span> <span class="nv">$custom-theme-accent</span><span class="o">,</span> <span class="nv">$custom-theme-warn</span><span class="p">);</span>
+
+<span class="k">@mixin</span> <span class="nf">custom-theme</span><span class="p">(</span><span class="nv">$theme</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">@include</span> <span class="nd">ml-file-tree-theme</span><span class="p">(</span><span class="n">theme</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">@include</span> <span class="nd">angular-material-theme</span><span class="p">(</span><span class="nv">$custom-theme</span><span class="p">);</span>
+<span class="k">@include</span> <span class="nd">custom-theme</span><span class="p">(</span><span class="nv">$custom-theme</span><span class="p">);</span></code></pre></div>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>Angular Material’s theming capabilities are very powerful and as of right now, it seems to be the only UI component library that gets it fairly right. Color palettes can be easily changed and reused and custom components can be enabled to consume a configured theme to match the look and feel of the entire application.</p>
+
+
+          
+
+
+
+
+        </div>
+
+        <div class="thtrm-subscriber">
+  <h3>Get updates on new articles and trainings.</h3>
+  <p>Join over 1400 other developers who get our content first.</p>
+  <form action="//thoughtram.us8.list-manage.com/subscribe/post?u=dfbb1507fbced5a20d9dc5698&amp;id=731f22cdca" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" novalidate>
+    <label for="mce-EMAIL"></label>
+    <input type="email" value="" name="EMAIL" placeholder="Your email address..." required>
+    <div style="position: absolute; left: -5000px;"><input type="text" name="b_dfbb1507fbced5a20d9dc5698_731f22cdca" tabindex="-1" value=""></div>
+    <input type="submit" value="Subscribe" name="subscribe" class="thtrm-cta thtrm-cta--small">
+  </form>
+</div>
+
+
+
+        <div class="thtrm-social-links">
+            <!-- Sharingbutton Facebook -->
+            <a class="resp-sharing-button__link" href="https://facebook.com/sharer/sharer.php?u=http%3A%2F%2Fblog.thoughtram.io/angular/2017/05/23/custom-themes-with-angular-material.html" target="_blank" aria-label="Share on Facebook">
+              <div class="resp-sharing-button resp-sharing-button--facebook resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M18.768,7.465H14.5V5.56c0-0.896,0.594-1.105,1.012-1.105s2.988,0,2.988,0V0.513L14.171,0.5C10.244,0.5,9.5,3.438,9.5,5.32 v2.145h-3v4h3c0,5.212,0,12,0,12h5c0,0,0-6.85,0-12h3.851L18.768,7.465z"/>
+                    </g>
+                </svg>
+                </div>Share on Facebook</div>
+            </a>
+
+            <!-- Sharingbutton Twitter -->
+            <a class="resp-sharing-button__link" href="https://twitter.com/intent/tweet/?text=Custom%20themes%20with%20Angular%20Material&amp;url=http://blog.thoughtram.io/angular/2017/05/23/custom-themes-with-angular-material.html" target="_blank" aria-label="Share on Twitter">
+              <div class="resp-sharing-button resp-sharing-button--twitter resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M23.444,4.834c-0.814,0.363-1.5,0.375-2.228,0.016c0.938-0.562,0.981-0.957,1.32-2.019c-0.878,0.521-1.851,0.9-2.886,1.104 C18.823,3.053,17.642,2.5,16.335,2.5c-2.51,0-4.544,2.036-4.544,4.544c0,0.356,0.04,0.703,0.117,1.036 C8.132,7.891,4.783,6.082,2.542,3.332C2.151,4.003,1.927,4.784,1.927,5.617c0,1.577,0.803,2.967,2.021,3.782 C3.203,9.375,2.503,9.171,1.891,8.831C1.89,8.85,1.89,8.868,1.89,8.888c0,2.202,1.566,4.038,3.646,4.456 c-0.666,0.181-1.368,0.209-2.053,0.079c0.579,1.804,2.257,3.118,4.245,3.155C5.783,18.102,3.372,18.737,1,18.459 C3.012,19.748,5.399,20.5,7.966,20.5c8.358,0,12.928-6.924,12.928-12.929c0-0.198-0.003-0.393-0.012-0.588 C21.769,6.343,22.835,5.746,23.444,4.834z"/>
+                    </g>
+                </svg>
+                </div>Share on Twitter</div>
+            </a>
+
+            <!-- Sharingbutton Google+ -->
+            <a class="resp-sharing-button__link" href="https://plus.google.com/share?url=http%3A%2F%2Fblog.thoughtram.io/angular/2017/05/23/custom-themes-with-angular-material.html" target="_blank" aria-label="Share on Google+">
+              <div class="resp-sharing-button resp-sharing-button--google resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                <svg version="1.1" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g>
+                        <path d="M11.366,12.928c-0.729-0.516-1.393-1.273-1.404-1.505c0-0.425,0.038-0.627,0.988-1.368 c1.229-0.962,1.906-2.228,1.906-3.564c0-1.212-0.37-2.289-1.001-3.044h0.488c0.102,0,0.2-0.033,0.282-0.091l1.364-0.989 c0.169-0.121,0.24-0.338,0.176-0.536C14.102,1.635,13.918,1.5,13.709,1.5H7.608c-0.667,0-1.345,0.118-2.011,0.347 c-2.225,0.766-3.778,2.66-3.778,4.605c0,2.755,2.134,4.845,4.987,4.91c-0.056,0.22-0.084,0.434-0.084,0.645 c0,0.425,0.108,0.827,0.33,1.216c-0.026,0-0.051,0-0.079,0c-2.72,0-5.175,1.334-6.107,3.32C0.623,17.06,0.5,17.582,0.5,18.098 c0,0.501,0.129,0.984,0.382,1.438c0.585,1.046,1.843,1.861,3.544,2.289c0.877,0.223,1.82,0.335,2.8,0.335 c0.88,0,1.718-0.114,2.494-0.338c2.419-0.702,3.981-2.482,3.981-4.538C13.701,15.312,13.068,14.132,11.366,12.928z M3.66,17.443 c0-1.435,1.823-2.693,3.899-2.693h0.057c0.451,0.005,0.892,0.072,1.309,0.2c0.142,0.098,0.28,0.192,0.412,0.282 c0.962,0.656,1.597,1.088,1.774,1.783c0.041,0.175,0.063,0.35,0.063,0.519c0,1.787-1.333,2.693-3.961,2.693 C5.221,20.225,3.66,19.002,3.66,17.443z M5.551,3.89c0.324-0.371,0.75-0.566,1.227-0.566l0.055,0 c1.349,0.041,2.639,1.543,2.876,3.349c0.133,1.013-0.092,1.964-0.601,2.544C8.782,9.589,8.363,9.783,7.866,9.783H7.865H7.844 c-1.321-0.04-2.639-1.6-2.875-3.405C4.836,5.37,5.049,4.462,5.551,3.89z"/>
+                        <polygon points="23.5,9.5 20.5,9.5 20.5,6.5 18.5,6.5 18.5,9.5 15.5,9.5 15.5,11.5 18.5,11.5 18.5,14.5 20.5,14.5 20.5,11.5  23.5,11.5   "/>
+                    </g>
+                </svg>
+                </div>Share on Google+</div>
+            </a>
+        </div>
+
+        <h3 class="thtrm-section-headline thtrm-section-headline--with-margin">Author</h3>
+        <div class="thtrm-article-author">
+          <span class="thtrm-article-author-avatar"><img src="/images/author-pascal.jpg" alt="Picture of Pascal Precht"></span>
+          <div class="thtrm-article-author-matter">
+            <h4 class="thtrm-article-author-name">Pascal Precht</h4>
+            <p class="thtrm-article-author-text">Pascal is a front-end engineer and a Angular Developer Expert nominated by Google. He created the angular-translate module, is an Angular contributor and also part of the Angular Docs Authoring team.</p>
+            <p>
+              <a class="thtrm-article-author-cta thtrm-article-author-cta-twitter" href="http://twitter.com/PascalPrecht" title="Pascal Precht on Twitter">Twitter</a>
+              <a class="thtrm-article-author-cta" href="http://github.com/PascalPrecht" title="Pascal Precht on GitHub">GitHub</a>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="thtrm-constraint">
+
+        
+        <h4 class="thtrm-section-headline thtrm-section-headline--with-big-margin thtrm-section-headline--centered">Related Posts</h4>
+        <ul class="thtrm-three-column-list thtrm-three-column-list--with-padding">
+        
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2017/05/08/angular-master-class-redux-and-ngrx.html" title="Angular Master Class - Redux and ngrx">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/ngrx_slide_logo.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Angular Master Class - Redux and ngrx</h3>
+                <p>Today we're super excited to announce that we finished working on our new Angular Master Class courseware. Read on for...</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2017/02/27/three-things-you-didnt-know-about-the-async-pipe.html" title="Three things you didn't know about the AsyncPipe">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/three-things-about-the-async-pipe.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Three things you didn't know about the AsyncPipe</h3>
+                <p>This article explains three lesser known features of the AsyncPipe that help us to write better async code.</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2017/02/21/using-zones-in-angular-for-better-performance.html" title="Using Zones in Angular for better performance">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/using-zones-in-angular-for-better-performance.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Using Zones in Angular for better performance</h3>
+                <p>In this article we'll take a look at how to use Zone APIs to improve our app's performance!</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2017/02/02/making-your-angular-app-fast.html" title="Making your Angular apps fast">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/angular-performance-tips.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Making your Angular apps fast</h3>
+                <p>In this article we discuss tips and tricks to make Angular blazingly fast!</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2016/12/27/angular-2-advance-testing-with-custom-matchers.html" title="Testing Angular Directives with Custom Matchers">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/testing-directives-with-custom-matchers2.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Testing Angular Directives with Custom Matchers</h3>
+                <p>Deliver terse, DRY, self-documenting unit tests with Angular using custom Jasmine Matchers and  Helper functions.</p>
+              </div>
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="thtrm-article-card" href="/angular/2016/11/28/testing-services-with-http-in-angular-2.html" title="Testing Services with Http in Angular">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/testing-services-with-http-in-angular-2.jpg);"></div>
+              <div class="thtrm-article-card-content ">
+                <h3>Testing Services with Http in Angular</h3>
+                <p>Want to learn how to test services in Angular that have an Http dependency? Read more here!</p>
+              </div>
+            </a>
+          </li>
+        
+        
+        </ul>
+        
+
+      
+
+      </div>
+    </main>
+    <footer role="contentinfo" class="thtrm-footer thtrm-footer--slim">
+  <div class="thtrm-footer-text">
+    <img class="thtrm-footer-logo" alt="thoughtram brain" src="/images/thoughtram-brain-white.png">
+    <p>This website was created in collaboration with <a href="http://twitter.com/timche_" title="Tim Cheung on Twitter"><strong>Tim Cheung</strong></a> and <a href="http://twitter.com/tim_hartmann_" title="Tim Hartmann on Twitter"><strong>Tim Hartmann</strong></a>.</p>
+    <p ><a href="http://thoughtram.io/code-of-conduct.html" title="Code of Conduct">Code of Conduct</a> &bullet; <a href="http://thoughtram.io/imprint.html" title="Legal Notice">Legal notice</a></p>
+    <p class="thtrm-footer-bottom">&copy; 2014-2017 thoughtram GmbH</p>
+  </div>
+</footer>
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-51360648-2', 'auto');
+ga('send', 'pageview');
+
+var form = document.getElementById('search-form');
+var eventCta = document.getElementById('event-cta');
+
+if (eventCta) {
+
+  eventCta.addEventListener('click', function (event) {
+    event.preventDefault();
+
+    setTimeout(clickLink, 1000);
+
+    function clickLink() {
+      window.location.replace(eventCta.getAttribute('href'));
+    }
+
+    ga('send', 'event', {
+      eventCategory: 'Event Link',
+      eventAction: 'click',
+      eventLabel: eventCta.getAttribute('title'),
+      hitCallback: clickLink
+    });
+  });
+}
+
+if (form) {
+
+  var searchTerm = document.getElementById('search-term');
+
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    var formSubmitted = false;
+
+    setTimeout(submitForm, 1000);
+
+    function submitForm() {
+      if (!formSubmitted) {
+        formSubmitted = true;
+        form.submit();
+      }
+    }
+
+    ga('send', 'event', {
+      eventCategory: 'Search Form',
+      eventAction: 'submit',
+      eventLabel: searchTerm.value,
+      hitCallback: submitForm
+    });
+  });
+}
+</script>
+
+
+
+    <script src="/scripts/stickyfill.js"></script>
+    <script src="/scripts/linkjuice/dist/linkjuice.js"></script>
+    <script src="/scripts/main.js"></script>
+  </body>
+</html>
