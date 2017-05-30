@@ -126,9 +126,9 @@
 </span><span class="p">})</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">ContactsListComponent</span> <span class="kr">implements</span> <span class="nx">OnInit</span> <span class="p">{</span>
 
-  <span class="nl">contacts</span><span class="p">:</span> <span class="nx">Observable</span><span class="o">&lt;</span><span class="nb">Array</span><span class="o">&lt;</span><span class="nx">Contact</span><span class="o">&gt;&gt;</span><span class="p">;</span>
+  <span class="na">contacts</span><span class="p">:</span> <span class="nx">Observable</span><span class="o">&lt;</span><span class="nb">Array</span><span class="o">&lt;</span><span class="nx">Contact</span><span class="o">&gt;&gt;</span><span class="p">;</span>
 
-  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">contactsService</span><span class="err">:</span> <span class="nx">ContactsService</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="na">contactsService</span><span class="p">:</span> <span class="nx">ContactsService</span><span class="p">)</span> <span class="p">{}</span>
 
   <span class="nx">ngOnInit</span> <span class="p">()</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">contacts</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">contactsService</span><span class="p">.</span><span class="nx">getContacts</span><span class="p">();</span>
@@ -230,7 +230,7 @@
 </span>    <span class="o">&lt;</span><span class="sr">/ul&gt;</span><span class="err">`
 </span><span class="p">})</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">AppComponent</span> <span class="p">{</span>
-  <span class="nl">items</span><span class="p">:</span> <span class="nx">Observable</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="na">items</span><span class="p">:</span> <span class="nx">Observable</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span><span class="p">;</span>
 
   <span class="nx">constructor</span> <span class="p">()</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">newSeq</span><span class="p">();</span>
@@ -266,7 +266,7 @@
 </span><span class="p">})</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">SeqComponent</span> <span class="p">{</span>
   <span class="err">@</span><span class="nx">Input</span><span class="p">()</span>
-  <span class="nl">items</span><span class="p">:</span> <span class="nb">Array</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="na">items</span><span class="p">:</span> <span class="nb">Array</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span><span class="p">;</span>
 <span class="p">}</span></code></pre></div>
 
 <p>Notice the <code>@Input()</code>decorator for <code>items</code> which means the component will receive those from the outside via a property binding.
@@ -337,7 +337,7 @@ Our root component maintains an array <code>seqs</code> and pushes new long-live
 </span><span class="p">})</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">SeqComponent</span> <span class="p">{</span>
   <span class="err">@</span><span class="nx">Input</span><span class="p">()</span>
-  <span class="nl">items</span><span class="p">:</span> <span class="nx">Observable</span><span class="o">&lt;</span><span class="nb">Array</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;&gt;</span><span class="p">;</span>
+  <span class="na">items</span><span class="p">:</span> <span class="nx">Observable</span><span class="o">&lt;</span><span class="nb">Array</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;&gt;</span><span class="p">;</span>
 <span class="p">}</span></code></pre></div>
 
 <p>Also note that it now applies the <code>AsyncPipe</code> in its template since it’s not dealing with a plain array anymore. Our <code>AppComponent</code> needs to be changed as well to <strong>not</strong> apply the <code>AsyncPipe</code> in the property binding anymore.</p>

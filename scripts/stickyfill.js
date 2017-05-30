@@ -38,7 +38,7 @@
         }
         catch(e) {}
         if (block.style.position != '') {
-            // seppuku();
+            seppuku();
         }
     }
 

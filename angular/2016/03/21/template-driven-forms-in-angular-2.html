@@ -74,7 +74,7 @@
         <hgroup class="thtrm-banner-container">
           <div class="thtrm-constraint thtrm-constraint--slim">
             <h2 class="thtrm-banner-text">Template-driven Forms in Angular</h2>
-            <span>by <a href="http://twitter.com/" title="Pascal Precht on Twitter">Pascal Precht</a> on Mar 21, 2016, last updated on Dec 18, 2016<br>11 minute read</span>
+            <span>by <a href="http://twitter.com/" title="Pascal Precht on Twitter">Pascal Precht</a> on Mar 21, 2016, last updated on Dec 18, 2016<br>12 minute read</span>
 
           </div>
         </hgroup>
@@ -188,17 +188,17 @@
 
 <p>Angular comes with a very convenient way of exposing directive instances in a component’s template using the <code>exportAs</code> property of the directive metadata. For example, if we’d build a directive <code>draggable</code>, we could expose an instance to the template via the name <code>draggable</code> like so:</p>
 
-<div class="highlight"><pre><code class="language-ts" data-lang="ts">@Directive({
-  selector: '[draggable]',
-  exportAs: 'draggable'
-})
-class Draggable {
-  ...
-}</code></pre></div>
+<div class="highlight"><pre><code class="language-ts" data-lang="ts"><span class="err">@</span><span class="nx">Directive</span><span class="p">({</span>
+  <span class="na">selector</span><span class="p">:</span> <span class="s1">'[draggable]'</span><span class="p">,</span>
+  <span class="na">exportAs</span><span class="p">:</span> <span class="s1">'draggable'</span>
+<span class="p">})</span>
+<span class="kr">class</span> <span class="nx">Draggable</span> <span class="p">{</span>
+  <span class="p">...</span>
+<span class="p">}</span></code></pre></div>
 
 <p>And then, in the template where it’s used, we can simply ask for it using Angular’s local variable mechanism:</p>
 
-<div class="highlight"><pre><code class="language-ts" data-lang="ts">&lt;div draggable #myDraggable="draggable"&gt;I'm draggable!&lt;/div&gt;</code></pre></div>
+<div class="highlight"><pre><code class="language-ts" data-lang="ts"><span class="o">&lt;</span><span class="nx">div</span> <span class="nx">draggable</span> <span class="err">#</span><span class="nx">myDraggable</span><span class="o">=</span><span class="s2">"draggable"</span><span class="o">&gt;</span><span class="nx">I</span><span class="err">'</span><span class="nx">m</span> <span class="nx">draggable</span><span class="o">!&lt;</span><span class="sr">/div&gt;</span></code></pre></div>
 
 <p>From this point on <code>myDraggable</code> is a reference to an instance of <code>Draggable</code> and we can use it throughout our entire template as part of other expressions.</p>
 
@@ -531,11 +531,11 @@ class Draggable {
         
           
           <li>
-            <a class="thtrm-article-card" href="/angular/2017/05/23/custom-themes-with-angular-material.html" title="Custom themes with Angular Material">
-              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/custom-themes-with-angular-material.jpg);"></div>
+            <a class="thtrm-article-card" href="/angular/2017/05/08/angular-master-class-redux-and-ngrx.html" title="Angular Master Class - Redux and ngrx">
+              <div class="thtrm-article-card-image" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 2%,#29383E 100%),url(/images/banner/ngrx_slide_logo.jpg);"></div>
               <div class="thtrm-article-card-content ">
-                <h3>Custom themes with Angular Material</h3>
-                <p>Angular Material offers great theming capabilities for both, built-in and custom themes. In this article we'll explore how to make...</p>
+                <h3>Angular Master Class - Redux and ngrx</h3>
+                <p>Today we're super excited to announce that we finished working on our new Angular Master Class courseware. Read on for...</p>
               </div>
             </a>
           </li>
