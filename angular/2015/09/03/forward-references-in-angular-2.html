@@ -333,7 +333,7 @@ class NameService {
   }
 }</code></pre></div>
 
-<p>What <code>forwardRef</code> does is, it takes a function as a parameter that returns a class. And because this functions isn’t immediately called but instead is called <em>after</em> <code>NameService</code> is declared it is safe to return <code>NameService</code> from it. In other words: At the point where <code>() =&gt; NameService</code> runs <code>NameService</code> isn’t undefined anymore.</p>
+<p>What <code>forwardRef</code> does is, it takes a function as a parameter that returns a class. And because this function isn’t immediately called but instead is called <em>after</em> <code>NameService</code> is declared it is safe to return <code>NameService</code> from it. In other words: At the point where <code>() =&gt; NameService</code> runs <code>NameService</code> isn’t undefined anymore.</p>
 
 <h2 id="conclusion">Conclusion</h2>
 
