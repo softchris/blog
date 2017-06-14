@@ -423,7 +423,7 @@ Here’s what it looks like if we’d combine the <code>required</code> validato
 <span class="p">})</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">EmailValidator</span> <span class="p">{</span>
 
-  <span class="nl">validator</span><span class="p">:</span> <span class="nb">Function</span><span class="p">;</span>
+  <span class="na">validator</span><span class="p">:</span> <span class="nb">Function</span><span class="p">;</span>
 
   <span class="nx">constructor</span><span class="p">(</span><span class="na">emailBlackList</span><span class="p">:</span> <span class="nx">EmailBlackList</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">validator</span> <span class="o">=</span> <span class="nx">validateEmailFactory</span><span class="p">(</span><span class="nx">emailBlackList</span><span class="p">);</span>
