@@ -7,6 +7,53 @@
     <atom:link href="http://blog.thoughtram.io/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
+        <title>Announcing Angular Master Class in Houston</title>
+        <description>&lt;p&gt;While we just &lt;a href=&quot;/announcements/2017/05/05/announcing-angular-master-class-in-denmark.html&quot;&gt;returned from Denmark&lt;/a&gt; and announced another upcoming &lt;a href=&quot;/announcements/2017/06/23/announcing-angular-master-class-in-berlin.html&quot;&gt;Angular Master Class in Berlin&lt;/a&gt;, we know that people want us to run our training all around the world.&lt;/p&gt;
+
+&lt;p&gt;It’s been a couple of month since we’ve last run our training in the US so we are very pleased to announce that our &lt;strong&gt;Angular Master Class is coming to Houston in August!&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;We’ve found the perfect, artsy venue to get into the right piece of mind to learn Angular in and out.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/amc_houston_hall.jpg&quot; alt=&quot;AMC Houston Event Location&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The event takes place on the &lt;strong&gt;22nd to 25th August 2017&lt;/strong&gt; in the &lt;strong&gt;Bisong Art Gallery&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;The bulk of the training happens on the first three days whereas day four is optional and covers &lt;strong&gt;Redux and ngrx&lt;/strong&gt;. Join us for a couple of days of learning and fun including things like&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Components and Modules&lt;/li&gt;
+  &lt;li&gt;Fetching data using Http&lt;/li&gt;
+  &lt;li&gt;Advanced Dependency Injection&lt;/li&gt;
+  &lt;li&gt;Basic Forms&lt;/li&gt;
+  &lt;li&gt;Observables deep-dive&lt;/li&gt;
+  &lt;li&gt;Architectural patterns&lt;/li&gt;
+  &lt;li&gt;ContentChildren and ViewChildren&lt;/li&gt;
+  &lt;li&gt;Template-driven Forms&lt;/li&gt;
+  &lt;li&gt;Reactive Forms&lt;/li&gt;
+  &lt;li&gt;Observables deep-dive&lt;/li&gt;
+  &lt;li&gt;Children routes and lazy-loading&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Redux and ngrx&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;…and many more!&lt;/p&gt;
+
+&lt;h3 id=&quot;tickets-on-sale-now&quot;&gt;Tickets on sale now&lt;/h3&gt;
+
+&lt;p&gt;The early bird round of tickets is on sale now. You can &lt;strong&gt;save up to 150,00 USD&lt;/strong&gt; so you’ll better be fast. Seats are &lt;strong&gt;very&lt;/strong&gt; limited with only &lt;strong&gt;5&lt;/strong&gt; early bird tickets available!&lt;/p&gt;
+
+&lt;p&gt;Come to our training… have a blast and get the best acceleration into Angular possible. You can find more information on our official &lt;a href=&quot;https://amc-houston.eventbrite.com/?aff=blogAnnouncement&quot;&gt;event page&lt;/a&gt;, or grab your ticket right here!&lt;/p&gt;
+
+&lt;iframe src=&quot;//eventbrite.de/tickets-external?eid=35632678300&amp;amp;ref=etckt&quot; frameborder=&quot;0&quot; vspace=&quot;0&quot; hspace=&quot;0&quot; marginheight=&quot;5&quot; marginwidth=&quot;5&quot; scrolling=&quot;auto&quot; allowtransparency=&quot;true&quot;&gt;&lt;/iframe&gt;
+
+&lt;p&gt;See you in Houston!&lt;/p&gt;
+
+</description>
+        <pubDate>Fri, 23 Jun 2017 02:00:00 +0200</pubDate>
+        <link>http://blog.thoughtram.io/announcements/2017/06/23/announcing-angular-master-class-in-houston.html</link>
+        <guid isPermaLink="true">http://blog.thoughtram.io/announcements/2017/06/23/announcing-angular-master-class-in-houston.html</guid>
+      </item>
+    
+      <item>
         <title>Announcing Angular Master Class in Berlin</title>
         <description>&lt;p&gt;We just returned from Denmark after running yet another Angular Master Class with a very diverse group of attendees from a wide range of different countries.&lt;/p&gt;
 
@@ -1515,46 +1562,6 @@ Our root component maintains an array &lt;code&gt;seqs&lt;/code&gt; and pushes n
         <pubDate>Thu, 02 Feb 2017 01:00:00 +0100</pubDate>
         <link>http://blog.thoughtram.io/angular/2017/02/02/making-your-angular-app-fast.html</link>
         <guid isPermaLink="true">http://blog.thoughtram.io/angular/2017/02/02/making-your-angular-app-fast.html</guid>
-      </item>
-    
-      <item>
-        <title>Announcing Angular Master Class in Freiburg</title>
-        <description>&lt;p&gt;We just &lt;a href=&quot;/announcements/2016/10/30/announcing-angular-2-master-class-in-sydney.html&quot;&gt;came back from Sydney&lt;/a&gt; and are still adjusting to the Central European Timezone, but this doesn’t keep us from sharing the exciting news with you that we’ll be running our &lt;strong&gt;Angular Master Class in Freiburg&lt;/strong&gt;!&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/humboldtsaal.jpg&quot; alt=&quot;Humboldtsaal Freiburg&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;The event takes place on the &lt;strong&gt;13th to 15th March 2017 at the &lt;a href=&quot;http://www.humboldtsaal.de/&quot;&gt;Humboldtsaal&lt;/a&gt;&lt;/strong&gt; in Freiburg, where we will have three (3) days of fun and learning the ins and outs of Angular including things like&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Components and Modules&lt;/li&gt;
-  &lt;li&gt;Fetching data using Http&lt;/li&gt;
-  &lt;li&gt;Advanced Dependency Injection&lt;/li&gt;
-  &lt;li&gt;Template-driven Forms&lt;/li&gt;
-  &lt;li&gt;Reactive Forms&lt;/li&gt;
-  &lt;li&gt;Observables deep-dive&lt;/li&gt;
-  &lt;li&gt;Children routes and lazy-loading&lt;/li&gt;
-  &lt;li&gt;Architectural patterns&lt;/li&gt;
-  &lt;li&gt;ContentChildren and ViewChildren&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;…and many more!&lt;/p&gt;
-
-&lt;h3 id=&quot;tickets-on-sale-now&quot;&gt;Tickets on sale now&lt;/h3&gt;
-
-&lt;p&gt;The early bird round of tickets is on sale now. You can &lt;strong&gt;save up to 200,00 €&lt;/strong&gt; so you’ll better be fast. Seats are limited!&lt;/p&gt;
-
-&lt;p&gt;Come to our training… have a blast and get the best acceleration into Angular possible. You can find more information on our official &lt;a href=&quot;https://www.eventbrite.de/e/angular-master-class-freiburg-tickets-31634972053?ref=etckt&quot;&gt;event page&lt;/a&gt;, or grab your ticket right here!&lt;/p&gt;
-
-&lt;iframe src=&quot;//eventbrite.de/tickets-external?eid=31634972053&amp;amp;ref=etckt&quot; frameborder=&quot;0&quot; vspace=&quot;0&quot; hspace=&quot;0&quot; marginheight=&quot;5&quot; marginwidth=&quot;5&quot; scrolling=&quot;auto&quot; allowtransparency=&quot;true&quot;&gt;&lt;/iframe&gt;
-
-&lt;p&gt;See you in Freiburg!&lt;/p&gt;
-
-&lt;p&gt;Pascal, Christoph &amp;amp; Dominic&lt;/p&gt;
-
-</description>
-        <pubDate>Wed, 01 Feb 2017 01:00:00 +0100</pubDate>
-        <link>http://blog.thoughtram.io/announcements/2017/02/01/announcing-angular-master-class-in-freiburg.html</link>
-        <guid isPermaLink="true">http://blog.thoughtram.io/announcements/2017/02/01/announcing-angular-master-class-in-freiburg.html</guid>
       </item>
     
   </channel>
