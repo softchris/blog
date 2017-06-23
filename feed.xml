@@ -7,6 +7,51 @@
     <atom:link href="http://blog.thoughtram.io/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
+        <title>Announcing Angular Master Class in Berlin</title>
+        <description>&lt;p&gt;We just returned from Denmark after running yet another Angular Master Class with a very diverse group of attendees from a wide range of different countries.&lt;/p&gt;
+
+&lt;p&gt;If you haven’t had the chance to join us in Denmark you really missed out on a fun event! However, here are good news: &lt;strong&gt;We are bringing our Angular Master Class to Berlin soon!&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;We are happy to team up with &lt;strong&gt;Westernacher Solutions AG&lt;/strong&gt; to run the training in a really cool atmosphere with lots of room to teach, learn and have fun!&lt;/p&gt;
+
+&lt;p&gt;&lt;img style=&quot;width: 50%; float:left&quot; src=&quot;/images/amc_berlin_main_room.jpg&quot; alt=&quot;AMC Berlin Event Location&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img style=&quot;width: 50%;&quot; src=&quot;/images/amc_berlin_billard.jpg&quot; alt=&quot;AMC Berlin Event Location&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The event takes place on the &lt;strong&gt;18th to 20th September 2017&lt;/strong&gt; in one of the most vibrant parts of the city.&lt;/p&gt;
+
+&lt;p&gt;We will have three (3) days of fun and learning the ins and outs of Angular including things like&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Components and Modules&lt;/li&gt;
+  &lt;li&gt;Fetching data using Http&lt;/li&gt;
+  &lt;li&gt;Advanced Dependency Injection&lt;/li&gt;
+  &lt;li&gt;Basic Forms&lt;/li&gt;
+  &lt;li&gt;Observables deep-dive&lt;/li&gt;
+  &lt;li&gt;Architectural patterns&lt;/li&gt;
+  &lt;li&gt;ContentChildren and ViewChildren&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Redux and ngrx&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;…and many more!&lt;/p&gt;
+
+&lt;h3 id=&quot;tickets-on-sale-now&quot;&gt;Tickets on sale now&lt;/h3&gt;
+
+&lt;p&gt;The early bird round of tickets is on sale now. You can &lt;strong&gt;save up to 125,00 €&lt;/strong&gt; so you’ll better be fast. Seats are &lt;strong&gt;very&lt;/strong&gt; limited with only &lt;strong&gt;5&lt;/strong&gt; early bird tickets available!&lt;/p&gt;
+
+&lt;p&gt;Come to our training… have a blast and get the best acceleration into Angular possible. You can find more information on our official &lt;a href=&quot;https://amc-berlin.eventbrite.com/?aff=blogAnnouncement&quot;&gt;event page&lt;/a&gt;, or grab your ticket right here!&lt;/p&gt;
+
+&lt;iframe src=&quot;//eventbrite.de/tickets-external?eid=35627970218&amp;amp;ref=etckt&quot; frameborder=&quot;0&quot; vspace=&quot;0&quot; hspace=&quot;0&quot; marginheight=&quot;5&quot; marginwidth=&quot;5&quot; scrolling=&quot;auto&quot; allowtransparency=&quot;true&quot;&gt;&lt;/iframe&gt;
+
+&lt;p&gt;See you in Berlin!&lt;/p&gt;
+
+</description>
+        <pubDate>Fri, 23 Jun 2017 02:00:00 +0200</pubDate>
+        <link>http://blog.thoughtram.io/announcements/2017/06/23/announcing-angular-master-class-in-berlin.html</link>
+        <guid isPermaLink="true">http://blog.thoughtram.io/announcements/2017/06/23/announcing-angular-master-class-in-berlin.html</guid>
+      </item>
+    
+      <item>
         <title>Join our free meetup in Denmark</title>
         <description>&lt;p&gt;Just a couple of weeks ago, we &lt;a href=&quot;/announcements/2017/05/05/announcing-angular-master-class-in-denmark.html&quot;&gt;announced to bring our Angular Master Class to Denmark&lt;/a&gt;.&lt;/p&gt;
 
@@ -1510,39 +1555,6 @@ Our root component maintains an array &lt;code&gt;seqs&lt;/code&gt; and pushes n
         <pubDate>Wed, 01 Feb 2017 01:00:00 +0100</pubDate>
         <link>http://blog.thoughtram.io/announcements/2017/02/01/announcing-angular-master-class-in-freiburg.html</link>
         <guid isPermaLink="true">http://blog.thoughtram.io/announcements/2017/02/01/announcing-angular-master-class-in-freiburg.html</guid>
-      </item>
-    
-      <item>
-        <title>A revamped Angular Master Class</title>
-        <description>&lt;p&gt;At thoughtram, we’re &lt;a href=&quot;/announcements/2015/10/26/angular-master-class-extended-ngupgrade.html&quot;&gt;constantly&lt;/a&gt; trying to provide the best training experience we can possibly offer. This includes things like updating the courseware to the latest Angular version, as well as adding new learning modules to the overall Angular Master Class program, so you can pick whatever topic you’re most interested in in our classes.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Today we’re super happy to announce&lt;/strong&gt; that we’ve recreated our courseware from the ground up to integrate the brand new &lt;a href=&quot;http://material.angular.io&quot;&gt;Angular Material library&lt;/a&gt;, as well as the even newer &lt;a href=&quot;https://github.com/angular/flex-layout&quot;&gt;Angular Flex Layout Module&lt;/a&gt;!&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;http://thoughtram.io/angular-master-class.html#whats-inside&quot; title=&quot;What&#39;s inside Angular Master Class?&quot;&gt;&lt;img src=&quot;/images/website-topic-box.png&quot; alt=&quot;Angular Master Class topic box&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;why-is-this-great&quot;&gt;Why is this great?&lt;/h2&gt;
-
-&lt;p&gt;While our courseware content has already been battle-tested since more than two (2) years and proven to be a solid and well working setup, with the latest changes you’ll benefit from the following &lt;strong&gt;additional&lt;/strong&gt; features:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Understand how to integrate Angular Material and Angular Flex Layout into your project&lt;/li&gt;
-  &lt;li&gt;Learn how to use Material components (like Dialogs) to build rich and accessible user interfaces&lt;/li&gt;
-  &lt;li&gt;Take advantage of Angular Flex Layout and learn how to build dynamic and responsive application layouts&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;These features will from now on come built-in with the Angular Master Class experience. Not only is this an improved experience for you as a student and your learning result when you’ve taken one of our classes, it also lays the foundation for future learning modules we’re adding to the Angular Master Class, that will go more in-depth into Angular’s Material components and Flex Layout.&lt;/p&gt;
-
-&lt;h2 id=&quot;cool-when-can-i-attend-a-class&quot;&gt;Cool, when can I attend a class?&lt;/h2&gt;
-
-&lt;p&gt;Great question! As of right now we’re planning in-house trainings for Q1 2017. We’re also giving a &lt;a href=&quot;https://www.ng-conf.org/register/&quot;&gt;Taming Forms in Angular&lt;/a&gt; training at ng-conf later this year in April, and we might plan another public training in Q1, so make sure to follow us on &lt;a href=&quot;http://twitter.com/thoughtram&quot;&gt;twitter&lt;/a&gt; for latest updates and news about the next trainings!&lt;/p&gt;
-
-&lt;h2 id=&quot;what-else-oh-right-free-ng-conf-ticket&quot;&gt;What else…? Oh right, free ng-conf ticket!&lt;/h2&gt;
-
-&lt;p&gt;Ng-conf is already sold out and it’s almost impossible to get a ticket for the biggest Angular conference on this planet….. Unless you’re reading our blog. That’s right. &lt;strong&gt;Somewhere on this website we’ve hidden a free ng-conf ticket&lt;/strong&gt;. &lt;s&gt;Find it, and it&#39;s yours.&lt;/s&gt; Too bad! Some lucky person already found it!&lt;/p&gt;
-</description>
-        <pubDate>Mon, 09 Jan 2017 01:00:00 +0100</pubDate>
-        <link>http://blog.thoughtram.io/angular/2017/01/09/a-revamped-angular-master-class.html</link>
-        <guid isPermaLink="true">http://blog.thoughtram.io/angular/2017/01/09/a-revamped-angular-master-class.html</guid>
       </item>
     
   </channel>
