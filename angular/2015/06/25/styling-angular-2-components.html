@@ -112,12 +112,12 @@
   <span class="na">templateUrl</span><span class="p">:</span> <span class="s1">'my-zippy.component.html'</span><span class="p">,</span>
   <span class="na">styles</span><span class="p">:</span> <span class="p">[</span><span class="err">`</span>
     <span class="p">.</span><span class="nx">zippy</span> <span class="p">{</span>
-      <span class="na">background</span><span class="p">:</span> <span class="nx">green</span><span class="p">;</span>
+      <span class="nl">background</span><span class="p">:</span> <span class="nx">green</span><span class="p">;</span>
     <span class="p">}</span>
   <span class="err">`</span><span class="p">]</span>
 <span class="p">})</span>
 <span class="kr">class</span> <span class="nx">ZippyComponent</span> <span class="p">{</span>
-  <span class="err">@</span><span class="nx">Input</span><span class="p">()</span> <span class="na">title</span><span class="p">:</span> <span class="nx">string</span><span class="p">;</span>
+  <span class="err">@</span><span class="nx">Input</span><span class="p">()</span> <span class="nx">title</span><span class="err">:</span> <span class="nx">string</span><span class="p">;</span>
 <span class="p">}</span></code></pre></div>
 
 <p>This is pretty straight forward. You might wonder though, why the value of that property is a list and not just a (multi-line) string. Well, I wonder too. That’s why I asked the <a href="https://github.com/angular/angular/issues/2730">question</a> right away.</p>

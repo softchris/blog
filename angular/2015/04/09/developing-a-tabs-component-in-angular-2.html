@@ -348,9 +348,9 @@ Using that instance, we can simply call the <code>addTab()</code> method with a 
 </span>  <span class="err">`</span><span class="p">,</span>
 <span class="p">})</span>
 <span class="kr">export</span> <span class="kr">class</span> <span class="nx">Tabs</span> <span class="p">{</span>
-  <span class="na">tabs</span><span class="p">:</span> <span class="nx">Tab</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[];</span>
+  <span class="nl">tabs</span><span class="p">:</span> <span class="nx">Tab</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[];</span>
 
-  <span class="nx">selectTab</span><span class="p">(</span><span class="na">tab</span><span class="p">:</span> <span class="nx">Tab</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">selectTab</span><span class="p">(</span><span class="nx">tab</span><span class="err">:</span> <span class="nx">Tab</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">tabs</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">tab</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
       <span class="nx">tab</span><span class="p">.</span><span class="nx">active</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
     <span class="p">});</span>

@@ -466,9 +466,9 @@
 <span class="p">})</span>
 <span class="kr">class</span> <span class="nx">AppComponent</span> <span class="kr">implements</span> <span class="nx">OnInit</span> <span class="p">{</span>
 
-  <span class="na">form</span><span class="p">:</span> <span class="nx">FormGroup</span><span class="p">;</span>
+  <span class="nl">form</span><span class="p">:</span> <span class="nx">FormGroup</span><span class="p">;</span>
 
-  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="na">fb</span><span class="p">:</span> <span class="nx">FormBuilder</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="nx">constructor</span><span class="p">(</span><span class="kr">private</span> <span class="nx">fb</span><span class="err">:</span> <span class="nx">FormBuilder</span><span class="p">)</span> <span class="p">{}</span>
 
   <span class="nx">ngOnInit</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">form</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">fb</span><span class="p">.</span><span class="nx">group</span><span class="p">({</span>
@@ -664,7 +664,7 @@
   <span class="na">providers</span><span class="p">:</span> <span class="p">[</span>
     <span class="p">...</span>
     <span class="p">{</span> 
-      <span class="na">provide</span><span class="p">:</span> <span class="nx">NG_VALIDATORS</span><span class="p">,</span>
+      <span class="nl">provide</span><span class="p">:</span> <span class="nx">NG_VALIDATORS</span><span class="p">,</span>
       <span class="na">useExisting</span><span class="p">:</span> <span class="nx">forwardRef</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="nx">CounterInputComponent</span><span class="p">),</span>
       <span class="na">multi</span><span class="p">:</span> <span class="kc">true</span>
     <span class="p">}</span>

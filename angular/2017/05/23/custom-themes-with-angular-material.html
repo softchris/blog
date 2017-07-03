@@ -167,26 +167,26 @@
 
 <p>We can easily try it out by having our application using Angular Material components. So first we add <code>MaterialModule</code> to our <code>AppModule</code>’s imports:</p>
 
-<div class="highlight"><pre><code class="language-ts" data-lang="ts"><span class="k">import</span> <span class="p">{</span> <span class="nx">MaterialModule</span> <span class="p">}</span> <span class="k">from</span> <span class="s1">'@angular/material'</span><span class="p">;</span>
+<div class="highlight"><pre><code class="language-ts" data-lang="ts">import { MaterialModule } from '@angular/material';
 
-<span class="err">@</span><span class="nx">NgModule</span><span class="p">({</span>
-  <span class="na">imports</span><span class="p">:</span> <span class="p">[</span>
-    <span class="p">...</span>
-    <span class="nx">MaterialModule</span>
-  <span class="p">],</span>
-  <span class="p">...</span>
-<span class="p">})</span>
-<span class="k">export</span> <span class="kr">class</span> <span class="nx">AppModule</span> <span class="p">{}</span></code></pre></div>
+@NgModule({
+  imports: [
+    ...
+    MaterialModule
+  ],
+  ...
+})
+export class AppModule {}</code></pre></div>
 
 <p>Then we go ahead and render, for example, Angular Material’s tool bar component:</p>
 
-<div class="highlight"><pre><code class="language-ts" data-lang="ts"><span class="err">@</span><span class="nx">Component</span><span class="p">({</span>
-  <span class="na">selector</span><span class="p">:</span> <span class="s1">'my-app'</span><span class="p">,</span>
-  <span class="na">template</span><span class="p">:</span> <span class="err">`</span>
-    <span class="o">&lt;</span><span class="nx">md</span><span class="o">-</span><span class="nx">toolbar</span><span class="o">&gt;</span><span class="nx">Awesome</span> <span class="nx">toolbar</span><span class="o">&lt;</span><span class="sr">/md-toolbar</span><span class="err">&gt;
-</span>  <span class="err">`</span>
-<span class="p">})</span>
-<span class="k">export</span> <span class="kr">class</span> <span class="nx">AppComponent</span> <span class="p">{}</span></code></pre></div>
+<div class="highlight"><pre><code class="language-ts" data-lang="ts">@Component({
+  selector: 'my-app',
+  template: `
+    &lt;md-toolbar&gt;Awesome toolbar&lt;/md-toolbar&gt;
+  `
+})
+export class AppComponent {}</code></pre></div>
 
 <p><img src="/images/md-toolbar.png" alt="Picture of md-toolbar component" /></p>
 
